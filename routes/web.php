@@ -29,4 +29,42 @@ Route::resource('ingridient_season', 'IngridientSeasonController');
 
 Route::resource('ingridient_store', 'IngridientStoreController');
 
-Route::resource('transport', 'TransportController');
+Route::resource('investation', 'InvestationController');
+
+Route::resource('investation_team', 'InvestationTeamController');
+
+Route::resource('machine', 'MachineController');
+
+Route::resource('machine_store', 'MachineStoreController');
+
+Route::resource('product', 'ProductController');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
+
+Route::resource('', '');
