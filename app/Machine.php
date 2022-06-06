@@ -11,4 +11,9 @@ class Machine extends Model
     {
         return $this->hasMany(TeamMachine::class, 'machine_id');
     }
+
+    public function machineStore()
+    {
+        return $this->belongsTo(machineStore::class, 'machine_store_id');
+    }
 }
