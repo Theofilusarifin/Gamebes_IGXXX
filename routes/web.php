@@ -2,20 +2,30 @@
 
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Web Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register web routes for your application. These
-| routes are loaded by the RouteServiceProvider within a group which
-| contains the "web" middleware group. Now create something great!
-|
-*/
-
 Route::get('/', function () {
     return view('index');
 });
+
+// ROUTE PENPOS
+Route::group(
+    ['prefix' => 'penpos', 'as' => 'penpos.'],
+    function () {
+    }
+);
+
+// ROUTE PESERTA
+Route::group(
+    ['prefix' => 'peserta', 'as' => 'peserta.'],
+    function () {
+        // Dashboard --> Inventory (Acara)
+        Route::get('/dashboard', 'Peserta\DashboardController@index')->name('dashboard');
+
+
+        // Inventory --> Gudang (Acara)
+    }
+);
+
+
 
 Route::resource('user', 'UserController');
 
@@ -38,33 +48,3 @@ Route::resource('machine', 'MachineController');
 Route::resource('machine_store', 'MachineStoreController');
 
 Route::resource('product', 'ProductController');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');
-
-Route::resource('', '');

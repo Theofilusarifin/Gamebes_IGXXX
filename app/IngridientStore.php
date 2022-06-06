@@ -6,5 +6,13 @@ use Illuminate\Database\Eloquent\Model;
 
 class IngridientStore extends Model
 {
-    //
+    public function ingridients()
+    {
+        return $this->hasMany(Ingridient::class, 'ingridient_store_id');
+    }
+
+    public function territory()
+    {
+        return $this->hasOne(Territories::class, 'ingridient_store_id');
+    }
 }

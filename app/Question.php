@@ -6,5 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Question extends Model
 {
-    //
+    public function answers(){
+        return $this->hasMany(Answer::class, 'question_id');
+    }
+
+    public function questions()
+    {
+        return $this->belongsTo(Question::class, 'investation_id');
+    }
 }
