@@ -16,3 +16,17 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('index');
 });
+
+Route::resource('user', 'UserController');
+
+Route::resource('admin', 'AdminController');
+
+Route::resource('answer', 'AnswerController');
+
+Route::resource('ingridient', 'IngridientController');
+
+Route::resource('ingridient_season', 'IngridientSeasonController');
+
+Route::resource('ingridient_store', 'IngridientStoreController');
+
+Route::resource('transport', 'TransportController');
