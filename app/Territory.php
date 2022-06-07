@@ -4,9 +4,8 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Territories extends Model
+class Territory extends Model
 {
-    //
     public function transportStore()
     {
         return $this->belongsTo(TransportStore::class, 'transport_store_id');

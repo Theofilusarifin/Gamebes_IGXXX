@@ -15,6 +15,6 @@ class TransportStore extends Model
     public function territories()
     {
         //How?
-        return $this->hasOne(Territories::class, 'transport_store_id');
+        return $this->hasOne(Territory::class, 'transport_store_id');
     }
 }

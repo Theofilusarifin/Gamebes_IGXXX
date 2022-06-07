@@ -13,6 +13,6 @@ class IngridientStore extends Model
 
     public function territory()
     {
-        return $this->hasOne(Territories::class, 'ingridient_store_id');
+        return $this->hasOne(Territory::class, 'ingridient_store_id');
     }
 }

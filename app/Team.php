@@ -25,7 +25,7 @@ class Team extends Model
 
     public function territory()
     {
-        return $this->belongsTo(Territories::class, 'territory_id');
+        return $this->belongsTo(Territory::class, 'territory_id');
     }
 
     public function teamMachines()

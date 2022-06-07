@@ -9,7 +9,7 @@ class MachineStore extends Model
     //
     public function territory()
     {
-        return $this->belongsTo(Territories::class, 'machine_store_id');
+        return $this->belongsTo(Territory::class, 'machine_store_id');
     }
 
     public function machines()

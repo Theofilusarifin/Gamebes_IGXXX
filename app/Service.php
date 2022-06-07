@@ -9,7 +9,7 @@ class Service extends Model
     //
     public function territory()
     {
-        return $this->hasOne(Territories::class, 'service_id');
+        return $this->hasOne(Territory::class, 'service_id');
     }
 
     public function team()
