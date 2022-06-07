@@ -1,1 +1,8 @@
-"id","name","alias","created_at","updated_at"
+id;name;alias
+1;Mesin Pembersih;MP
+2;Mk;Mk
+3;MS;MS
+4;Mesin Vakum;MV
+5;Mesin UV;MU
+6;M;M
+7;MC;MC
