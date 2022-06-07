@@ -11,14 +11,15 @@ Auth::routes();
 
 // ROUTE PENPOS
 Route::group(
-    ['prefix' => 'penpos', 'as' => 'penpos.'],
+    ['prefix' => 'penpos', 'as' =>'penpos.', 'middleware' => 'penpos'],
     function () {
+        // Route::get('/dashboard', 'Peserta\DashboardController@index')->name('dashboard');
     }
 );
 
 // ROUTE PESERTA
 Route::group(
-    ['prefix' => 'peserta', 'as' => 'peserta.'],
+    ['prefix' => 'peserta', 'as' => 'peserta.', 'middleware' => 'peserta'],
     function () {
         // Dashboard --> Inventory (Acara)
         Route::get('/dashboard', 'Peserta\DashboardController@index')->name('dashboard');
