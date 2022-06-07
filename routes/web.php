@@ -1,10 +1,13 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('index');
 });
+
+Auth::routes();
 
 // ROUTE PENPOS
 Route::group(
@@ -24,27 +27,3 @@ Route::group(
         // Inventory --> Gudang (Acara)
     }
 );
-
-
-
-Route::resource('user', 'UserController');
-
-Route::resource('admin', 'AdminController');
-
-Route::resource('answer', 'AnswerController');
-
-Route::resource('ingridient', 'IngridientController');
-
-Route::resource('ingridient_season', 'IngridientSeasonController');
-
-Route::resource('ingridient_store', 'IngridientStoreController');
-
-Route::resource('investation', 'InvestationController');
-
-Route::resource('investation_team', 'InvestationTeamController');
-
-Route::resource('machine', 'MachineController');
-
-Route::resource('machine_store', 'MachineStoreController');
-
-Route::resource('product', 'ProductController');
