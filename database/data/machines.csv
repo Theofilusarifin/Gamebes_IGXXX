@@ -1,1 +1,5 @@
-"id";"name";"price_var";"price";"defect";"machine_store_id";"created_at";"updated_at"
+id;name;price_var;price;defect;machine_store_id;created_at;updated_at
+1;Penggiling;100;5000;10;1;;
+2;Pemijat;200;10000;20;2;;
+3;Pemutar;300;12000;30;3;;
+4;Pembungkus;400;15000;10;4;;
