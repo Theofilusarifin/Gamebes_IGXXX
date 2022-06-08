@@ -1,1 +1,5 @@
-id,name,alias,created_at,updated_at
+id;name;alias
+1;Tomat Store;TS
+2;Kelontong Store;KS
+3;Seafood Store;SS
+4;Chemical Store;CS
