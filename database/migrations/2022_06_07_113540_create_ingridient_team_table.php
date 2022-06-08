@@ -14,7 +14,12 @@ class CreateIngridientTeamTable extends Migration
     public function up()
     {
         Schema::create('ingridient_team', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('team_id');
+            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('ingridient_id');
+            $table->foreign('ingridient_id')->references('id')->on('ingridients')->onUpdate('cascade')->onDelete('cascade');
+
             $table->integer('amount');
             $table->timestamps();
         });

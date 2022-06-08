@@ -14,7 +14,12 @@ class CreateMachineMachineCombinationTable extends Migration
     public function up()
     {
         Schema::create('machine_machine_combination', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('machine_id');
+            $table->foreign('machine_id')->references('id')->on('machines')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('machine_combination_id');
+            $table->foreign('machine_combination_id')->references('id')->on('machine_combinations')->onUpdate('cascade')->onDelete('cascade');
+
             $table->integer('order');
             $table->timestamps();
         });

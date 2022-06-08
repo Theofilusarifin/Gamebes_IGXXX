@@ -14,9 +14,14 @@ class CreateProductTeamTable extends Migration
     public function up()
     {
         Schema::create('product_team', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('team_id');
+            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('product_id');
+            $table->foreign('product_id')->references('id')->on('products')->onUpdate('cascade')->onDelete('cascade');
+
             $table->integer('amount_have');
-            $table->integer('amount_sold');
+            $table->integer('amount_sold')->nullable();
             $table->timestamps();
         });
     }

@@ -14,7 +14,12 @@ class CreateInvestationTeamTable extends Migration
     public function up()
     {
         Schema::create('investation_team', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('team_id');
+            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('investation_id');
+            $table->foreign('investation_id')->references('id')->on('investations')->onUpdate('cascade')->onDelete('cascade');
+
             $table->integer('total_profit');
             $table->timestamps();
         });

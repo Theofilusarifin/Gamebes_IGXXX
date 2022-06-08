@@ -17,7 +17,6 @@ class CreateTeamsTable extends Migration
             $table->id();
 
             $table->string('name');
-            $table->string('role');
             $table->integer('tc');
             $table->integer('level');
 
@@ -32,11 +31,11 @@ class CreateTeamsTable extends Migration
             $table->integer('total_maintenance')->nullable();
             $table->integer('waste')->nullable();
 
-            $table->foreignId('territory_id');
-            $table->foreign('territory_id')->references('id')->on('territories')->onUpdate('cascade')->onDelete('cascade')->nullable();
+            $table->foreignId('territory_id')->nullable();
+            $table->foreign('territory_id')->references('id')->on('territories')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('service_id');
-            $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade')->nullable();
+            $table->foreignId('service_id')->nullable();
+            $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
 
             $table->timestamps();
         });

@@ -14,7 +14,12 @@ class CreateIngridientSeasonTable extends Migration
     public function up()
     {
         Schema::create('ingridient_season', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('ingridient_id');
+            $table->foreign('ingridient_id')->references('id')->on('ingridients')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('season_id');
+            $table->foreign('season_id')->references('id')->on('seasons')->onUpdate('cascade')->onDelete('cascade');
+
             $table->integer('price');
             $table->timestamps();
         });

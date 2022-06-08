@@ -13,14 +13,13 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // $this->call(UsersTableSeeder::class);
-
-        // $this->call(IngridientStoreSeeder::class, false);
-        // $this->call(MachineStoreSeeder::class, false, );
-        // $this->call(TransportStoreSeeder::class, false);
-        // $this->call(ServiceSeeder::class, false);
-        // $this->call(TerritorySeeder::class, false);
+        $this->call(IngridientStoreSeeder::class, false);
+        $this->call(MachineStoreSeeder::class, false, );
+        $this->call(TransportStoreSeeder::class, false);
+        $this->call(ServiceSeeder::class, false);
+        $this->call(TerritorySeeder::class, false);
+        $this->call(InvestationSeeder::class, false);
+        $this->call(TeamSeeder::class, false);
         $this->call(UserSeeder::class, false);
-
     }
 }

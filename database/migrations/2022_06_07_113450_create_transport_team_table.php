@@ -14,9 +14,14 @@ class CreateTransportTeamTable extends Migration
     public function up()
     {
         Schema::create('transport_team', function (Blueprint $table) {
-            $table->id();
+            $table->foreignId('team_id');
+            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->foreignId('transport_id');
+            $table->foreign('transport_id')->references('id')->on('transports')->onUpdate('cascade')->onDelete('cascade');
+
             $table->integer('amount');
-            $table->integer('use_num');
+            $table->integer('use_num')->nullable();
             $table->timestamps();
         });
     }
