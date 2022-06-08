@@ -8,7 +8,7 @@ class Season extends Model
 {
     public function ingridients()
     {
-        return $this->belongsToMany(Ingridient::class, 'season_id', 'ingridient_id')
+        return $this->belongsToMany(Ingridient::class, 'ingridient_season', 'season_id', 'ingridient_id')
             ->withPivot(['price']);
     }
 

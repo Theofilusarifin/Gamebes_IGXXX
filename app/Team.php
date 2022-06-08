@@ -13,13 +13,13 @@ class Team extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'team_id', 'product_id')
+        return $this->belongsToMany(Product::class, 'product_team', 'team_id', 'product_id')
             ->withPivot(['amount_have', 'amount_sold']);
     }
 
     public function transports()
     {
-        return $this->belongsToMany(Transport::class, 'team_id', 'transport_id')
+        return $this->belongsToMany(Transport::class, 'transport_team', 'team_id', 'transport_id')
             ->withPivot(['amount', 'use_num']);
     }
 
@@ -35,7 +35,7 @@ class Team extends Model
 
     public function ingridients()
     {
-        return $this->belongsToMany(Team::class, 'team_id', 'ingridient_id')
+        return $this->belongsToMany(Ingridient::class, 'ingridient_team', 'team_id', 'ingridient_id')
             ->withPivot(['amount']);
     }
 
@@ -46,7 +46,7 @@ class Team extends Model
 
     public function investations()
     {
-        return $this->belongsToMany(Team::class, 'team_id', 'investation_id') 
-        ->withPivot(['total_profit']);
+        return $this->belongsToMany(Investation::class, 'investation_team', 'team_id', 'investation_id')
+            ->withPivot(['total_profit']);
     }
 }

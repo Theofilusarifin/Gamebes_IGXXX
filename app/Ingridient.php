@@ -11,14 +11,15 @@ class Ingridient extends Model
         return $this->belongsTo(IngridientStore::class, 'ingridient_store_id');
     }
 
-    public function seasons(){
-        return $this->belongsToMany(Season::class, 'ingridient_id', 'season_id')
-        ->withPivot(['price']);
+    public function seasons()
+    {
+        return $this->belongsToMany(Season::class, 'ingridient_season', 'ingridient_id', 'season_id')
+            ->withPivot(['price']);
     }
 
     public function teams()
     {
-        return $this->belongsToMany(Team::class, 'ingridient_id', 'team_id')
-        ->withPivot(['amount']);
+        return $this->belongsToMany(Team::class, 'ingridient_team', 'ingridient_id', 'team_id')
+            ->withPivot(['amount']);
     }
 }
