@@ -1,5 +1,6 @@
 <?php
 
+use App\IngridientStore;
 use Illuminate\Database\Seeder;
 
 class IngridientStoreSeeder extends Seeder
@@ -9,8 +10,10 @@ class IngridientStoreSeeder extends Seeder
      *
      * @return void
      */
-    public function run($path, $model)
+    public function run()
     {
+        $path = "database/data/1-ingridient_stores.csv";
+        $model = IngridientStore::class;
         include("csv-reader.php");
     }
 }

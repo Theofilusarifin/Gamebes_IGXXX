@@ -17,10 +17,10 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('username')->unique();
             $table->string('password');
-            $table->string('role');
+            $table->string('role')->nullable();
 
-            $table->foreignId('team_id');
-            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade')->nullable();
+            $table->foreignId('team_id')->nullable();
+            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
 
             $table->rememberToken();
             $table->timestamps();

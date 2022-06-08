@@ -15,12 +15,10 @@ class DatabaseSeeder extends Seeder
     {
         // $this->call(UsersTableSeeder::class);
 
-        $this->call(IngridientStoreSeeder::class, false, ["path" => "database/data/1-ingridient_store.csv", "model" => IngridientStore::class]);
-        $this->call(MachineStoreSeeder::class, false, ["path" => "database/data/2-machine_store.csv", "model" => MachineStore::class]);
-        $this->call(TransportStoreSeeder::class, false, ["path" => "database/data/1-ingridient_store.csv", "model" => IngridientStore::class]);
-        $this->call(ServiceSeeder::class, false, ["path" => "database/data/1-ingridient_store.csv", "model" => IngridientStore::class]);
-        $this->call(TerritorySeeder::class, false, ["path" => "database/data/1-ingridient_store.csv", "model" => Terr::class]);
-
-
+        $this->call(IngridientStoreSeeder::class, false);
+        $this->call(MachineStoreSeeder::class, false, );
+        $this->call(TransportStoreSeeder::class, false);
+        $this->call(ServiceSeeder::class, false);
+        $this->call(TerritorySeeder::class, false);
     }
 }

@@ -12,10 +12,11 @@
                         <div class="text-center text-md-center mb-4 mt-md-0">
                             <h1 class="mb-4 h3">Industrial Games XXX <br> Login Form</h1>
                         </div>
-                        <form action="POST" action="{{ route('login') }}" class="mt-4">
+                        <form method="POST" action="{{ route('login') }}" class="mt-4">
+                            @csrf
                             <!-- Form -->
                             <div class="form-group mb-4">
-                                <label for="email">Your Username</label>
+                                <label for="username">Your Username</label>
                                 <div class="input-group">
                                     <span class="input-group-text" id="basic-addon1">
                                         <svg class="icon icon-xs text-gray-600" fill="currentColor" viewBox="0 0 20 20"
@@ -27,8 +28,8 @@
                                             </path>
                                         </svg>
                                     </span>
-                                    <input type="email" name="email" class="form-control"
-                                        placeholder="example@company.com" id="email" autofocus required>
+                                    <input type="text" name="username" class="form-control"
+                                        placeholder="example@company.com" id="username" autofocus required>
                                 </div>
                             </div>
                             <!-- End of Form -->
@@ -63,6 +64,10 @@
                                 <button type="submit" class="btn btn-gray-800">Sign in</button>
                             </div>
                         </form>
+
+                        @foreach($errors->all() as $error)
+                        {{ $error }}
+                        @endforeach
 
                         <div class="d-flex justify-content-center align-items-center mt-4">
                             <span class="fw-normal">

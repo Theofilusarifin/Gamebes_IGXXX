@@ -145,6 +145,10 @@
                                 <button type="submit" class="btn btn-gray-800 mt-4">Sign up</button>
                             </div>
                         </form>
+
+                        @foreach($errors->all() as $error)
+                            {{ $error }}
+                        @endforeach
                         <div class="d-flex justify-content-center align-items-center mt-4">
                             <span class="fw-normal">
                                 Already have an account?
