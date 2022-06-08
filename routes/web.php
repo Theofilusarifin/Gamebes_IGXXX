@@ -13,7 +13,10 @@ Auth::routes();
 Route::group(
     ['prefix' => 'penpos', 'as' =>'penpos.', 'middleware' => 'penpos'],
     function () {
-        Route::get('/', 'Penpos\DashboardController@index')->name('dashboard');
+        Route::get('/', 'Penpos\DashboardController@index')->name('index');
+
+        // Route::get('/', 'Penpos\DashboardController@index')->name('index');
+
     }
 );
 
@@ -22,7 +25,7 @@ Route::group(
     ['prefix' => 'peserta', 'as' => 'peserta.', 'middleware' => 'peserta'],
     function () {
         // Dashboard --> Inventory (Acara)
-        Route::get('/', 'Peserta\DashboardController@index')->name('dashboard');
+        Route::get('/', 'Peserta\DashboardController@index')->name('index');
 
 
         // Inventory --> Gudang (Acara)
