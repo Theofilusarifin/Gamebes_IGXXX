@@ -2,10 +2,15 @@
 
 @section('style')
 <style>
-    td {
-    width: 5%;
+    td,th {
+    width: 1.5%;
     height: 35px;
     border: 1px dashed rgb(84, 84, 84);
+    }
+
+    tr{
+        width: 100%;
+        height: 35px;
     }
 
     .water{
@@ -26,12 +31,21 @@
 @section('content')
 @php($column = 60)
 <table id="mainTable">
-    @php($index = 0)
+    <thead>
+        <tr>
+            @for ($i = 1; $i <= $column; $i++) 
+            <th></th>
+            @endfor
+        </tr>
+    </thead>
+    @php($index = 1)
     @foreach ($territories as $territory)
-        {{-- Buka Tr --}}
-        @if ($index == 0 || $index % $column == 0) 
+    
+    {{-- Buka Tr --}}
+    @if ($index == 1 || $index % $column == 1) 
+        @php($max_colspan = 1)
             @php($dibuka = $index)
-            <tr>
+            <tr >
         @endif
 
         {{-- Inisialisasi Class --}}
@@ -44,11 +58,16 @@
 
 
         {{-- Buat Td --}}
-        <td class="{{ $class }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}"></td>
-
+        <td class="{{ $class }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}">{{ $index }}</td>
+            @if ($territory->colspan > $max_colspan)
+                @php($max_colspan = $territory->colspan)
+            @endif
         {{-- Nutup tr --}}
         @if($index == $dibuka + $column)
             </tr>
+            @for ($i = 1; $i < $max_colspan; $i++)
+                <tr></tr>
+            @endfor
         @endif
         @php($index += $territory->colspan)
     @endforeach
