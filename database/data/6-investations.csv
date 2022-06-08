@@ -1,1 +1,6 @@
-"id";"name";"profit";"created_at";"updated_at"
+id;name;profit
+1;very easy;1000
+2;easy;1100
+3;medium;1300
+4;hard;1500
+5;very hard;2000
