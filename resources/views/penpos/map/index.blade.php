@@ -1,4 +1,4 @@
-@extends('peserta.layouts.app')
+@extends('penpos.layouts.app')
 
 @section('content')
 

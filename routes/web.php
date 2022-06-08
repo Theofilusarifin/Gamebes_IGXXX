@@ -13,7 +13,7 @@ Auth::routes();
 Route::group(
     ['prefix' => 'penpos', 'as' =>'penpos.', 'middleware' => 'penpos'],
     function () {
-        // Route::get('/dashboard', 'Peserta\DashboardController@index')->name('dashboard');
+        Route::get('/', 'Penpos\DashboardController@index')->name('dashboard');
     }
 );
 
