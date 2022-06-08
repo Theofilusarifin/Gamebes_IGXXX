@@ -38,7 +38,7 @@
 </head>
 
 <body>
-    @include('layouts.sidebar')
+    @include('peserta.layouts.sidebar')
     <!-- NOTICE: You can use the _analytics.html partial to include production code specific code & trackers -->
     <main class="content">
         <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
