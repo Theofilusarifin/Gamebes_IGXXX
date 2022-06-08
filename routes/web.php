@@ -15,8 +15,11 @@ Route::group(
     function () {
         Route::get('/', 'Penpos\DashboardController@index')->name('index');
 
-        // Route::get('/', 'Penpos\DashboardController@index')->name('index');
+        // Fitur Map
+        Route::get('/map', 'Penpos\MapController@index')->name('map');
 
+        // Fitur Susun Mesin
+        Route::get('/mesin', 'Penpos\DashboardController@index')->name('mesin');
     }
 );
 
