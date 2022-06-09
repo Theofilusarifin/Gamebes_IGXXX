@@ -4,30 +4,41 @@ namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
 use App\Machine;
+use App\MachineCombination;
 use Illuminate\Http\Request;
 
 class MachineController extends Controller
 {
     public function SusunMesin(Request $request){
+        // Define banyak mesin berapa
         $banyak_machine = count($request->all());
-        $machines = [];
+        
+        // Masukan order dari tiap mesin
+        $orders = [];
         foreach ($request as $idx => $machine) {
-            $machines[$idx] = $machine;
+            $orders[$idx+1] = $machine;
         }
 
-        for ($i=0; $i < $banyak_machine; $i++) { 
-            # code...
+        // Dapatkan semua kombinasi dari mesin yang berada pada order yang disusun
+        $combinations = [];
+        for ($i=1; $i <= $banyak_machine; $i++) {
+            $combinations[] = $orders[$i]->machineCombinations()->withPivot('order', $i)->get(['id']);
         }
-        // $combination_1 = $machine_1->machineCombinations->withPivot('order', $machine_1->order);
-        // $combination_2 = $machine_2->machineCombinations->withPivot('order', $machine_2->order);
-        // $combination_3 = $machine_3->machineCombinations->withPivot('order', $machine_3->order);
-        // $combination_4 = $machine_4->machineCombinations->withPivot('order', $machine_4->order);
-        // $combination_5 = $machine_5->machineCombinations->withPivot('order', $machine_5->order);
-        // $combination_6 = $machine_6->machineCombinations->withPivot('order', $machine_6->order);
-        // $combination_7 = $machine_7->machineCombinations->withPivot('order', $machine_7->order);
-        // $combination_8 = $machine_8->machineCombinations->withPivot('order', $machine_8->order);
-        // $combination_9 = $machine_9->machineCombinations->withPivot('order', $machine_9->order);
-        // $combination_10 = $machine_10->machineCombinations->withPivot('order', $machine_10->order);   
 
+        // Lakukan intersect untuk mengetahui apakah ada kombinasi yang cocok
+        $combination_found = array_intersect(...$combinations);
+        
+        // Apabila terdapat persis satu kombinasi yang cocok maka statusnya true
+        $status = (count($combination_found)==1) ? true : false;
+
+        // 
+        if ($status){
+            $combination = MachineCombination::find($combination_found[1]);
+        }
+
+        return response()->json([
+            'status' => $status,
+            'combination' => $combination,
+        ]);
     }
 }

@@ -19,7 +19,5 @@ class PesertaMiddleware
         if (Auth::check() && Auth::user()->role == "peserta") {
             return $next($request);
         }
-
-        abort(404);
     }
 }

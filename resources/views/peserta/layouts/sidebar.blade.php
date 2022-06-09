@@ -33,3 +33,7 @@
         </ul>
     </div>
 </nav>
+
+<div class="simplebar-track simplebar-vertical" style="visibility: hidden;">
+    <div class="simplebar-scrollbar" style="height: 0px; display: none;"></div>
+</div>

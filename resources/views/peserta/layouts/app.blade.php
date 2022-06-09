@@ -80,6 +80,8 @@
                 </div>
             </div>
         </nav>
+        
+        @yield('content')
 
         <footer class="bg-white rounded shadow p-5 mb-4 mt-4">
             <div class="row">
@@ -92,7 +94,6 @@
         </footer>
     </main>
 
-    @yield('content')
 
     <!-- Core -->
     <script src="{{ asset('') }}vendor/@popperjs/core/dist/umd/popper.min.js"></script>

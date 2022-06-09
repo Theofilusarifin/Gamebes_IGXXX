@@ -14,51 +14,63 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        $team = Auth::user()->team;
-        $data_team = $team->investations->all();
-        $profit = [];
+        $teams = Auth::user()->team;
+        $data_teams = $teams->investations->all();
+        $profits = [];
 
         // Ini data untuk menampilkan Investasi
-        foreach ($data_team as $team_profit) {
-            $profit[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
+        foreach ($data_teams as $team_profit) {
+            $profits[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
         }
-        // var_dump($var);
-        //dd($var);
 
         //Ini data untuk menampilkan data transport_team
-        $data_team_transport = $team->transports->all();
+        $data_team_transports = $teams->transports->all();
         //dd($data_team_transport);
 
         //Ini data untuk menampilkan data team_ingridient
-        $data_team_beli = $team->ingridients->all();
-        //dd($data_team_beli);
+        $data_team_belis = $teams->ingridients->all();
+        //dd($data_team_belis);
+
+        //Ini untuk nama toko dari ingridientsnya
+        $data_team_storeIngridient = 0;
 
         //Ini data untuk menampilkan data TeamMachine
-        $data_team_mesin = TeamMachine::where('team_id', $team->id)->get();
+        $data_team_mesins = TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get();
         //dd($data_team_mesin);
 
         //Untuk harga jual mesinnya
-        $hargaMesin = [[]];
-        for ($i = 0; $i < count($data_team_mesin); $i++) {
-            $data_mesin_spesifik = Machine::where('id', $data_team_mesin[$i]->machine_id)->get(['price_var']);
+        $hargaMesins = [[]];
+        for ($i = 0; $i < count($data_team_mesins); $i++) {
+            //Ngambil harga jual dari mesin dengan id tertentu
+            $data_mesin_spesifik = Machine::where('id', $data_team_mesins[$i]->machine_id)->get(['price_var']);
+            //Ada kemungkinan satu team punya 2 mesin yang sama jadi dilooping
             for ($j = 0; $j < count($data_mesin_spesifik); $j++) {
-                $hargaMesin[$i][$j] = $data_mesin_spesifik[$j];
+                //Dimasukin ke array 2D
+                //Jadi i itu adalah banyaknya mesin yang dimiliki oleh team tertentu
+                //Sedangkan j itu banyaknya mesin spesifik yang dimiliki oleh team tertentu
+                $hargaMesins[$i][$j] = $data_mesin_spesifik[$j];
             }
         }
         //dd($hargaMesin);
 
         //Ini data untuk menampilkan data product_team
-        $data_team_jual = $team->products->all();
+        $data_team_juals = $teams->products->all();
         //dd($data_team_jual);
 
+
+
+        $harga_susun_mesin = 1000;
+        $harga_total_susuns = $teams->machine_assembly * $harga_susun_mesin;
+
         return view('peserta.dashboard.index', compact(
-            'team',
-            'data_team',
-            'data_team_transport',
-            'data_team_beli',
-            'data_team_mesin',
-            'hargaMesin',
-            'data_team_jual'
+            'teams',
+            'data_teams',
+            'data_team_transports',
+            'data_team_belis',
+            'data_team_mesins',
+            'hargaMesins',
+            'data_team_juals',
+            'harga_total_susuns'
         ));
     }
 }
