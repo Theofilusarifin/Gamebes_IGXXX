@@ -22,7 +22,6 @@ class CreateProductTeamTable extends Migration
 
             $table->integer('amount_have');
             $table->integer('amount_sold')->nullable();
-            $table->timestamps();
         });
     }
 

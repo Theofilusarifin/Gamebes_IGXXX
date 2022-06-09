@@ -25,22 +25,22 @@ class DashboardController extends Controller
         // var_dump($var);
         //dd($var);
 
-        //Ini data untuk menampilkan data team transport belum masuk data rawnya
-        $data_team_transport = $team->transports;
-        dd($data_team_transport);
+        //Ini data untuk menampilkan data transport_team
+        $data_team_transport = $team->transports->all();
+        //dd($data_team_transport);
 
-        //Ini data untuk menampilkan data team beli belum masuk data rawnya
+        //Ini data untuk menampilkan data team_ingridient
         $data_team_beli = $team->ingridients->all();
         //dd($data_team_beli);
 
-        //Ini data untuk menampilkan data team mesin belum masuk data rawnya
+        //Ini data untuk menampilkan data TeamMachine
         $data_team_mesin = TeamMachine::where('team_id', $team->id)->get();
         //dd($data_team_mesin);
 
         //Untuk harga jual mesinnya
         $hargajualMesin = 0;
 
-        //Ini data untuk menampilkan data team jualZ
+        //Ini data untuk menampilkan data product_team
         $data_team_jual = $team->products->all();
         //dd($data_team_jual);
 

@@ -21,7 +21,6 @@ class CreateTransportsTable extends Migration
             $table->double('fuel_cost');
             $table->foreignId('transport_store_id');
             $table->foreign('transport_store_id')->references('id')->on('transport_stores')->onUpdate('cascade')->onDelete('cascade');
-
         });
     }
 

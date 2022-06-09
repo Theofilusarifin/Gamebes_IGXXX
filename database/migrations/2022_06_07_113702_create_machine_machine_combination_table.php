@@ -21,7 +21,6 @@ class CreateMachineMachineCombinationTable extends Migration
             $table->foreign('machine_combination_id')->references('id')->on('machine_combinations')->onUpdate('cascade')->onDelete('cascade');
 
             $table->integer('order');
-            $table->timestamps();
         });
     }
 

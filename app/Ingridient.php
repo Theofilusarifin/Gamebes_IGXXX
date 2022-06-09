@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ingridient extends Model
 {
+    public $timestamps = false;
     public function ingridientStore()
     {
         return $this->belongsTo(IngridientStore::class, 'ingridient_store_id');

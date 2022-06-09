@@ -20,7 +20,6 @@ class CreateAnswersTable extends Migration
             $table->tinyInteger('is_correct');
             $table->foreignId('question_id');
             $table->foreign('question_id')->references('id')->on('questions')->onUpdate('cascade')->onDelete('cascade');
-            $table->timestamps();
         });
     }
 

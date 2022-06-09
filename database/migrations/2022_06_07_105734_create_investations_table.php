@@ -17,7 +17,6 @@ class CreateInvestationsTable extends Migration
             $table->id();
             $table->string('name');
             $table->double('profit');
-            $table->timestamps();
         });
     }
 

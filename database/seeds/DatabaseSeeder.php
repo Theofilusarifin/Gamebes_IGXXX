@@ -21,5 +21,10 @@ class DatabaseSeeder extends Seeder
         $this->call(InvestationSeeder::class, false);
         $this->call(TeamSeeder::class, false);
         $this->call(UserSeeder::class, false);
+        $this->call(IngridientSeeder::class, false);
+        $this->call(MachineSeeder::class, false);
+        $this->call(ProductSeeder::class, false);
+        $this->call(TransportSeeder::class, false);
+
     }
 }

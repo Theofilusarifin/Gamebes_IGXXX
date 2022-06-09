@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class MachineCombination extends Model
 {
+    public $timestamps = false;
     //
     public function machines()
     {

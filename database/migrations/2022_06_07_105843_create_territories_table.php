@@ -18,6 +18,9 @@ class CreateTerritoriesTable extends Migration
             $table->integer('rowspan');
             $table->integer('colspan');
 
+            // $table->tinyInteger('open_tr');
+            // $table->tinyInteger('close_tr');
+
             $table->tinyInteger('is_wall');
             $table->tinyInteger('is_water');
             $table->tinyInteger('is_harbour');
@@ -36,8 +39,6 @@ class CreateTerritoriesTable extends Migration
             $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
 
             $table->text('url_company')->nullable();
-
-            $table->timestamps();
         });
     }
 

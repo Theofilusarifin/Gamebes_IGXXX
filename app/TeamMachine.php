@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeamMachine extends Model
 {
-    //
+    public $timestamps = false;
     public function team()
     {
         return $this->belongsTo(Team::class, 'team_id');

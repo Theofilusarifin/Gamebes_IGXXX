@@ -21,7 +21,6 @@ class CreateIngridientTeamTable extends Migration
             $table->foreign('ingridient_id')->references('id')->on('ingridients')->onUpdate('cascade')->onDelete('cascade');
 
             $table->integer('amount');
-            $table->timestamps();
         });
     }
 

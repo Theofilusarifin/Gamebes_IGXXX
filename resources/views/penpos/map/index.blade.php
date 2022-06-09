@@ -30,7 +30,7 @@
 
 @section('content')
 @php($column = 60)
-<table id="mainTable">
+<table id="mainTable" class="m-4">
     <thead>
         <tr>
             @for ($i = 1; $i <= $column; $i++) 

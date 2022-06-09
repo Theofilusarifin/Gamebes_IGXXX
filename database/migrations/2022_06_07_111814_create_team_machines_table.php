@@ -25,8 +25,6 @@ class CreateTeamMachinesTable extends Migration
 
             $table->foreignId('machine_id');
             $table->foreign('machine_id')->references('id')->on('machines')->onUpdate('cascade')->onDelete('cascade');
-
-            $table->timestamps();
         });
     }
 

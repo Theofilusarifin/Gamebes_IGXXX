@@ -18,7 +18,6 @@ class CreateMachineCombinationsTable extends Migration
             $table->integer('number');
             $table->integer('higenity');
             $table->integer('effectivity');
-            $table->timestamps();
         });
     }
 

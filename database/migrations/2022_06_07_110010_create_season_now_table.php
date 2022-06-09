@@ -16,7 +16,6 @@ class CreateSeasonNowTable extends Migration
         Schema::create('season_now', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->timestamps();
         });
     }
 

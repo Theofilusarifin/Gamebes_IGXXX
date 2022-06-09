@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Transport extends Model
 {
+    public $timestamps = false;
     public function transportstore()
     {
         return $this->belongsTo(TransportStore::class, 'transport_store_id');

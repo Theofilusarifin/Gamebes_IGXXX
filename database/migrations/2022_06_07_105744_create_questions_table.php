@@ -19,8 +19,6 @@ class CreateQuestionsTable extends Migration
             $table->integer('number');
             $table->foreignId('investation_id');
             $table->foreign('investation_id')->references('id')->on('investations')->onUpdate('cascade')->onDelete('cascade');
-            $table->timestamps();
-
         });
     }
 

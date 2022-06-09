@@ -22,7 +22,6 @@ class CreateTransportTeamTable extends Migration
 
             $table->integer('amount');
             $table->integer('use_num')->nullable();
-            $table->timestamps();
         });
     }
 

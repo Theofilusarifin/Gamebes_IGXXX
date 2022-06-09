@@ -36,8 +36,6 @@ class CreateTeamsTable extends Migration
 
             $table->foreignId('service_id')->nullable();
             $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
-
-            $table->timestamps();
         });
     }
 

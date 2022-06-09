@@ -19,8 +19,6 @@ class CreateIngridientsTable extends Migration
             $table->double('price');
             $table->foreignId('ingridient_store_id');
             $table->foreign('ingridient_store_id')->references('id')->on('ingridient_stores')->onUpdate('cascade')->onDelete('cascade');
-            $table->timestamps();
-            
         });
     }
 

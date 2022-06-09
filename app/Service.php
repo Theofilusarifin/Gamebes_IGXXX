@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Service extends Model
 {
-    //
+    public $timestamps = false;
     public function territory()
     {
         return $this->hasOne(Territory::class, 'service_id');

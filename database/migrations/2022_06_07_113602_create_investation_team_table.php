@@ -21,7 +21,6 @@ class CreateInvestationTeamTable extends Migration
             $table->foreign('investation_id')->references('id')->on('investations')->onUpdate('cascade')->onDelete('cascade');
 
             $table->integer('total_profit');
-            $table->timestamps();
         });
     }
 

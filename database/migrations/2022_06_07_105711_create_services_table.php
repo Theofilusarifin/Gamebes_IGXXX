@@ -19,7 +19,6 @@ class CreateServicesTable extends Migration
             $table->string('alias');
             $table->double('price');
             $table->integer('stock');
-            $table->timestamps();
         });
     }
 

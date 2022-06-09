@@ -21,7 +21,6 @@ class CreateProductSeasonTable extends Migration
             $table->foreign('season_id')->references('id')->on('seasons')->onUpdate('cascade')->onDelete('cascade');
 
             $table->integer('price');
-            $table->timestamps();
         });
     }
 
