@@ -20,7 +20,9 @@ class CreateIngridientTeamTable extends Migration
             $table->foreignId('ingridient_id');
             $table->foreign('ingridient_id')->references('id')->on('ingridients')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->integer('amount');
+            $table->integer('amount_have');
+            $table->integer('amount_use')->nullable();
+            $table->double('total');
         });
     }
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
+use App\IngridientStore;
 use App\Investation;
 use App\Machine;
 use App\Team;
@@ -23,20 +24,23 @@ class DashboardController extends Controller
             $profits[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
         }
 
+        //dd($teams);
+
         //Ini data untuk menampilkan data transport_team
         $data_team_transports = $teams->transports->all();
-        //dd($data_team_transport);
+        //dd($data_team_transports);
 
-        //Ini data untuk menampilkan data team_ingridient
+        //Ini data untuk menampilkan data team_ingridient 
         $data_team_belis = $teams->ingridients->all();
         //dd($data_team_belis);
 
         //Ini untuk nama toko dari ingridientsnya
-        $data_team_storeIngridient = 0;
+        $data_team_storeIngridients = IngridientStore::all();
+        //dd($data_team_storeIngridients);
 
         //Ini data untuk menampilkan data TeamMachine
         $data_team_mesins = TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get();
-        //dd($data_team_mesin);
+        //dd($data_team_mesins);
 
         //Untuk harga jual mesinnya
         $hargaMesins = [[]];
@@ -49,16 +53,16 @@ class DashboardController extends Controller
                 //Jadi i itu adalah banyaknya mesin yang dimiliki oleh team tertentu
                 //Sedangkan j itu banyaknya mesin spesifik yang dimiliki oleh team tertentu
                 $hargaMesins[$i][$j] = $data_mesin_spesifik[$j];
+                //tinggal tunggu acara untuk rumusnya
             }
         }
-        //dd($hargaMesin);
+        //dd($data_team_mesins);
 
         //Ini data untuk menampilkan data product_team
         $data_team_juals = $teams->products->all();
         //dd($data_team_jual);
 
-
-
+        //Nunggu acara untuk rumusnya
         $harga_susun_mesin = 1000;
         $harga_total_susuns = $teams->machine_assembly * $harga_susun_mesin;
 
@@ -70,7 +74,8 @@ class DashboardController extends Controller
             'data_team_mesins',
             'hargaMesins',
             'data_team_juals',
-            'harga_total_susuns'
+            'harga_total_susuns',
+            'data_team_storeIngridients'
         ));
     }
 }

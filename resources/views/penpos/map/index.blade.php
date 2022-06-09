@@ -7,11 +7,14 @@
     height: 35px;
     border: 1px dashed rgb(84, 84, 84);
     }
+/* 
+    table {border-collapse:collapse; table-layout:fixed; width:310px;}
+    table td {border:solid 1px #fab; width:100px; word-wrap:break-word;} */
 
-    tr{
+    /* tr{
         width: 100%;
         height: 35px;
-    }
+    } */
 
     .water{
         background-color: #8DB5F8
@@ -38,13 +41,9 @@
             @endfor
         </tr>
     </thead>
-    @php($index = 1)
     @foreach ($territories as $territory)
-    
-    {{-- Buka Tr --}}
-    @if ($index == 1 || $index % $column == 1) 
-        @php($max_colspan = 1)
-            @php($dibuka = $index)
+        {{-- Buka Tr --}}
+        @if($territory->open_tr)
             <tr >
         @endif
 
@@ -56,20 +55,14 @@
         @elseif ($territory->is_company) @php($class="company")
         @endif
 
-
         {{-- Buat Td --}}
-        <td class="{{ $class }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}">{{ $index }}</td>
-            @if ($territory->colspan > $max_colspan)
-                @php($max_colspan = $territory->colspan)
-            @endif
+        <td class="{{ $class }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}"></td>
+        
         {{-- Nutup tr --}}
-        @if($index == $dibuka + $column)
+        @if($territory->close_tr)
             </tr>
-            @for ($i = 1; $i < $max_colspan; $i++)
-                <tr></tr>
-            @endfor
         @endif
-        @php($index += $territory->colspan)
+        {{-- @php($index += $territory->colspan) --}}
     @endforeach
 </table>
 @endsection

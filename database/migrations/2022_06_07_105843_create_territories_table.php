@@ -18,8 +18,8 @@ class CreateTerritoriesTable extends Migration
             $table->integer('rowspan');
             $table->integer('colspan');
 
-            // $table->tinyInteger('open_tr');
-            // $table->tinyInteger('close_tr');
+            $table->tinyInteger('open_tr');
+            $table->tinyInteger('close_tr');
 
             $table->tinyInteger('is_wall');
             $table->tinyInteger('is_water');

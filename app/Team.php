@@ -15,7 +15,7 @@ class Team extends Model
     public function products()
     {
         return $this->belongsToMany(Product::class, 'product_team', 'team_id', 'product_id')
-            ->withPivot(['amount_have', 'amount_sold']);
+            ->withPivot(['amount_have', 'amount_sold', 'total']);
     }
 
     public function transports()
@@ -37,7 +37,8 @@ class Team extends Model
     public function ingridients()
     {
         return $this->belongsToMany(Ingridient::class, 'ingridient_team', 'team_id', 'ingridient_id')
-            ->withPivot(['amount']);
+            ->withPivot(['amount_have', 'amount_use', 'total'])
+            ->orderby('ingridient_store_id', 'asc');
     }
 
     public function service()

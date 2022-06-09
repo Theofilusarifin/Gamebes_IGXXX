@@ -9,8 +9,8 @@ class Product extends Model
     public $timestamps = false;
     public function teams()
     {
-        return $this->belongsToMany(Team::class, 'product_id', 'team_id')
-            ->withPivot(['amount_have', 'amount_sold']);
+        return $this->belongsToMany(Team::class, 'product_team','product_id', 'team_id')
+            ->withPivot(['amount_have', 'amount_use', 'total']);
     }
 
     public function seasons()
