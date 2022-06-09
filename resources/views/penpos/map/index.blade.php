@@ -2,9 +2,9 @@
 
 @section('style')
 <style>
-    td,th {
-    width: 1.5%;
-    height: 35px;
+    td {
+    width: 30px;
+    height: 30px;
     border: 1px dashed rgb(84, 84, 84);
     }
 /* 
@@ -34,17 +34,10 @@
 @section('content')
 @php($column = 60)
 <table id="mainTable" class="m-4">
-    <thead>
-        <tr>
-            @for ($i = 1; $i <= $column; $i++) 
-            <th></th>
-            @endfor
-        </tr>
-    </thead>
     @foreach ($territories as $territory)
         {{-- Buka Tr --}}
         @if($territory->open_tr)
-            <tr >
+            <tr>
         @endif
 
         {{-- Inisialisasi Class --}}
@@ -56,13 +49,12 @@
         @endif
 
         {{-- Buat Td --}}
-        <td class="{{ $class }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}"></td>
+        <td class="{{ $class }}" id="{{ $territory->id }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}"></td>
         
         {{-- Nutup tr --}}
         @if($territory->close_tr)
             </tr>
         @endif
-        {{-- @php($index += $territory->colspan) --}}
     @endforeach
 </table>
 @endsection
