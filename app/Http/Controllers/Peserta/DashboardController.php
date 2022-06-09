@@ -38,7 +38,12 @@ class DashboardController extends Controller
         //dd($data_team_mesin);
 
         //Untuk harga jual mesinnya
-        $hargajualMesin = 0;
+        $data_mesin_spesifik = Machine::where('id', $data_team_mesin[0]->machine_id)->get();
+        $hargaMesin = array_push($hargaMesin, $data_mesin_spesifik);
+        $hargaMesin = [];
+        for ($i = 0; $i < count($data_team_mesin); $i++) {
+        }
+        dd($hargaMesin);
 
         //Ini data untuk menampilkan data product_team
         $data_team_jual = $team->products->all();
