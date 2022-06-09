@@ -45,7 +45,7 @@ class DashboardController extends Controller
                 $hargaMesin[$i][$j] = $data_mesin_spesifik[$j];
             }
         }
-        dd($hargaMesin);
+        //dd($hargaMesin);
 
         //Ini data untuk menampilkan data product_team
         $data_team_jual = $team->products->all();
@@ -57,7 +57,7 @@ class DashboardController extends Controller
             'data_team_transport',
             'data_team_beli',
             'data_team_mesin',
-            'hargajualMesin',
+            'hargaMesin',
             'data_team_jual'
         ));
     }
