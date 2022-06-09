@@ -38,10 +38,12 @@ class DashboardController extends Controller
         //dd($data_team_mesin);
 
         //Untuk harga jual mesinnya
-        $data_mesin_spesifik = Machine::where('id', $data_team_mesin[0]->machine_id)->get();
-        $hargaMesin = array_push($hargaMesin, $data_mesin_spesifik);
-        $hargaMesin = [];
+        $hargaMesin = [[]];
         for ($i = 0; $i < count($data_team_mesin); $i++) {
+            $data_mesin_spesifik = Machine::where('id', $data_team_mesin[$i]->machine_id)->get(['price_var']);
+            for ($j = 0; $j < count($data_mesin_spesifik); $j++) {
+                $hargaMesin[$i][$j] = $data_mesin_spesifik[$j];
+            }
         }
         dd($hargaMesin);
 
