@@ -1,4 +1,4 @@
-id;rowspan;colspan;open_tr;close_tr;transport_store_id;ingridient_store_id;machine_store_id;service_id;is_wall;is_water;is_harbour;is_company;url_company
+id;num_occupant;rowspan;colspan;open_tr;close_tr;transport_store_id;ingridient_store_id;machine_store_id;service_id;is_wall;is_water;is_harbour;is_company;url_company
 1;1;5;1;0;null;null;null;null;0;0;0;1;null
 2;1;5;0;0;null;null;null;null;0;0;0;1;null
 3;1;5;0;0;null;null;null;null;0;0;0;1;null
@@ -556,7 +556,7 @@ id;rowspan;colspan;open_tr;close_tr;transport_store_id;ingridient_store_id;machi
 555;1;1;0;0;null;null;null;null;0;0;0;0;null
 556;1;1;0;0;null;null;null;null;0;0;0;0;null
 557;1;1;0;0;null;null;null;null;0;0;0;0;null
-558;1;1;0;0;null;null;null;null;0;0;0;0;null
+558;1;1;0;0;null;null;null;JP5;0;0;0;0;null
 559;1;1;0;0;null;null;null;null;0;0;0;0;null
 560;1;1;0;0;null;null;null;null;0;0;0;0;null
 561;1;1;0;0;null;null;null;null;0;0;0;0;null
@@ -586,7 +586,7 @@ id;rowspan;colspan;open_tr;close_tr;transport_store_id;ingridient_store_id;machi
 585;1;1;0;0;null;null;null;null;0;0;0;0;null
 586;1;1;0;0;null;null;null;null;0;0;0;0;null
 587;1;1;0;0;null;null;null;null;0;0;0;0;null
-588;1;1;0;0;null;null;null;JP5;0;0;0;0;null
+588;1;1;0;0;null;null;null;null;0;0;0;0;null
 589;1;1;0;0;null;null;null;null;0;0;0;0;null
 590;1;1;0;0;null;null;null;null;0;0;0;0;null
 591;1;1;0;0;null;null;null;null;0;0;0;0;null

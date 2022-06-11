@@ -1,5 +1,11 @@
-id;name;price
-1;Udang Vaname;11
-2;Udang Pama;15;
-3;Udang Jerbung;8;
-4;telur;15;
+id;name
+1;Udang Vaname
+2;Udang Pama
+3;Udang Jerbung
+4;Tomat
+5;Air Mineral
+6;Garam
+7;Gula
+8;MSG
+9;NaOH
+10;HCl

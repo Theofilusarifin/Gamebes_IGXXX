@@ -16,8 +16,6 @@ class CreateIngridientsTable extends Migration
         Schema::create('ingridients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->double('price');
-            $table->foreignId('ingridient_store_id');
         });
     }
 

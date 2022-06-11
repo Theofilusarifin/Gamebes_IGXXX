@@ -16,30 +16,48 @@ class DashboardController extends Controller
     public function index()
     {
         $teams = Auth::user()->team;
-        $data_teams = $teams->investations->all();
-        $profits = [];
-
-        // Ini data untuk menampilkan Investasi
-        foreach ($data_teams as $team_profit) {
-            $profits[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
+        
+        $data_teams = "";
+        $data_team_transports = "";
+        $data_team_belis = "";
+        $data_team_mesins = "";
+        $data_team_juals = "";
+        $harga_total_susuns = "";
+        $data_team_storeIngridients = "";
+        if (!empty($teams->investations->all())) {
+            $data_teams = $teams->investations->all();
+            $profits = [];
+            // Ini data untuk menampilkan Investasi
+            foreach ($data_teams as $team_profit) {
+                $profits[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
+            }
         }
 
         //dd($teams);
 
         //Ini data untuk menampilkan data transport_team
-        $data_team_transports = $teams->transports->all();
+        // if (!empty($teams->transports->all())) {
+        //     $data_team_transports = $teams->transports->all();
+        // }
+
         //dd($data_team_transports);
 
         //Ini data untuk menampilkan data team_ingridient 
-        $data_team_belis = $teams->ingridients->all();
+        // if (empty($teams->ingridients->all())) {
+        //     $data_team_belis = $teams->ingridients->all();
+        // }
         //dd($data_team_belis);
 
         //Ini untuk nama toko dari ingridientsnya
-        $data_team_storeIngridients = IngridientStore::all();
+        // if (empty($teams->ingridients->all())) {
+        //     $data_team_storeIngridients = IngridientStore::all();
+        // }
         //dd($data_team_storeIngridients);
 
         //Ini data untuk menampilkan data TeamMachine
-        $data_team_mesins = TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get(); //data utuh lengkap semua yang dimiliki 1 team
+        if (!empty(TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get())) {
+            $data_team_mesins = TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get(); //data utuh lengkap semua yang dimiliki 1 team
+        }
         //dd($data_team_mesins);
 
         //Untuk depresiasi mesinnya
@@ -69,18 +87,18 @@ class DashboardController extends Controller
                 }
             }
         }
-
-
         //dd($data_team_mesins);
 
         //Ini data untuk menampilkan data product_team
-        $data_team_juals = $teams->products->all();
+        if (!empty($teams->products->all())) {
+            $data_team_juals = $teams->products->all();
+        }
         //dd($data_team_jual);
 
         //Nunggu acara untuk rumusnya
-        $harga_susun_mesin = 1000;
-        $harga_total_susuns = $teams->machine_assembly * $harga_susun_mesin;
+        $harga_total_susuns = $teams->machine_assembly * 5;
 
+        
         return view('peserta.dashboard.index', compact(
             'teams',
             'data_teams',

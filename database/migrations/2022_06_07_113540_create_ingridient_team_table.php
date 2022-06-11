@@ -22,7 +22,7 @@ class CreateIngridientTeamTable extends Migration
 
             $table->integer('amount_have');
             $table->integer('amount_use')->nullable();
-            $table->double('total');
+            $table->double('total')->nullable();
         });
     }
 

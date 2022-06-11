@@ -1,5 +1,4 @@
-id;name;price;capacity;fuel_cost;transport_store_id
-1;Kapal B+;900;20;15;1
-2;Kapal A;1200;40;25;1
-3;Kapal A+;1500;70;35;1
-4;Kapal S;2000;100;45;1
+id;name;price;price_var;capacity;
+1;OASIS;100;19;50
+2;COASTA;250;24;80
+3;THALA;500;32;120

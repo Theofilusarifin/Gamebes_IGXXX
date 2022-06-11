@@ -16,6 +16,6 @@ class Transport extends Model
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'transport_team', 'transport_id', 'team_id')
-            ->withPivot(['amount', 'use_num']);
+            ->withPivot(['amount', 'use_num', 'season_buy', 'season_sell']);
     }
 }
