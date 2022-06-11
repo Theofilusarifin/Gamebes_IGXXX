@@ -20,7 +20,6 @@ class CreateMachinesTable extends Migration
             $table->double('price');
             $table->double('defect');
             $table->foreignId('machine_store_id');
-            $table->foreign('machine_store_id')->references('id')->on('machine_stores')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

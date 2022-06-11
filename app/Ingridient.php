@@ -7,9 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Ingridient extends Model
 {
     public $timestamps = false;
-    public function ingridientStore()
+    public function ingridientStores()
     {
-        return $this->belongsTo(IngridientStore::class, 'ingridient_store_id');
+        return $this->belongsToMany(IngridientStore::class, 'ingridient_id', 'ingridient_store_id')
+        ->withPivot(['stock']);
     }
 
     public function seasons()

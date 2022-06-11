@@ -9,7 +9,8 @@ class IngridientStore extends Model
     public $timestamps = false;
     public function ingridients()
     {
-        return $this->hasMany(Ingridient::class, 'ingridient_store_id');
+        return $this->belongsToMany(Ingridient::class, 'ingridient_store_id', 'ingridient_id')
+        ->withPivot(['stock']);
     }
 
     public function territory()

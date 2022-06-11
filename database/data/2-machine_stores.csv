@@ -1,8 +1,29 @@
-id;name;alias
-1;Mesin Pembersih;MP
-2;Mk;Mk
-3;MS;MS
-4;Mesin Vakum;MV
-5;Mesin UV;MU
-6;M;M
-7;MC;MC
+id;name
+MP1;Mesin Pembersih
+MP2;Mesin Pembersih
+MP3;Mesin Pembersih
+MP4;Mesin Pembersih
+MK1;Mk
+MK2;Mk
+MK3;Mk
+MK4;Mk
+MS1;MS
+MS2;MS
+MS3;MS
+MS4;MS
+MV1;Mesin Vakum
+MV2;Mesin Vakum
+MV3;Mesin Vakum
+MV4;Mesin Vakum
+MU1;Mesin UV
+MU2;Mesin UV
+MU3;Mesin UV
+MU4;Mesin UV
+M1;M
+M2;M
+M3;M
+M4;M
+MC1;MC
+MC2;MC
+MC3;MC
+MC4;MC

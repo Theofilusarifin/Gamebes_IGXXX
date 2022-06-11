@@ -1,5 +1,23 @@
-id;name;alias
-1;Tomat Store;TS
-2;Kelontong Store;KS
-3;Seafood Store;SS
-4;Chemical Store;CS
+id;name
+TS1;Tomat Store
+TS2;Tomat Store
+TS3;Tomat Store
+TS4;Tomat Store
+KS1;Kelontong Store
+KS2;Kelontong Store
+KS3;Kelontong Store
+KS4;Kelontong Store
+KS5;Kelontong Store
+KS6;Kelontong Store
+SS1;Seafood Store
+SS2;Seafood Store
+SS3;Seafood Store
+SS4;Seafood Store
+SS5;Seafood Store
+SS6;Seafood Store
+SS7;Seafood Store
+SS8;Seafood Store
+CS1;Chemical Store
+CS2;Chemical Store
+CS3;Chemical Store
+CS4;Chemical Store

@@ -14,9 +14,8 @@ class CreateIngridientStoresTable extends Migration
     public function up()
     {
         Schema::create('ingridient_stores', function (Blueprint $table) {
-            $table->id();
+            $table->string('id', 30)->primary();
             $table->string('name');
-            $table->string('alias');
         });
     }
 

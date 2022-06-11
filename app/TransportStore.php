@@ -9,7 +9,8 @@ class TransportStore extends Model
     public $timestamps = false;
     public function transports()
     {
-        return $this->hasMany(Transport::class, 'transport_store_id');
+        return $this->belongsToMany(Transport::class, 'transport_id', 'transport_store_id')
+        ->withPivot(['stock']);
     }
 
     public function territories()
