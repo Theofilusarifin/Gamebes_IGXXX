@@ -49,10 +49,10 @@ class DashboardController extends Controller
         //dd($data_team_belis);
 
         //Ini untuk nama toko dari ingridientsnya INI BELUM
-        if (!empty($teams->ingridient_ingridient_stores->all())) {
-            $data_team_storeIngridients = $teams->ingridient_ingridient_stores->all();
-        }
-        //dd($data_team_storeIngridients);
+        // if (!empty(IngridientStore::where('ingridient_id', $teams->ingridients->id))) {
+        // $data_team_storeIngridients = IngridientStore::where('ingridient_id', $teams->ingridients->id);
+        // }
+        //dd($data_team_storeIngridients->id);
 
         //Ini data untuk menampilkan data TeamMachine
         if (!empty(TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get())) {
