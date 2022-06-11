@@ -10,7 +10,7 @@ class MachineCombination extends Model
     //
     public function machines()
     {
-        return $this->belongsToMany(Machine::class, 'machine_combination_id', 'machine_id')
+        return $this->belongsToMany(Machine::class,'machine_machine_combination', 'machine_combination_id', 'machine_id')
             ->withPivot(['order']);
     }
 }

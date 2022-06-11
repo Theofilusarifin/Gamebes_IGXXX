@@ -16,7 +16,7 @@ class DashboardController extends Controller
     public function index()
     {
         $teams = Auth::user()->team;
-        
+
         $data_teams = "";
         $data_team_transports = "";
         $data_team_belis = "";
@@ -33,25 +33,25 @@ class DashboardController extends Controller
             }
         }
 
-        //dd($teams);
+        dd($teams);
 
         //Ini data untuk menampilkan data transport_team
-        // if (!empty($teams->transports->all())) {
-        //     $data_team_transports = $teams->transports->all();
-        // }
+        if (!empty($teams->transports->all())) {
+            $data_team_transports = $teams->transports->all();
+        }
 
         //dd($data_team_transports);
 
         //Ini data untuk menampilkan data team_ingridient 
-        // if (empty($teams->ingridients->all())) {
-        //     $data_team_belis = $teams->ingridients->all();
-        // }
+        if (!empty($teams->ingridients->all())) {
+            $data_team_belis = $teams->ingridients->all();
+        }
         //dd($data_team_belis);
 
-        //Ini untuk nama toko dari ingridientsnya
-        // if (empty($teams->ingridients->all())) {
-        //     $data_team_storeIngridients = IngridientStore::all();
-        // }
+        //Ini untuk nama toko dari ingridientsnya INI BELUM
+        if (!empty($teams->ingridients->all())) {
+            $data_team_storeIngridients = $teams;
+        }
         //dd($data_team_storeIngridients);
 
         //Ini data untuk menampilkan data TeamMachine
@@ -98,7 +98,7 @@ class DashboardController extends Controller
         //Nunggu acara untuk rumusnya
         $harga_total_susuns = $teams->machine_assembly * 5;
 
-        
+
         return view('peserta.dashboard.index', compact(
             'teams',
             'data_teams',

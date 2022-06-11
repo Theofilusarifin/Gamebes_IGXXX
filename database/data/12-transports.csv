@@ -1,4 +1,4 @@
-id;name;price;price_var;capacity;
-1;OASIS;100;19;50
-2;COASTA;250;24;80
-3;THALA;500;32;120
+id;name;price;capacity
+1;OASIS;100;50
+2;COASTA;250;80
+3;THALA;500;120

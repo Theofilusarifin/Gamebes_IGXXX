@@ -15,13 +15,13 @@ class Machine extends Model
 
     public function machineStore()
     {
-        return $this->belongsToMany(MachineStore::class, 'machine_id', 'machine_store_id')
+        return $this->belongsToMany(MachineStore::class, 'machine_machine_store' ,'machine_id', 'machine_store_id')
         ->withPivot(['stock']);
     }
 
     public function machineCombinations()
     {
-        return $this->belongsToMany(MachineCombinations::class, 'machine_id', 'machine_combination_id')
+        return $this->belongsToMany(MachineCombinations::class, 'machine_machine_combination' ,'machine_id', 'machine_combination_id')
             ->withPivot(['order']);
     }
 }

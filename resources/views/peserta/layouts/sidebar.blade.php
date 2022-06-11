@@ -18,8 +18,9 @@
         <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
         <ul class="nav flex-column pt-3 pt-md-0">
 
-            <li class="nav-item active ">
-                <a href="{{ asset('') }}pages/dashboard/dashboard.html" class="nav-link">
+            {{-- Dahsboard --}}
+            <li class="nav-item {{ request()->is('peserta') ? ' active' : '' }}">
+                <a href="{{ route("peserta.index") }}" class="nav-link">
                     <span class="sidebar-icon">
                         <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20"
                             xmlns="http://www.w3.org/2000/svg">
@@ -28,6 +29,19 @@
                         </svg>
                     </span>
                     <span class="sidebar-text">Dashboard</span>
+                </a>
+            </li>
+            {{-- Inventory --}}
+            <li class="nav-item {{ request()->is('peserta/inventory') ? ' active' : '' }}">
+                <a href="{{ route("peserta.inventory") }}" class="nav-link">
+                    <span class="sidebar-icon">
+                        <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z">
+                            </path>
+                        </svg>
+                    </span>
+                    <span class="sidebar-text">Inventory</span>
                 </a>
             </li>
         </ul>

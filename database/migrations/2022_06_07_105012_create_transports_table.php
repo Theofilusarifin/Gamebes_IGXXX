@@ -17,7 +17,6 @@ class CreateTransportsTable extends Migration
             $table->id();
             $table->string('name');
             $table->double('price');
-            $table->double('price_var');
             $table->integer('capacity');
         });
     }

@@ -15,6 +15,7 @@ class CreateTerritoriesTable extends Migration
     {
         Schema::create('territories', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('num_occupant');
             $table->integer('rowspan');
             $table->integer('colspan');
 
@@ -27,16 +28,12 @@ class CreateTerritoriesTable extends Migration
             $table->tinyInteger('is_company');
 
             $table->string('transport_store_id')->nullable()->references('id')->on('transport_stores')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('transport_store_id')->references('id')->on('transport_stores')->onUpdate('cascade')->onDelete('cascade');
 
             $table->string('ingridient_store_id')->nullable()->references('id')->on('ingridient_stores')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('ingridient_store_id')->references('id')->on('ingridient_stores')->onUpdate('cascade')->onDelete('cascade');
 
             $table->string('machine_store_id')->nullable()->references('id')->on('machine_stores')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('machine_store_id')->references('id')->on('machine_stores')->onUpdate('cascade')->onDelete('cascade');
 
             $table->string('service_id')->nullable()->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
-            // $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
 
             $table->text('url_company')->nullable();
         });

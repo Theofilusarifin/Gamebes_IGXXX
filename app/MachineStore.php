@@ -16,7 +16,7 @@ class MachineStore extends Model
 
     public function machines()
     {
-        return $this->belongsToMany(Machine::class, 'machine_store_id', 'machine_id')
+        return $this->belongsToMany(Machine::class, 'machine_machine_store' , 'machine_store_id', 'machine_id')
         ->withPivot(['stock']);
     }
 }

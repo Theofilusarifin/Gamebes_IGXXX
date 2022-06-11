@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTeamMachinesTable extends Migration
+class CreateMachineMachineStoreTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,17 +13,12 @@ class CreateTeamMachinesTable extends Migration
      */
     public function up()
     {
-        Schema::create('team_machines', function (Blueprint $table) {
-            $table->id();
-            $table->integer('performance');
-            $table->integer('season_buy');
-            $table->integer('season_sell')->nullable();
-
-            $table->foreignId('team_id');
-            $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
-
+        Schema::create('machine_machine_store', function (Blueprint $table) {
             $table->foreignId('machine_id');
             $table->foreign('machine_id')->references('id')->on('machines')->onUpdate('cascade')->onDelete('cascade');
+
+            $table->string('machine_store_id')->references('id')->on('machine_stores')->onUpdate('cascade')->onDelete('cascade');
+            $table->integer('stock');
         });
     }
 
@@ -34,6 +29,6 @@ class CreateTeamMachinesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('team_machines');
+        Schema::dropIfExists('machine_machine_store');
     }
 }

@@ -15,9 +15,10 @@ class CreateMachineCombinationsTable extends Migration
     {
         Schema::create('machine_combinations', function (Blueprint $table) {
             $table->id();
-            $table->integer('number');
             $table->integer('higenity');
             $table->integer('effectivity');
+            $table->tinyInteger('produce_head');
+            $table->tinyInteger('produce_skin');
         });
     }
 

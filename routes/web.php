@@ -28,9 +28,8 @@ Route::group(
     ['prefix' => 'peserta', 'as' => 'peserta.', 'middleware' => 'peserta'],
     function () {
         // Dashboard --> Inventory (Acara)
-        Route::get('/', 'Peserta\DashboardController@index')->name('index');
-
-
+        Route::get('/', 'Peserta\DashboardController@index')->name('index'); // -> /peserta/
         // Inventory --> Gudang (Acara)
+        Route::get('/inventory', 'Peserta\InventoryController@index')->name('inventory'); // -> /peserta/inventory
     }
 );

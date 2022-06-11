@@ -9,8 +9,8 @@ class Ingridient extends Model
     public $timestamps = false;
     public function ingridientStores()
     {
-        return $this->belongsToMany(IngridientStore::class, 'ingridient_id', 'ingridient_store_id')
-        ->withPivot(['stock']);
+        return $this->belongsToMany(IngridientStore::class, 'ingridient_ingridient_store', 'ingridient_id', 'ingridient_store_id')
+            ->withPivot(['stock']);
     }
 
     public function seasons()

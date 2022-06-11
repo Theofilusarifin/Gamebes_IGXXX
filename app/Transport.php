@@ -9,13 +9,13 @@ class Transport extends Model
     public $timestamps = false;
     public function transportstores()
     {
-        return $this->belongsToMany(TransportStore::class, 'transport_store_id', 'transport_id')
-        ->withPivot(['stock']);
+        return $this->belongsToMany(TransportStore::class, 'transport_transport_store', 'transport_store_id', 'transport_id')
+            ->withPivot(['stock']);
     }
 
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'transport_team', 'transport_id', 'team_id')
-            ->withPivot(['amount', 'use_num', 'season_buy', 'season_sell']);
+            ->withPivot(['amount', 'use_num']);
     }
 }

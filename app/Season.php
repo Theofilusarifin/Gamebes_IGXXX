@@ -15,6 +15,7 @@ class Season extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'season_id', 'product_id');
+        return $this->belongsToMany(Product::class, 'product_season', 'season_id', 'product_id')
+            ->withPivot(['price']);
     }
 }

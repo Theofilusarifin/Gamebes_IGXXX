@@ -87,9 +87,6 @@
                     <div class="col">
                         <h2 class="fs-5 fw-bold mb-0">Pembelian</h2>
                     </div>
-                    <div class="col text-end">
-                        <a href="#" class="btn btn-sm btn-primary">See all</a>
-                    </div>
                 </div>
             </div>
             <div class="table-responsive py-4">
@@ -135,9 +132,6 @@
                     <div class="col">
                         <h2 class="fs-5 fw-bold mb-0">Penjualan</h2>
                     </div>
-                    <div class="col text-end">
-                        <a href="#" class="btn btn-sm btn-primary">See all</a>
-                    </div>
                 </div>
             </div>
             <div class="table-responsive">
@@ -180,9 +174,6 @@
                     <div class="col">
                         <h2 class="fs-5 fw-bold mb-0">Perjalanan</h2>
                     </div>
-                    <div class="col text-end">
-                        <a href="#" class="btn btn-sm btn-primary">See all</a>
-                    </div>
                 </div>
             </div>
             <div class="table-responsive py-4">
@@ -222,9 +213,6 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h2 class="fs-5 fw-bold mb-0">Biaya Penjualan</h2>
-                    </div>
-                    <div class="col text-end">
-                        <a href="#" class="btn btn-sm btn-primary">See all</a>
                     </div>
                 </div>
             </div>
@@ -277,9 +265,6 @@
                 <div class="col">
                     <h2 class="fs-5 fw-bold mb-0">Inventory</h2>
                 </div>
-                <div class="col text-end">
-                    <a href="#" class="btn btn-sm btn-primary">See all</a>
-                </div>
             </div>
         </div>
         <div class="table-responsive py-4">
@@ -329,9 +314,6 @@
             <div class="row align-items-center">
                 <div class="col">
                     <h2 class="fs-5 fw-bold mb-0">Susun Mesin</h2>
-                </div>
-                <div class="col text-end">
-                    <a href="#" class="btn btn-sm btn-primary">See all</a>
                 </div>
             </div>
         </div>
