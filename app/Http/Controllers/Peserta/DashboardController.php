@@ -33,7 +33,7 @@ class DashboardController extends Controller
             }
         }
 
-        dd($teams);
+        //dd($teams);
 
         //Ini data untuk menampilkan data transport_team
         if (!empty($teams->transports->all())) {
@@ -49,8 +49,8 @@ class DashboardController extends Controller
         //dd($data_team_belis);
 
         //Ini untuk nama toko dari ingridientsnya INI BELUM
-        if (!empty($teams->ingridients->all())) {
-            $data_team_storeIngridients = $teams;
+        if (!empty($teams->ingridient_ingridient_stores->all())) {
+            $data_team_storeIngridients = $teams->ingridient_ingridient_stores->all();
         }
         //dd($data_team_storeIngridients);
 

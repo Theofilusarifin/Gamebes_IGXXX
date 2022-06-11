@@ -9,9 +9,6 @@
                     <div class="col">
                         <h2 class="fs-5 fw-bold mb-0">Produk</h2>
                     </div>
-                    <div class="col text-end">
-                        <a href="#" class="btn btn-sm btn-primary">See all</a>
-                    </div>
                 </div>
             </div>
             <div class="table-responsive py-4">
@@ -56,9 +53,6 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h2 class="fs-5 fw-bold mb-0">Ingredient</h2>
-                    </div>
-                    <div class="col text-end">
-                        <a href="#" class="btn btn-sm btn-primary">See all</a>
                     </div>
                 </div>
             </div>

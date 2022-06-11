@@ -31,5 +31,7 @@ Route::group(
         Route::get('/', 'Peserta\DashboardController@index')->name('index'); // -> /peserta/
         // Inventory --> Gudang (Acara)
         Route::get('/inventory', 'Peserta\InventoryController@index')->name('inventory'); // -> /peserta/inventory
+        // Mesin --> 
+        Route::get('/mesin', 'Peserta\MesinController@index')->name('mesin'); // -> /peserta/mesin
     }
 );
