@@ -34,8 +34,7 @@ class CreateTeamsTable extends Migration
             $table->foreignId('territory_id')->nullable();
             $table->foreign('territory_id')->references('id')->on('territories')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('service_id')->nullable();
-            $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('service_id')->nullable()->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
         });
     }
 

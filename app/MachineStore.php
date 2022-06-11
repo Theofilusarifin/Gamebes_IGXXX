@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class MachineStore extends Model
 {
     public $timestamps = false;
-    //
+    public $incrementing = false;
+    public $keyType = 'string';
     public function territory()
     {
         return $this->belongsTo(Territory::class, 'machine_store_id');

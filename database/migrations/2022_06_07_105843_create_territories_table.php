@@ -26,17 +26,17 @@ class CreateTerritoriesTable extends Migration
             $table->tinyInteger('is_harbour');
             $table->tinyInteger('is_company');
 
-            $table->foreignId('transport_store_id')->nullable();
-            $table->foreign('transport_store_id')->references('id')->on('transport_stores')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('transport_store_id')->nullable()->references('id')->on('transport_stores')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('transport_store_id')->references('id')->on('transport_stores')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('ingridient_store_id')->nullable();
-            $table->foreign('ingridient_store_id')->references('id')->on('ingridient_stores')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('ingridient_store_id')->nullable()->references('id')->on('ingridient_stores')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('ingridient_store_id')->references('id')->on('ingridient_stores')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('machine_store_id')->nullable();
-            $table->foreign('machine_store_id')->references('id')->on('machine_stores')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('machine_store_id')->nullable()->references('id')->on('machine_stores')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('machine_store_id')->references('id')->on('machine_stores')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->foreignId('service_id')->nullable();
-            $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
+            $table->string('service_id')->nullable()->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
+            // $table->foreign('service_id')->references('id')->on('services')->onUpdate('cascade')->onDelete('cascade');
 
             $table->text('url_company')->nullable();
         });

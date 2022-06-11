@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 class TransportStore extends Model
 {
     public $timestamps = false;
+    public $incrementing = false;
+    public $keyType = 'string';
     public function transports()
     {
         return $this->belongsToMany(Transport::class, 'transport_id', 'transport_store_id')
