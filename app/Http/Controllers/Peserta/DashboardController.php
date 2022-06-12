@@ -41,18 +41,42 @@ class DashboardController extends Controller
         }
 
         //dd($data_team_transports);
+        $table_store = array(
+            "Udang Vaname" => "Seafood Store",
+            "Udang Pama" => "Seafood Store",
+            "Udang Jerbung" => "Seafood Store",
+            "Tomat" => "Tomat Store",
+            "Air Mineral" => "Kelontong Store",
+            "Garam" => "Kelontong Store",
+            "Gula" => "Kelontong Store",
+            "MSG" => "Kelontong Store",
+            "NaOH" => "Chemical Store",
+            "HCl" => "Chemical Store"
+        );
 
-        //Ini data untuk menampilkan data team_ingridient 
+        //Ini data untuk menampilkan data pembelian SUDAH URUT!
         if (!empty($teams->ingridients->all())) {
             $data_team_belis = $teams->ingridients->all();
         }
         //dd($data_team_belis);
-
-        //Ini untuk nama toko dari ingridientsnya INI BELUM
-        // if (!empty(IngridientStore::where('ingridient_id', $teams->ingridients->id))) {
-        // $data_team_storeIngridients = IngridientStore::where('ingridient_id', $teams->ingridients->id);
-        // }
-        //dd($data_team_storeIngridients->id);
+        //d($table_store["Udang Vaname"]);
+        //Ini untuk nama toko dari ingridientsnya
+        if (!empty($teams->ingridients->all())) {
+            $toko_barang_teams = [[]]; 
+            $counter = -1;
+            for ($i=0; $i < count($data_team_belis) ; $i++) {
+                $nama_barang = $data_team_belis[$i]->name;
+                if(!in_array($table_store[$nama_barang],$toko_barang_teams))
+                {
+                    $counter+=1;
+                    $toko_barang_teams[$counter][] = $table_store[$nama_barang];
+                }
+                else{
+                    $toko_barang_teams[$counter][] = $table_store[$nama_barang];
+                }
+            }
+        }
+        dd($toko_barang_teams);
 
         //Ini data untuk menampilkan data TeamMachine
         if (!empty(TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get())) {
@@ -108,7 +132,8 @@ class DashboardController extends Controller
             'hargaMesins',
             'data_team_juals',
             'harga_total_susuns',
-            'data_team_storeIngridients'
+            'data_team_storeIngridients',
+            'toko_barang_teams'
         ));
     }
 }

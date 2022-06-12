@@ -79,6 +79,7 @@
     </div>
 </div>
 
+
 <div class="row my-6">
     <div class="col-4 col-sm-6 col-xl-6 mb-4">
         <div class="card border-0 shadow">
@@ -91,9 +92,10 @@
             </div>
             <div class="table-responsive py-4">
                 <table class="table table-flush" id="datatable">
+                    @foreach ($toko_barang_teams as $toko)
                     <thead class="thead-light">                        
                         <tr>
-                            <th class="border-bottom" scope="col">Seafood Store</th>
+                            <th class="border-bottom" scope="col">{{$toko}}</th>
                         </tr>
                     </thead>
                     <thead class="thead-light">
@@ -104,27 +106,19 @@
                         </tr>
                     </thead>
                     <tbody>
+                        @foreach ($data_team_belis as $ingridient)
                         <tr>
                             <th class="text-gray-900" scope="row">udang</th>
                             <td class="fw-bolder text-gray-500">60</td>
                             <td class="fw-bolder text-gray-500">120</td>
                         </tr>
-                        <tr>
-                            <th class="text-gray-900" scope="row">/demo/admin/forms.html</th>
-                            <td class="fw-bolder text-gray-500">2,987</td>
-                            <td class="fw-bolder text-gray-500">0</td>
-                        </tr>
-                        <tr>
-                            <th class="text-gray-900" scope="row">/demo/admin/util.html</th>
-                            <td class="fw-bolder text-gray-500">2,844</td>
-                            <td class="fw-bolder text-gray-500">294</td>
-                        </tr>
+                        @endforeach
+                    @endforeach
                     </tbody>
                 </table>
             </div>
         </div>
     </div>
-
     <div class="col-4 col-sm-6 col-xl-6 mb-4">
         <div class="card border-0 shadow">
             <div class="card-header">
