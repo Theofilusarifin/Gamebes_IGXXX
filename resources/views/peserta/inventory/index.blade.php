@@ -7,7 +7,7 @@
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h2 class="fs-5 fw-bold mb-0">Ingridient</h2>
+                        <h2 class="fs-5 fw-bold mb-0">Ingredient</h2>
                     </div>
                 </div>
             </div>

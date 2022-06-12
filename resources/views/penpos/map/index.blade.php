@@ -123,7 +123,7 @@
                         {{ $alias }}
                     </td>
                 @else
-                    <td class="{{ $class }}" num_occupants="{{ $territory->num_occupant }}" id="{{ $territory->id }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}" onclick="{{ $onclick }}">
+                    <td class="{{ $class }}" num_occupants="{{ $territory->num_occupant }}" id="{{ $territory->id }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}">
                         @if($territory->num_occupant > 0)
                             <div class="dot">{{ $territory->teams->first()->id }}</div>
                             @php($alias = "")
@@ -179,46 +179,56 @@
                     <h5 class="text-white"><b>Capacity : <span id="capacity">0</span></b></h5>
                 </div>
                 <div class="d-flex justify-content-center px-4 mt-2">
-                    <button type="button" class="btn btn-gray-50 me-3 mb-3 " onclick="move('kanan_atas')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 me-3 mb-3 btn-control-action" onclick="move('kanan_atas')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-up-left' style="width: 24px; height:24px;"></i>
                     </button>
-                    <button type="button" class="btn btn-gray-50 mb-3 " onclick="move('atas')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 mb-3 btn-control-action" onclick="move('atas')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-up' style="width: 24px; height:24px;"></i>
                     </button>
-                    <button type="button" class="btn btn-gray-50 ms-3 mb-3 " onclick="move('kiri_atas')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 ms-3 mb-3 btn-control-action" onclick="move('kiri_atas')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-up-right' style="width: 24px; height:24px;"></i>
                     </button>
                 </div>
                 <div class="d-flex justify-content-center px-4" >
-                    <button type="button" class="btn btn-gray-50 me-3 " onclick="move('kiri')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 me-3 btn-control-action" onclick="move('kiri')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-left' style="width: 24px; height:24px;"></i>
                     </button>
-                    <button type="button" class="btn btn-icon btn-gray-500 " onclick="action()" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-icon btn-gray-500 btn-control-action" onclick="action()" style="width: 58px; height:58px;">
                         <i data-feather='zap' style="width: 24px; height:24px;"></i>
                     </button>
-                    <button type="button" class="btn btn-gray-50 ms-3 " onclick="move('kanan')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 ms-3 btn-control-action" onclick="move('kanan')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-right' style="width: 24px; height:24px;"></i>
                     </button>
                 </div>
                 <div class="d-flex justify-content-center px-4" >
-                    <button type="button" class="btn btn-gray-50 me-3 mt-3 " onclick="move('kiri_bawah')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 me-3 mt-3 btn-control-action" onclick="move('kiri_bawah')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-down-left' style="width: 24px; height:24px;"></i>
                     </button>
-                    <button type="button" class="btn btn-gray-50 mt-3 " onclick="move('bawah')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 mt-3 btn-control-action" onclick="move('bawah')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-down' style="width: 24px; height:24px;"></i>
                     </button>
-                    <button type="button" class="btn btn-gray-50 ms-3 mt-3 " onclick="move('kanan_bawah')" style="width: 58px; height:58px;">
+                    <button type="button" class="btn btn-gray-50 ms-3 mt-3 btn-control-action" onclick="move('kanan_bawah')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-down-right' style="width: 24px; height:24px;"></i>
                     </button>
                 </div>
 
                 {{-- Reset capacity Button --}}
-                <div class="d-flex flex-row-reverse">
+                <div class="d-flex flex-row-reverse mt-4">
                     <button type="button" class="btn btn-icon btn-info" id ="reset_capacity" style="width: 48px; height:48px;" >
                         <i data-feather='rotate-cw' style="width: 18px; height:18px;"></i>
                     </button>
                 </div>
 
+                {{-- Team --}}
+                <p class="text-white" id="nama_store">-</p>
+
+                <select class="select2 form-select mb-4" id="nama_item" tabindex="-1" aria-hidden="true" disabled>
+                    <option selected disabled>-- Pilih Item --</option>
+                </select>
+
+                {{-- Tempat Beli --}}
+                <div class="row d-flex justify-content-between" id="buy_section">
+                </div>
             </div>
         </div>
     </div>
@@ -227,6 +237,8 @@
 
 
 @section('script')
+<script src="../js/app.js"></script>
+
 <script>
     function setSpawnPoint(territory_id) {
         $.ajax({
@@ -258,7 +270,11 @@
     }
 
     function move(arah) {
-        $('.btn-gray-50').attr('disabled', true);
+        $('.btn-control-action').attr('disabled', true);
+        $('#nama_item').attr('disabled', true);
+
+        // Ambil current capacity
+        var current_capacity = $("#capacity").text() * 1;
 
         $.ajax({
             type: 'POST',
@@ -266,6 +282,7 @@
             data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'arah': arah,
+                    'current_capacity': current_capacity,
                     'team_id': $('#team_id').val(),
                 },
             success: function (data) {
@@ -286,7 +303,6 @@
                         $('#alert').addClass("alert-danger");
                     }
                 }
-            $('.btn-gray-50').attr('disabled', false);
             }
         })
     }
@@ -294,8 +310,8 @@
     function action() {
         $('.btn-control-action').attr('disabled', true);
         
-        // Ambil remaining capacity
-        var remaining_capacity = $("#capacity").text() * 1;
+        // Ambil current capacity
+        var current_capacity = $("#capacity").text() * 1;
 
         $.ajax({
             type: 'POST',
@@ -303,18 +319,14 @@
             data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'team_id': $('#team_id').val(),
-                    'sisa_move': remaining_capacity,
+                    'current_capacity': current_capacity,
                 },
             success: function (data) {
                 // Jika response error, tidak usah di kurangi Actionnya
                 if(data.response == 'error') {
                     $('.btn-control-action').attr('disabled', false);
                 } else {
-                    // Kurangi remaining capacity
-                    if (remaining_capacity > 0) {
-                        remaining_capacity -= 1;
-                        $("#capacity").html(remaining_capacity);
-                    }
+                    // Kurangi current_capacity capacity
                 }
 
                 if (data.status != ""){
@@ -328,31 +340,49 @@
                     if (data.status == "success") {
                         $('#alert').removeClass("alert-danger");
                         $('#alert').addClass("alert-success");
-                    } 
-                    else if (data.status == "error") {
-                        $('#alert').removeClass("alert-success");
-                        $('#alert').addClass("alert-danger");
-                    }
-                }
-                if (data.status2 != ""){
-                    $('#alert-2').hide();
-                    $('#alert-2').show();
-                    $('#alert-body-2').html(data.msg2);
 
-                    $("#alert-2").fadeTo(5000, 500).hide(1000, function(){
-                            $("#alert-2").hide(1000);
-                        });
-                    if (data.status2 == "success") {
-                        $('#alert-2').removeClass("alert-danger");
-                        $('#alert-2').addClass("alert-success");
-                    } 
-                    else if (data.status2 == "error") {
-                        $('#alert-2').removeClass("alert-success");
-                        $('#alert-2').addClass("alert-danger");
+                        $('#nama_store').html("Toko " + data.store.name);
+
+                        $option_item = "";
+                        if (data.store_items != null){
+                            $('#nama_item').attr('disabled', false);
+                            $.each(data.store_items, (key, store_item) => {
+                                $option_item += 
+                                `<option value=" ${store_item.id} ">
+                                    ${store_item.name} - (${store_item.pivot.stock})
+                                </option>`
+                            });
+                            $('#nama_item').append($option_item);
+                            $('#buy_section').html(`
+                                <div class="col-9">
+                                    <div class="form-group">
+                                        <input class="form-control" id="number" type="number" min=0 placeholder="-- Banyak Barang --" required="">
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item" onclick="buy('${data.store.id}')">
+                                        Buy
+                                    </button>
+                                </div>`
+                                );
+                        }
                     }
                 }
             }
-        })
+        });
+    }
+    function buy(store_id) {
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.map.action') }}",
+            data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'team_id': $('#team_id').val(),
+                    'nama_item': nama_item,
+                },
+            success: function (data) {
+            }
+        });
     }
 </script>
 <script>

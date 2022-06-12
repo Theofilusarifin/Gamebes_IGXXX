@@ -12,7 +12,7 @@ class MachineCombinationSeeder extends Seeder
      */
     public function run()
     {
-        $path = "database/data/13-machine_combinations";
+        $path = "database/data/13-machine_combinations.csv";
         $model = MachineCombination::class;
         include("csv-reader.php");
     }

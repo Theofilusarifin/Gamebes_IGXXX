@@ -24,7 +24,8 @@ class DashboardController extends Controller
         $data_team_juals = "";
         $harga_total_susuns = "";
         $data_team_storeIngridients = "";
-        $profits =array(1=>0,2=>0,3=>0,4=>0,5=>0);
+        $toko_barang_teams = "";
+        $profits = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
         if (!empty($teams->investations->all())) {
             $data_teams = $teams->investations->all();
             // Ini data untuk menampilkan Investasi
@@ -61,9 +62,9 @@ class DashboardController extends Controller
 
         //Ini untuk nama toko dari ingridientsnya -->harus 2D
         if (!empty($teams->ingridients->all())) {
-            $toko_barang_teams = array(0 => array(), 1 =>array(), 2 => array(), 3 => array()); 
-            for ($i=0; $i < count($data_team_belis) ; $i++) {
-                $nama_barang = $data_team_belis[$i]->name;//Udang Vaname, Udang Pama, Tomat, MSG
+            $toko_barang_teams = array(0 => array(), 1 => array(), 2 => array(), 3 => array());
+            for ($i = 0; $i < count($data_team_belis); $i++) {
+                $nama_barang = $data_team_belis[$i]->name; //Udang Vaname, Udang Pama, Tomat, MSG
                 $nama_toko = $table_store[$nama_barang];
                 $jumlah = $data_team_belis[$i]->pivot->amount_have;
                 $total = $data_team_belis[$i]->pivot->total;
@@ -80,7 +81,7 @@ class DashboardController extends Controller
         }
         //dd($data_team_mesins);
 
-        //Untuk depresiasi mesinnya
+        //Untuk depresiasi mesinnya --> Coba di Local
         $hargaMesins = [[]];
 
         for ($i = 0; $i < count($data_team_mesins); $i++) {
