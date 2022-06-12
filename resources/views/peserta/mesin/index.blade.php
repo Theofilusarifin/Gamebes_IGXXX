@@ -1,44 +1,11 @@
 @extends('peserta.layouts.app')
 
 @section('content')
-<div class="row row-cols-5">
-  <div class="col bg-success">1</div>
-  <div class="col bg-warning">2</div>
-  <div class="col bg-success">3</div>
-  <div class="col"></div>
-  <div class="col"></div>
-  <div class="col"></div>
-  <div class="col"></div>
-  <div class="col"></div>
-</div>
-<br>
-<div class="row row-cols-5">
-  <div class="col bg-success">1</div>
-  <div class="col bg-warning">2</div>
-  <div class="col bg-success">3</div>
-  <div class="col bg-warning">4</div>
-  <div class="col bg-success">5</div>
-  <div class="col bg-warning">6</div>
-  <div class="col bg-success">7</div>
-  <div class="col bg-warning">8</div>
-  <div class="col bg-success">9</div>
-  <div class="col bg-warning">10</div>
-</div>
-<br>
-<div class="row row-cols-5">
-  <div class="col bg-success">1</div>
-  <div class="col bg-warning">2</div>
-  <div class="col bg-success">3</div>
-  <div class="col"></div>
-  <div class="col bg-success">AC</div>
-</div>
-
 <div class="bd-example">
   <div class="table-responsive">
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Mesin 1</th>
           <th scope="col">Mesin 2</th>
           <th scope="col">Mesin 3</th>
@@ -46,7 +13,6 @@
       </thead>
       <tbody>
         <tr>
-          <th scope="row">1</th>
           <td>Cell</td>
           <td>Cell</td>
           <td>Cell</td>
@@ -61,7 +27,6 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Mesin 1</th>
           <th scope="col">Mesin 2</th>
           <th scope="col">Mesin 3</th>
@@ -76,7 +41,6 @@
       </thead>
       <tbody>
         <tr>
-          <th scope="row">1</th>
           <td>Cell</td>
           <td>Cell</td>
           <td>Cell</td>
@@ -98,7 +62,6 @@
     <table class="table">
       <thead>
         <tr>
-          <th scope="col">#</th>
           <th scope="col">Mesin 1</th>
           <th scope="col">Mesin 2</th>
           <th scope="col"></th>
@@ -107,10 +70,9 @@
       </thead>
       <tbody>
         <tr>
-          <th scope="row">1</th>
           <td>Cell</td>
           <td>Cell</td>
-          <td>Cell</td>
+          <td></td>
           <td>Cell</td>
         </tr>
       </tbody>

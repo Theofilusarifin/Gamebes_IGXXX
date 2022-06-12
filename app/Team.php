@@ -49,6 +49,7 @@ class Team extends Model
     public function investations()
     {
         return $this->belongsToMany(Investation::class, 'investation_team', 'team_id', 'investation_id')
-            ->withPivot(['total_profit']);
+            ->withPivot(['total_profit'])
+            ->orderby('investation_id', 'asc');
     }
 }

@@ -10,7 +10,8 @@
     <meta name="author" content="Themesberg">
     <meta name="description" content="Industrial Games XXX">
     <meta name="keywords" content="Industrial Games XXX" />
-
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <!-- Favicon -->
     {{--
     <link rel="apple-touch-icon" sizes="120x120" href="{{ asset('') }}assets/img/favicon/apple-touch-icon.png"> --}}
@@ -140,6 +141,18 @@
 
     <!-- Volt JS -->
     <script src="{{ asset('') }}assets/js/volt.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
+    <script>
+        $(window).on('load', function() {
+            if (feather) {
+                feather.replace({
+                    width: 14,
+                    height: 14
+                });
+            }
+        })
+    </script>
 
     @yield('script')
 </body>

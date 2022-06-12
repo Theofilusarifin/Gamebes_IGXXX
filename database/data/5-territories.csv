@@ -556,7 +556,7 @@ id;num_occupant;rowspan;colspan;open_tr;close_tr;transport_store_id;ingridient_s
 555;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 556;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 557;0;1;1;0;0;null;null;null;null;0;0;0;0;null
-558;0;1;1;0;0;null;null;null;null;0;0;0;0;null
+558;0;1;1;0;0;null;null;null;JP5;0;0;0;0;null
 559;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 560;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 561;0;1;1;0;0;null;null;null;null;0;0;0;0;null
@@ -586,7 +586,7 @@ id;num_occupant;rowspan;colspan;open_tr;close_tr;transport_store_id;ingridient_s
 585;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 586;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 587;0;1;1;0;0;null;null;null;null;0;0;0;0;null
-588;0;1;1;0;0;null;null;null;JP5;0;0;0;0;null
+588;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 589;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 590;0;1;1;0;0;null;null;null;null;0;0;0;0;null
 591;0;1;1;0;0;null;null;null;null;0;0;0;0;null

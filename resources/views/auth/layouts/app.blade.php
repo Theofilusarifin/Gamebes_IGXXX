@@ -10,6 +10,9 @@
     <meta name="author" content="Themesberg">
     <meta name="description" content="Industrial Games XXX">
     <meta name="keywords" content="Industrial Games XXX" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
 
     {{--
     <!-- Favicon -->

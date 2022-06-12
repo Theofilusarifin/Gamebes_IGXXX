@@ -7,41 +7,41 @@
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h2 class="fs-5 fw-bold mb-0">Produk</h2>
+                        <h2 class="fs-5 fw-bold mb-0">Ingridient</h2>
                     </div>
                 </div>
             </div>
-            <div class="table-responsive py-4">
-                <table class="table table-flush" id="datatable">
-                    <thead class="thead-light">                        
-                        <tr>
-                            <th class="border-bottom" scope="col">Seafood Store</th>
-                        </tr>
-                    </thead>
+            <div class="table-responsive">
+                <table class="table align-items-center table-flush">
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-bottom" scope="col">Item</th>
-                            <th class="border-bottom" scope="col">Quantity</th>
-                            <th class="border-bottom" scope="col">Value (TC)</th>
+                            <th class="border-bottom" scope="col">Nama</th>
+                            <th class="border-bottom" scope="col">Jumlah Dimiliki</th>
+                            <th class="border-bottom" scope="col">Total (TC)</th>
                         </tr>
                     </thead>
+                    @empty(!$data_team_belis)
                     <tbody>
+                        @for($i = 1; $i <= 4; $i++)
                         <tr>
-                            <th class="text-gray-900" scope="row">udang</th>
-                            <td class="fw-bolder text-gray-500">60</td>
-                            <td class="fw-bolder text-gray-500">120</td>
+                            <th class="text-gray-900" scope="row">{{$table_store2[$i-1]}}</th>
                         </tr>
-                        <tr>
-                            <th class="text-gray-900" scope="row">/demo/admin/forms.html</th>
-                            <td class="fw-bolder text-gray-500">2,987</td>
-                            <td class="fw-bolder text-gray-500">0</td>
-                        </tr>
-                        <tr>
-                            <th class="text-gray-900" scope="row">/demo/admin/util.html</th>
-                            <td class="fw-bolder text-gray-500">2,844</td>
-                            <td class="fw-bolder text-gray-500">294</td>
-                        </tr>
-                    </tbody>
+                            @php
+                                $counter = 0    
+                            @endphp
+                            @for ($j = 0; $j < count($toko_barang_teams[$i-1])/3; $j++)
+                                <tr>
+                                    <th class="text-gray-900" scope="row">{{$toko_barang_teams[$i-1][$j+$counter]}}</th>
+                                    <td class="fw-bolder text-gray-500">{{$toko_barang_teams[$i-1][$j+$counter+1]}}</td>
+                                    <td class="fw-bolder text-gray-500">{{$toko_barang_teams[$i-1][$j+$counter+2]}}</td>
+                                    @php
+                                        $counter += 2    
+                                    @endphp
+                                </tr> 
+                            @endfor
+                        @endfor
+                    </tbody>  
+                    @endempty
                 </table>
             </div>
         </div>
@@ -52,7 +52,7 @@
             <div class="card-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h2 class="fs-5 fw-bold mb-0">Ingredient</h2>
+                        <h2 class="fs-5 fw-bold mb-0">Product</h2>
                     </div>
                 </div>
             </div>
@@ -60,28 +60,22 @@
                 <table class="table align-items-center table-flush">
                     <thead class="thead-light">
                         <tr>
-                            <th class="border-bottom" scope="col">Item</th>
-                            <th class="border-bottom" scope="col">Quantity</th>
-                            <th class="border-bottom" scope="col">Value (TC)</th>
+                            <th class="border-bottom" scope="col">Nama</th>
+                            <th class="border-bottom" scope="col">Jumlah Dimiliki</th>
+                            <th class="border-bottom" scope="col">Total (TC)</th>
                         </tr>
                     </thead>
+                    @empty(!$data_team_juals)
+                        @foreach ($data_team_juals as $product)
                     <tbody>
                         <tr>
-                            <th class="text-gray-900" scope="row">Udang Kaleng</th>
-                            <td class="fw-bolder text-gray-500">750</td>
-                            <td class="fw-bolder text-gray-500">$20</td>
+                            <th class="text-gray-900" scope="row">{{$product->name}}</th>
+                            <td class="fw-bolder text-gray-500">{{$product->pivot->amount_have}}</td>
+                            <td class="fw-bolder text-gray-500">{{$product->pivot->total}}</td>
                         </tr>
-                        <tr>
-                            <th class="text-gray-900" scope="row">/demo/admin/forms.html</th>
-                            <td class="fw-bolder text-gray-500">2,987</td>
-                            <td class="fw-bolder text-gray-500">0</td>
-                        </tr>
-                        <tr>
-                            <th class="text-gray-900" scope="row">/demo/admin/util.html</th>
-                            <td class="fw-bolder text-gray-500">2,844</td>
-                            <td class="fw-bolder text-gray-500">294</td>
-                        </tr>
-                    </tbody>
+                    </tbody>                        
+                        @endforeach                           
+                    @endempty
                 </table>
             </div>
         </div>

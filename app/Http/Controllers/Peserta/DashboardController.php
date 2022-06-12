@@ -24,59 +24,55 @@ class DashboardController extends Controller
         $data_team_juals = "";
         $harga_total_susuns = "";
         $data_team_storeIngridients = "";
+        $profits =array(1=>0,2=>0,3=>0,4=>0,5=>0);
         if (!empty($teams->investations->all())) {
             $data_teams = $teams->investations->all();
-            $profits = [];
             // Ini data untuk menampilkan Investasi
             foreach ($data_teams as $team_profit) {
                 $profits[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
             }
         }
-
-        //dd($teams);
+        //dd($profits);
 
         //Ini data untuk menampilkan data transport_team
-        if (!empty($teams->transports->all())) {
-            $data_team_transports = $teams->transports->all();
-        }
-
-        //dd($data_team_transports);
+        // if (!empty($teams->transports->all())) {
+        //     $data_team_transports = $teams->transports->all();
+        // }
         $table_store = array(
-            "Udang Vaname" => "Seafood Store",
-            "Udang Pama" => "Seafood Store",
-            "Udang Jerbung" => "Seafood Store",
-            "Tomat" => "Tomat Store",
-            "Air Mineral" => "Kelontong Store",
-            "Garam" => "Kelontong Store",
-            "Gula" => "Kelontong Store",
-            "MSG" => "Kelontong Store",
-            "NaOH" => "Chemical Store",
-            "HCl" => "Chemical Store"
+            "Udang Vaname" => 0,
+            "Udang Pama" => 0,
+            "Udang Jerbung" => 0,
+            "Tomat" => 1,
+            "Air Mineral" => 2,
+            "Garam" => 2,
+            "Gula" => 2,
+            "MSG" => 2,
+            "NaOH" => 3,
+            "HCl" => 3
         );
+
+        $table_store2 = array("Seafood Store", "Tomat Store", "Kelontong Store", "Chemical Store");
 
         //Ini data untuk menampilkan data pembelian SUDAH URUT!
         if (!empty($teams->ingridients->all())) {
             $data_team_belis = $teams->ingridients->all();
         }
         //dd($data_team_belis);
-        //d($table_store["Udang Vaname"]);
-        //Ini untuk nama toko dari ingridientsnya
+
+        //Ini untuk nama toko dari ingridientsnya -->harus 2D
         if (!empty($teams->ingridients->all())) {
-            $toko_barang_teams = [[]]; 
-            $counter = -1;
+            $toko_barang_teams = array(0 => array(), 1 =>array(), 2 => array(), 3 => array()); 
             for ($i=0; $i < count($data_team_belis) ; $i++) {
-                $nama_barang = $data_team_belis[$i]->name;
-                if(!in_array($table_store[$nama_barang],$toko_barang_teams))
-                {
-                    $counter+=1;
-                    $toko_barang_teams[$counter][] = $table_store[$nama_barang];
-                }
-                else{
-                    $toko_barang_teams[$counter][] = $table_store[$nama_barang];
-                }
+                $nama_barang = $data_team_belis[$i]->name;//Udang Vaname, Udang Pama, Tomat, MSG
+                $nama_toko = $table_store[$nama_barang];
+                $jumlah = $data_team_belis[$i]->pivot->amount_have;
+                $total = $data_team_belis[$i]->pivot->total;
+                $toko_barang_teams[$nama_toko][] = $nama_barang;
+                $toko_barang_teams[$nama_toko][] = $jumlah;
+                $toko_barang_teams[$nama_toko][] = $total;
             }
         }
-        dd($toko_barang_teams);
+        //dd($toko_barang_teams);
 
         //Ini data untuk menampilkan data TeamMachine
         if (!empty(TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get())) {
@@ -117,10 +113,7 @@ class DashboardController extends Controller
         if (!empty($teams->products->all())) {
             $data_team_juals = $teams->products->all();
         }
-        //dd($data_team_jual);
-
-        //Nunggu acara untuk rumusnya
-        $harga_total_susuns = $teams->machine_assembly * 5;
+        //dd($data_team_juals);
 
 
         return view('peserta.dashboard.index', compact(
@@ -131,8 +124,10 @@ class DashboardController extends Controller
             'data_team_mesins',
             'hargaMesins',
             'data_team_juals',
-            'harga_total_susuns',
             'data_team_storeIngridients',
+            'profits',
+            'table_store',
+            'table_store2',
             'toko_barang_teams'
         ));
     }

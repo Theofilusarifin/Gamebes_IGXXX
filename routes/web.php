@@ -17,6 +17,11 @@ Route::group(
 
         // Fitur Map
         Route::get('/map', 'Penpos\MapController@index')->name('map');
+        Route::post('/map/move', 'Penpos\MapController@move')->name('map.move');
+        Route::post('/map/spawn', 'Penpos\MapController@spawn')->name('map.spawn');
+        Route::post('/map/action', 'Penpos\MapController@action')->name('map.action');
+
+
 
         // Fitur Susun Mesin
         Route::get('/mesin', 'Penpos\DashboardController@index')->name('mesin');
