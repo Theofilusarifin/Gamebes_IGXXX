@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\IngridientStore;
 use App\Investation;
 use App\Machine;
+use App\SeasonNow;
 use App\Team;
 use App\TeamMachine;
 use Illuminate\Http\Request;
@@ -15,8 +16,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        //Deklarasi
         $teams = Auth::user()->team;
-
         $data_teams = "";
         $data_team_transports = "";
         $data_team_belis = "";
@@ -25,7 +26,9 @@ class DashboardController extends Controller
         $harga_total_susuns = "";
         $data_team_storeIngridients = "";
         $toko_barang_teams = "";
-        $profits = array(1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0);
+        $profits = array();
+
+        //Cek apakah investasinya ada atau tidak?
         if (!empty($teams->investations->all())) {
             $data_teams = $teams->investations->all();
             // Ini data untuk menampilkan Investasi
@@ -33,12 +36,7 @@ class DashboardController extends Controller
                 $profits[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
             }
         }
-        //dd($profits);
-
-        //Ini data untuk menampilkan data transport_team
-        // if (!empty($teams->transports->all())) {
-        //     $data_team_transports = $teams->transports->all();
-        // }
+        //Hardcode table_store buat cek
         $table_store = array(
             "Udang Vaname" => 0,
             "Udang Pama" => 0,
@@ -51,7 +49,7 @@ class DashboardController extends Controller
             "NaOH" => 3,
             "HCl" => 3
         );
-
+        //Hardcode untuk nama storenya
         $table_store2 = array("Seafood Store", "Tomat Store", "Kelontong Store", "Chemical Store");
 
         //Ini data untuk menampilkan data pembelian SUDAH URUT!
@@ -76,41 +74,69 @@ class DashboardController extends Controller
         //dd($toko_barang_teams);
 
         //Ini data untuk menampilkan data TeamMachine
-        if (!empty(TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get())) {
-            $data_team_mesins = TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get(); //data utuh lengkap semua yang dimiliki 1 team
-        }
-        //dd($data_team_mesins);
+        // if (!empty($teams->teamMachines->all())) {
+        //     $data_team_mesins = $teams->teamMachines->all();
+        //     $counter = 0;
+        //     foreach ($data_team_mesins as $spesifikMesin) {
+        //         if ($spesifikMesin->season_sell >= 1) {
+        //             //lanjut proses
+        //             $spesifikMesinData = Machine::where('id', $spesifikMesin->machine_id)->get();
+        //             $hargaJualDasar = $spesifikMesinData[0]->price_var; //harga jual dasar
+        //             $hargaBeliDasar = $spesifikMesinData[0]->price; //harga beli
+        //             $dT = ($hargaBeliDasar - $hargaJualDasar) / 3;
+        //             $hargaJualMesin = round($hargaBeliDasar - ($spesifikMesin->season_sell * $dT), 2);
+        //             $hargaMesins[$counter] = $spesifikMesinData[0]->name;
+        //             $seasonBeli = $spesifikMesin->season_buy;
+        //             if ($seasonBeli == 1) {
+        //                 $namaSeasonBeli = "Panas";
+        //             } elseif ($seasonBeli == 2) {
+        //                 $namaSeasonBeli = "Hujan";
+        //             } else {
+        //                 $namaSeasonBeli = "Salju";
+        //             }
+        //             $seasonJual = $spesifikMesin->season_sell;
+        //             if ($seasonJual == 1) {
+        //                 $namaSeasonJual = "Panas";
+        //             } elseif ($seasonJual == 2) {
+        //                 $namaSeasonJual = "Hujan";
+        //             } else {
+        //                 $namaSeasonJual = "Salju";
+        //             }
+        //             $hargaMesins[$counter + 1] = $namaSeasonBeli;
+        //             $hargaMesins[$counter + 2] = $namaSeasonJual;
+        //             $hargaMesins[$counter + 3] = $hargaJualMesin;
+        //             $counter += 4;
+        //         }
+        //     }
+        // }
 
-        //Untuk depresiasi mesinnya --> Coba di Local
-        $hargaMesins = [[]];
+        //Tampilin Penjualan Mesin
+        $hargaMesins = [];
+        $counter = 0;
+        $arraySeason = array(1 => "Musim Panas", 2 => "Musim Hujan", 3 => "Musim Salju");
+        $team_machine = $teams->teamMachines->all();
+        foreach ($team_machine as $mesinku) {
+            $season_sell = $mesinku->season_sell;
+            //CEK udah KEJUAL APA BLM
+            if ($season_sell >= 1) {
+                $season_buy = $mesinku->season_buy;
+                $price_var = $mesinku->machine->price_var;
+                $buy_price = $mesinku->machine->price;
+                $spesifikMesinData = Machine::where('id', $mesinku->machine_id)->get();
 
-        for ($i = 0; $i < count($data_team_mesins); $i++) {
-            //CEK MESINNYA UDAH DIJUAL ATAU BELUM
-            for ($j = 0; $j <= 16; $j++) {
-                if ($data_team_mesins->machine_id == $j && $data_team_mesins->season_sell >= 0) {
-                    //lanjut proses
-                    $waktuJual = $data_team_mesins->season_sell + 1;
-                    $kumpulanHargaJualDasar = Machine::where('id', $data_team_mesins[$i]->machine_id)->get(['price_var']); //Ini harga jual dasar
-                    $kumpulanHargaBeli = Machine::where('id', $data_team_mesins[$i]->machine_id)->get(['price']);
-                    //Ada kemungkinan satu team punya 2 mesin yang sama jadi dilooping
-                    for ($k = 0; $k < count($kumpulanHargaJualDasar); $k++) {
-                        //Dimasukin ke array 2D
-                        //Jadi i itu adalah banyaknya mesin yang dimiliki oleh team tertentu
-                        //Sedangkan j itu banyaknya mesin spesifik yang dimiliki oleh team tertentu
-                        $hargaJualDasar = $kumpulanHargaJualDasar[$k];
-                        $hargaBeli = $kumpulanHargaBeli[$k];
-                        $dT = ($hargaBeli - $hargaJualDasar) / 3;
-                        $hargaMesins[$j][$k] = $hargaBeli - ($waktuJual * $dT);
-                        //tinggal tunggu acara untuk rumusnya
-                    }
-                } else {
-                    $hargaMesins[$j][] = 0;
-                }
+                // Perhitungan Harga jual
+                $dT = ($buy_price - $price_var) / 3;
+                $sell_price = round($buy_price - ($season_sell * $dT), 2);
+
+                // Masukin Array buat tampilin
+                $hargaMesins[$counter] = $spesifikMesinData[0]->name;
+                $hargaMesins[$counter + 1] = $arraySeason[$season_buy];
+                $hargaMesins[$counter + 2] = $arraySeason[$season_sell];
+                $hargaMesins[$counter + 3] = $sell_price;
+                $counter += 4;
             }
         }
-        //dd($data_team_mesins);
 
-        //Ini data untuk menampilkan data product_team
         if (!empty($teams->products->all())) {
             $data_team_juals = $teams->products->all();
         }

@@ -11,8 +11,9 @@ Auth::routes();
 
 // ROUTE PENPOS
 Route::group(
-    ['prefix' => 'penpos', 'as' =>'penpos.', 'middleware' => 'penpos'],
+    ['prefix' => 'penpos', 'as' => 'penpos.', 'middleware' => 'penpos'],
     function () {
+        // Dashboard
         Route::get('/', 'Penpos\DashboardController@index')->name('index');
 
         // Fitur Map
@@ -22,10 +23,10 @@ Route::group(
         Route::post('/map/action', 'Penpos\MapController@action')->name('map.action');
         Route::post('/map/action/buy-items', 'Penpos\MapController@buy')->name('map.buy');
 
-        
-        
-        // Fitur Susun Mesin
-        Route::get('/mesin', 'Penpos\DashboardController@index')->name('mesin');
+        // Marketing
+        Route::get('/marketing', 'Penpos\MarketingController@index')->name('marketing');
+        // Investasi
+        Route::get('/investasi', 'Penpos\InvestasiController@index')->name('investasi');
     }
 );
 
@@ -37,9 +38,17 @@ Route::group(
     function () {
         // Dashboard --> Inventory (Acara)
         Route::get('/', 'Peserta\DashboardController@index')->name('index'); // -> /peserta/
+        // List Harga -->
+        Route::get('/harga', 'Peserta\ListHargaController@index')->name('harga'); // -> /peserta/harga
         // Inventory --> Gudang (Acara)
         Route::get('/inventory', 'Peserta\InventoryController@index')->name('inventory'); // -> /peserta/inventory
         // Mesin --> 
         Route::get('/mesin', 'Peserta\MesinController@index')->name('mesin'); // -> /peserta/mesin
+        Route::post('/mesin/mesin-available', 'Peserta\MesinController@getAvailableMachine')->name('mesin.get');
+        Route::post('/mesin/set-mesin', 'Peserta\MesinController@setMachine')->name('mesin.set');
+        Route::post('/mesin/save-mesin', 'Peserta\MesinController@saveMachine')->name('mesin.save');
+        Route::post('/mesin/jual-mesin', 'Peserta\MesinController@sellMachine')->name('mesin.jual');
+        // produksi -->
+        Route::get('/produksi', 'Peserta\ProduksiController@index')->name('produksi'); // -> /peserta/produksi
     }
 );

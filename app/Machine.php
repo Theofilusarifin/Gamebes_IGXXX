@@ -13,7 +13,7 @@ class Machine extends Model
         return $this->hasMany(TeamMachine::class, 'machine_id');
     }
 
-    public function machineStore()
+    public function machineStores()
     {
         return $this->belongsToMany(MachineStore::class, 'machine_machine_store' ,'machine_id', 'machine_store_id')
         ->withPivot(['stock']);
@@ -21,7 +21,7 @@ class Machine extends Model
 
     public function machineCombinations()
     {
-        return $this->belongsToMany(MachineCombinations::class, 'machine_machine_combination' ,'machine_id', 'machine_combination_id')
+        return $this->belongsToMany(MachineCombination::class, 'machine_machine_combination' ,'machine_id', 'machine_combination_id')
             ->withPivot(['order']);
     }
 }

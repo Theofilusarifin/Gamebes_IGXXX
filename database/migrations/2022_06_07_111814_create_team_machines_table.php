@@ -15,6 +15,7 @@ class CreateTeamMachinesTable extends Migration
     {
         Schema::create('team_machines', function (Blueprint $table) {
             $table->id();
+            $table->tinyInteger('selected');
             $table->integer('performance');
             $table->integer('season_buy');
             $table->integer('season_sell')->nullable();

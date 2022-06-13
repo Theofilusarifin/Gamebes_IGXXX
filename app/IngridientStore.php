@@ -11,7 +11,7 @@ class IngridientStore extends Model
     public $keyType = 'string';
     public function ingridients()
     {
-        return $this->belongsToMany(Ingridient::class, 'ingridient_ingridient_store','ingridient_store_id', 'ingridient_id')
+        return $this->belongsToMany(Ingridient::class, 'ingridient_ingridient_store', 'ingridient_store_id', 'ingridient_id')
         ->withPivot(['stock']);
     }
 

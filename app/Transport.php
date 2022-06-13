@@ -7,9 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 class Transport extends Model
 {
     public $timestamps = false;
-    public function transportstores()
+    public function transportStores()
     {
-        return $this->belongsToMany(TransportStore::class, 'transport_transport_store', 'transport_store_id', 'transport_id')
+        return $this->belongsToMany(TransportStore::class, 'transport_transport_store', 'transport_id', 'transport_store_id')
             ->withPivot(['stock']);
     }
 

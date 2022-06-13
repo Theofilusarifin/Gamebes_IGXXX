@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Peserta;
 use App\Http\Controllers\Controller;
 use App\Machine;
 use App\MachineCombination;
+use App\SeasonNow;
 use App\TeamMachine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -15,48 +16,192 @@ class MesinController extends Controller
     {
         //Declare
         $teams = Auth::user()->team;
-        $data_team_mesins = "";
-        $hargaMesins = "";
 
-        //Untuk depresiasi mesinnya
-        $hargaMesins = [[]];
+        // Ambil team machine untuk diubah selectednya
+        $team_machine = TeamMachine::where('team_id', $teams->id)->get();
 
-        if (!empty(TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get())) {
-            $data_team_mesins = TeamMachine::where('team_id', $teams->id)->orderBy('machine_id', 'ASC')->get(); //data utuh lengkap semua yang dimiliki 1 team
+        // reset selected
+        foreach ($team_machine as $mesin) {
+            $mesin->selected = 0;
+            $mesin->save();
         }
 
-        //dd($data_team_mesins);
-
-        for ($i = 0; $i < count($data_team_mesins); $i++) {
-            //CEK MESINNYA UDAH DIJUAL ATAU BELUM
-            for ($j = 0; $j <= 16; $j++) {
-                if ($data_team_mesins->machine_id == $j && $data_team_mesins->season_sell >= 0) {
-                    //lanjut proses
-                    $waktuJual = $data_team_mesins->season_sell + 1;
-                    $kumpulanHargaJualDasar = Machine::where('id', $data_team_mesins[$i]->machine_id)->get(['price_var']); //Ini harga jual dasar
-                    $kumpulanHargaBeli = Machine::where('id', $data_team_mesins[$i]->machine_id)->get(['price']);
-                    //Ada kemungkinan satu team punya 2 mesin yang sama jadi dilooping
-                    for ($k = 0; $k < count($kumpulanHargaJualDasar); $k++) {
-                        //Dimasukin ke array 2D
-                        //Jadi i itu adalah banyaknya mesin yang dimiliki oleh team tertentu
-                        //Sedangkan j itu banyaknya mesin spesifik yang dimiliki oleh team tertentu
-                        $hargaJualDasar = $kumpulanHargaJualDasar[$k];
-                        $hargaBeli = $kumpulanHargaBeli[$k];
-                        $dT = ($hargaBeli - $hargaJualDasar) / 3;
-                        $hargaMesins[$j][$k] = $hargaBeli - ($waktuJual * $dT);
-                        //tinggal tunggu acara untuk rumusnya
-                    }
-                } else {
-                    $hargaMesins[$j][] = 0;
-                }
-            }
-        }
+        // Ambil team mesin
+        $display_team_mesins = TeamMachine::where('team_id', $teams->id)->where('season_sell', null)->get();
 
         return view('peserta.mesin.index', compact(
             'teams',
-            'data_team_mesins',
-            'hargaMesins',
+            'display_team_mesins'
         ));
+    }
+
+    public function getAvailableMachine()
+    {
+        // Ambil Team
+        $team = Auth::user()->team;
+        // Ambil team machine yang not selected dan belum dijual 
+        $avaiable_machines = TeamMachine::where('team_id', $team->id)->where('selected', 0)->where('season_sell', null)->get();
+
+        // Masukkan detail machine kedalam array available machine
+        $index = 0;
+        foreach ($avaiable_machines as $avaiable_machine) {
+            $machine = Machine::where('id', $avaiable_machine->machine_id)->first();
+            $avaiable_machines[$index]->machine = $machine;
+            $index++;
+        }
+
+        $status = 'success';
+
+        return response()->json(array(
+            'avaiable_machines' => $avaiable_machines,
+            'status' => $status,
+        ), 200);
+    }
+
+    public function setMachine(Request $request)
+    {
+        // Ambil Team
+        $team = Auth::user()->team;
+
+        // Ambil team machine untuk diubah selectednya
+        $team_machine = TeamMachine::find($request['team_machine_id']);
+        //Ubah selected
+        $team_machine->selected = 1;
+        $team_machine->save();
+
+        // Ambil team machine yang not selected dan belum dijual 
+        $avaiable_machines = TeamMachine::where('team_id', $team->id)->where('selected', 0)->where('season_sell', null)->get();
+        // Masukkan detail machine kedalam array available machine
+        $index = 0;
+        foreach ($avaiable_machines as $avaiable_machine) {
+            $machine = Machine::where('id', $avaiable_machine->machine_id)->first();
+            $avaiable_machines[$index]->machine = $machine;
+            $index++;
+        }
+        $status = 'success';
+
+        return response()->json(array(
+            'avaiable_machines' => $avaiable_machines,
+            'status' => $status,
+        ), 200);
+    }
+
+    public function saveMachine(Request $request)
+    {
+        //Declare
+        $teams = Auth::user()->team;
+        // Ambil team machine untuk diubah selectednya
+        $team_machine = TeamMachine::where('team_id', $teams->id)->get();
+
+        // reset selected
+        foreach ($team_machine as $mesin) {
+            $mesin->selected = 0;
+            $mesin->save();
+        }
+
+        // uang cukup atau tidak?
+        if ($teams->tc >= 5) {
+            // kurang 5 
+            $teams->tc = $teams->tc - 5;
+            $teams->total_spend = $teams->total_spend + 5;
+        } else { //Tidak cukup uang
+            // kurang sesuai tc 
+            $teams->tc = 0;
+            $teams->total_spend = $teams->total_spend + $teams->tc;
+        }
+        // total mesin assembly + 1
+        $teams->machine_assembly = $teams->machine_assembly + 1;
+        $teams->save();
+
+        // Bug : Tambah Terus
+        $status = '';
+        $msg = '';
+
+        // Ambil susunan mesin dari AJAX
+        $susunan_mesin = $request['susunan_mesin'];
+        // Define Variablex
+        $team = Auth::user()->team;
+
+        // Define banyak mesin berapa
+        $banyak_machine = count($susunan_mesin);
+
+        // Masukan order dari tiap mesin
+        $orders = [];
+        foreach ($susunan_mesin as $idx => $machine_id) {
+            $orders[$idx + 1] = Machine::find($machine_id);
+        }
+
+        // Dapatkan semua kombinasi dari mesin yang berada pada order yang disusun
+        $combinations = [];
+        for ($i = 1; $i <= $banyak_machine; $i++) {
+            $all_combinations = $orders[$i]->machineCombinations()->wherePivot('order', $i)->get();
+            $combination_id = [];
+            foreach ($all_combinations as $combination) {
+                $combination_id[] = $combination->id;
+            }
+            $combinations[] = $combination_id;
+        }
+        // Lakukan intersect untuk mengetahui apakah ada kombinasi yang cocok
+        $combination_found = array_intersect(...$combinations);
+
+        // Apabila terdapat persis satu kombinasi yang cocok maka foundnya true
+        $found = (count($combination_found) >= 1) ? true : false;
+        // Kombinasi ada
+        if ($found) {
+            // Ambil Kombinasi
+            if (count($combination_found) > 1) {
+                $combination = MachineCombination::find($combination_found[0]);
+                $team->machineCombinations()->attach($combination->id);
+            } else {
+                $combination = MachineCombination::find($combination_found);
+                $team->machineCombinations()->attach($combination[0]->id);
+            }
+            // Update tambahkan machine combination
+            $team->save();
+
+            $status = 'success';
+            $msg = 'Kombinasi yang dimasukkan sudah benar';
+        } else {
+            $status = 'error';
+            $msg = 'Kombinasi yang dimasukkan belum tepat!';
+        }
+
+        return response()->json(array(
+            'status' => $status,
+            'msg' => $msg,
+        ), 200);
+    }
+
+    public function sellMachine(Request $request)
+    {
+        $status = '';
+        $msg = '';
+
+        // Define Variable
+        $team = Auth::user()->team;
+        $team_machine = TeamMachine::find($request['team_machine_id']);
+        $season_sell = SeasonNow::first()->number;
+        $season_buy = $team_machine->season_buy;
+        $price_var = $team_machine->machine->price_var;
+        $buy_price = $team_machine->machine->price;
+
+        // Perhitungan Harga jual
+        $dT = ($buy_price - $price_var) / 3;
+        $sell_price = round($buy_price - ($season_sell * $dT), 2);
+        //Tambah uang
+        $team->tc = $team->tc + $sell_price;
+        $team->total_income = $team->total_income + $sell_price;
+        $team->save();
+
+        //update season sell team machine (jual)
+        $team_machine->season_sell = $season_sell;
+        $team_machine->save();
+        $status = "success";
+
+        return response()->json(array(
+            'status' => $status,
+            'msg' => $msg,
+        ), 200);
     }
 
     public function SusunMesin(Request $request)

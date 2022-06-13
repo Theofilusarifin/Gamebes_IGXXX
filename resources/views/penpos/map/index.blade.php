@@ -371,14 +371,16 @@
                                 );
                         }
                     }
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                        $('.btn-control-action').attr('disabled', false);
+                    }
                 }
             }
         });
     }
     function buy(store_id) {
-        alert($('#nama_item').val());
-        alert(store_id);
-
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.map.buy') }}",

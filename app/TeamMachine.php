@@ -9,7 +9,8 @@ class TeamMachine extends Model
     public $timestamps = false;
     public function team()
     {
-        return $this->belongsTo(Team::class, 'team_id');
+        return $this->belongsTo(Team::class, 'team_id')
+            ->orderby('machine_id', 'asc');
     }
 
     public function machine()

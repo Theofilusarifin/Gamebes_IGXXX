@@ -131,6 +131,20 @@
     <!-- Volt JS -->
     <script src="{{ asset('') }}assets/js/volt.js"></script>
 
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
+
+    <script>
+        $(window).on('load', function() {
+                if (feather) {
+                    feather.replace({
+                        width: 14,
+                        height: 14
+                    });
+                }
+            })
+    </script>
+
     @yield('script')
 </body>
 

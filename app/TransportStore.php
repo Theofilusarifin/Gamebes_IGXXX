@@ -11,7 +11,7 @@ class TransportStore extends Model
     public $keyType = 'string';
     public function transports()
     {
-        return $this->belongsToMany(Transport::class, 'transport_transport_store',  'transport_id', 'transport_store_id')
+        return $this->belongsToMany(Transport::class, 'transport_transport_store',  'transport_store_id', 'transport_id')
             ->withPivot(['stock']);
     }
 

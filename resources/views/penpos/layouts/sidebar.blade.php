@@ -44,8 +44,17 @@
                 </a>
             </li>
 
-            <li class="nav-item ">
-                <a href="{{ route('penpos.mesin') }}" class="nav-link">
+            <li class="nav-item {{ request()->is('penpos/marketing') ? ' active' : '' }} {{ request()->is('penpos/marketing/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.marketing') }}" class="nav-link">
+                    <i data-feather='heart' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Marketing</span>
+                </a>
+            </li>
+
+            <li class="nav-item {{ request()->is('penpos/investasi') ? ' active' : '' }} {{ request()->is('penpos/investasi/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.investasi') }}" class="nav-link">
                     <span class="sidebar-icon">
                         <svg class="icon icon-xs me-2" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                             <path fill-rule="evenodd"
@@ -53,7 +62,7 @@
                                 clip-rule="evenodd"></path>
                         </svg>
                     </span>
-                    <span class="sidebar-text">Susun Mesin</span>
+                    <span class="sidebar-text">Investasi</span>
                 </a>
             </li>
 

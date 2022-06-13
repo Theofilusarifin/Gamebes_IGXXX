@@ -31,7 +31,8 @@ class Team extends Model
 
     public function teamMachines()
     {
-        return $this->hasMany(TeamMachine::class, 'team_id');
+        return $this->hasMany(TeamMachine::class, 'team_id')
+            ->orderby('machine_id', 'asc');
     }
 
     public function ingridients()
@@ -51,5 +52,10 @@ class Team extends Model
         return $this->belongsToMany(Investation::class, 'investation_team', 'team_id', 'investation_id')
             ->withPivot(['total_profit'])
             ->orderby('investation_id', 'asc');
+    }
+
+    public function machineCombinations()
+    {
+        return $this->belongsToMany(machineCombination::class, 'team_machine_combination', 'team_id', 'machine_combination_id');
     }
 }
