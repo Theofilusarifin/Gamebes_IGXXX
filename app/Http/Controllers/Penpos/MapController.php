@@ -32,7 +32,8 @@ class MapController extends Controller
         ), 200);
     }
 
-    public function spawn(Request $request){
+    public function spawn(Request $request)
+    {
         // Ambil variabel awal yang dibutuhkan
         $team = Team::find($request['team_id']);
         $territory = Territory::find($request['territory_id']);
@@ -56,17 +57,16 @@ class MapController extends Controller
                         // Kalau panas hujan harganya 30
                         $cost = 30;
                         // Kalau salju berkurang 60
-                        if ($season_now->number = 3){
+                        if ($season_now->number = 3) {
                             $cost = 60;
                         }
 
-                        if ($team->tc - $cost >= 0){
+                        if ($team->tc - $cost >= 0) {
                             // Kurangi tc sesuai harga spawn
                             $team->tc = $team->tc - $cost;
                             // Tambah spend sesuai harga spawn
                             $team->tc = $team->total_spend + $cost;
-                        }
-                        else{
+                        } else {
                             $team->tc = 0;
                         }
 
@@ -110,7 +110,7 @@ class MapController extends Controller
             $msg = 'Harap select team terlebih dahulu!';
         }
 
-        if($response != 'error') event(new UpdateMap("updateMap"));
+        if ($response != 'error') event(new UpdateMap("updateMap"));
         return response()->json(array(
             'response' => $response,
             'status' => $status,
@@ -118,7 +118,8 @@ class MapController extends Controller
         ), 200);
     }
 
-    public function move(Request $request){
+    public function move(Request $request)
+    {
         // Ambil variabel awal yang dibutuhkan
         $team = Team::find($request['team_id']);
         $arah = $request['arah'];
@@ -228,7 +229,8 @@ class MapController extends Controller
         ), 200);
     }
 
-    public function action(Request $request){
+    public function action(Request $request)
+    {
         // Ambil variabel awal yang dibutuhkan
         $team = Team::find($request['team_id']);
         $territory = Territory::find($team->territory_id);
@@ -243,23 +245,20 @@ class MapController extends Controller
         // Check Terrirory
         if ($territory->transport_store_id != null) {
             $store = TransportStore::find($territory->transport_store_id);
-            $store_items = $store-> transports->all();
+            $store_items = $store->transports->all();
             $status = 'success';
             $response = 'success';
-        }
-        else if ($territory->ingridient_store_id != null){
+        } else if ($territory->ingridient_store_id != null) {
             $store = IngridientStore::find($territory->ingridient_store_id);
             $store_items = $store->ingridients->all();
             $status = 'success';
             $response = 'success';
-        }
-        else if ($territory->machine_store_id != null){
+        } else if ($territory->machine_store_id != null) {
             $store = MachineStore::find($territory->machine_store_id);
             $store_items = $store->machines->all();
             $status = 'success';
             $response = 'success';
-        }
-        else if ($territory->service_id != null) {
+        } else if ($territory->service_id != null) {
             $store = Service::find($territory->service_id);
             $status = 'success';
             $response = 'success';
@@ -276,7 +275,8 @@ class MapController extends Controller
         ), 200);
     }
 
-    public function buy(Request $request){
+    public function buy(Request $request)
+    {
         // Ambil variabel awal yang dibutuhkan
         $team = Team::find($request['team_id']);
         $territory = Territory::find($team->territory_id);
@@ -288,7 +288,7 @@ class MapController extends Controller
 
         // Check Terrirory
         if ($territory->transport_store_id != null) {
-            if ($request['store_id'] == $territory->transport_store_id){
+            if ($request['store_id'] == $territory->transport_store_id) {
                 $store = TransportStore::find($territory->transport_store_id);
                 $data_stores = $store->transports->first();
                 $stock = $data_stores->pivot->stock;
@@ -317,12 +317,13 @@ class MapController extends Controller
             $response = 'success';
         }
 
-        return response()->json(array(
-            'response' => $response,
-            'status' => $status,
-            'msg' => $msg,
-            'store' => $store,
-        ),
+        return response()->json(
+            array(
+                'response' => $response,
+                'status' => $status,
+                'msg' => $msg,
+                'store' => $store,
+            ),
             200
         );
     }
