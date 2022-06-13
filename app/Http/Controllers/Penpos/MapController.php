@@ -14,6 +14,7 @@ use App\Transport;
 use App\TransportStore;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class MapController extends Controller
 {
@@ -157,8 +158,12 @@ class MapController extends Controller
                     $old_territory = Territory::find($t_id);
 
                     // Menentukan Posisi
-                    if ($arah == 'atas') $t_id -= $lebar_map;
-                    else if ($arah == 'kanan_atas') $t_id -= ($lebar_map + 1);
+                    if ($arah == 'atas') {
+                        $t_id -= $lebar_map;
+                    }
+                    else if {
+                        ($arah == 'kanan_atas') $t_id -= ($lebar_map + 1);
+                    }
                     else if ($arah == 'kiri_atas')  $t_id -= ($lebar_map - 1);
                     else if ($arah == 'kanan') $t_id += 1;
                     else if ($arah == 'kiri') $t_id -= 1;
@@ -280,41 +285,83 @@ class MapController extends Controller
         // Ambil variabel awal yang dibutuhkan
         $team = Team::find($request['team_id']);
         $territory = Territory::find($team->territory_id);
+        $item_id = $request['item_id'];
         $banyak_item = $request['banyak_item'];
+        $biaya = 0;
+
         // Status dan message yang diberikan
         $msg = '';
         $status = 'error';
         $response = 'error';
 
         // Check Terrirory
-        if ($territory->transport_store_id != null) {
-            if ($request['store_id'] == $territory->transport_store_id) {
-                $store = TransportStore::find($territory->transport_store_id);
-                $data_stores = $store->transports->first();
-                $stock = $data_stores->pivot->stock;
-            }
-            $status = 'success';
-            $response = 'success';
-        } else if ($territory->ingridient_store_id != null) {
-            if ($request['store_id'] == $territory->ingridient_store_id) {
-                $store = IngridientStore::find($territory->ingridient_store_id);
-                $data_stores = $store->ingridients->first();
-                $stock = $data_stores->pivot->stock;
-            }
-            $status = 'success';
-            $response = 'success';
-        } else if ($territory->machine_store_id != null) {
-            if ($request['store_id'] == $territory->machine_store_id) {
-                $store = MachineStore::find($territory->machine_store_id);
-                $data_stores = $store->machines->first();
-                $stock = $data_stores->pivot->stock;
-            }
-            $status = 'success';
-            $response = 'success';
-        } else if ($territory->service_id != null) {
+        if ($territory->service_id != null) {
             $store = Service::find($territory->service_id);
+            $biaya = $store->price;
             $status = 'success';
             $response = 'success';
+        }
+        else{
+            if ($territory->transport_store_id != null) {
+                if ($request['store_id'] == $territory->transport_store_id) {
+                    $store = TransportStore::find($territory->transport_store_id);
+                    $item = $store->transports->where('id', $item_id)->first();
+                    $biaya = $item->price;
+                    // Ambil banyaknya yang dimiliki sekarang
+                    $amount_have = $team->transports->where('transport_id', $item_id)->first()->pivot->amount_have;
+                }
+                $status = 'success';
+                $response = 'success';
+            } else if ($territory->ingridient_store_id != null) {
+                if ($request['store_id'] == $territory->ingridient_store_id) {
+                    $store = IngridientStore::find($territory->ingridient_store_id);
+                    $item = $store-> ingridients->where('id', $item_id)->first();
+                    $biaya = $item->seasons->first()->price;
+                    // Ambil banyaknya yang dimiliki sekarang
+                    $amount_have = $team->ingridients->where('ingridient_id', $item_id)->first()->pivot->amount_have;
+                }
+                $status = 'success';
+                $response = 'success';
+            } else if ($territory->machine_store_id != null) {
+                if ($request['store_id'] == $territory->machine_store_id) {
+                    $store = MachineStore::find($territory->machine_store_id);
+                    $item = $store-> machines->where('id', $item_id)->first();
+                    $biaya = $item->price;
+                    // Ambil banyaknya yang dimiliki sekarang
+                    $amount_have = $team->machines->where('machine_id', $item_id)->first()->pivot->amount_have;
+                }
+                $status = 'success';
+                $response = 'success';
+            }
+
+            // Ambil stock dari store
+            $stock = $item->pivot->stock;
+            if ($stock >= $banyak_item){
+                $biaya_total = $biaya * $banyak_item;
+                // Kalau uangnya cukup
+                if ($team->tc >= $biaya_total){
+                    // Kurang TC dari team untuk pembayaran
+                    $team->tc = $team->tc - $biaya_total;
+                    // Tambahkan team total spend 
+                    $team->total_spend = $team->total_spend + $biaya_total;
+
+                    $item->pivot->stock = $item->pivot->stock - $banyak_item;
+                    $item->save();
+
+                    // Update tambahkan banyak yang sekarang dengan yang dibeli
+                    $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item ]], false);
+                    $team->save();
+                    
+                    $status = 'success';
+                    $response = 'success';
+                    $msg = 'Pembelian berhasil';
+                }
+                else{
+                    $status = 'error';
+                    $response = 'error';
+                    $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
+                }
+            }
         }
 
         return response()->json(

@@ -20,7 +20,7 @@ class CreateTransportTeamTable extends Migration
             $table->foreignId('transport_id');
             $table->foreign('transport_id')->references('id')->on('transports')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->integer('amount');
+            $table->integer('amount_have');
             $table->integer('use_num')->nullable();
         });
     }
