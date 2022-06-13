@@ -142,6 +142,15 @@ class MapController extends Controller
                 } else {
                     // Posisi lama pemain
                     $t_id = $team->territory_id;
+                    if ($t_id < 260) $lebar_map = 51;
+                    else if ($t_id < 362) $lebar_map = 50;
+                    else if ($t_id < 463) $lebar_map = 51;
+                    else if ($t_id < 564) $lebar_map = 50;
+                    else if ($t_id < 665) $lebar_map = 51;
+                    else if ($t_id < 766) $lebar_map = 50;
+                    else if ($t_id < 867) $lebar_map = 51;
+                    else if ($t_id < 968) $lebar_map = 50;
+                    else if ($t_id < 1069) $lebar_map = 51;
 
                     // Territory Lama
                     $old_territory = Territory::find($t_id);
@@ -265,5 +274,56 @@ class MapController extends Controller
             'store' => $store,
             'store_items' => $store_items,
         ), 200);
+    }
+
+    public function buy(Request $request){
+        // Ambil variabel awal yang dibutuhkan
+        $team = Team::find($request['team_id']);
+        $territory = Territory::find($team->territory_id);
+        $banyak_item = $request['banyak_item'];
+        // Status dan message yang diberikan
+        $msg = '';
+        $status = 'error';
+        $response = 'error';
+
+        // Check Terrirory
+        if ($territory->transport_store_id != null) {
+            if ($request['store_id'] == $territory->transport_store_id){
+                $store = TransportStore::find($territory->transport_store_id);
+                $data_stores = $store->transports->first();
+                $stock = $data_stores->pivot->stock;
+            }
+            $status = 'success';
+            $response = 'success';
+        } else if ($territory->ingridient_store_id != null) {
+            if ($request['store_id'] == $territory->ingridient_store_id) {
+                $store = IngridientStore::find($territory->ingridient_store_id);
+                $data_stores = $store->ingridients->first();
+                $stock = $data_stores->pivot->stock;
+            }
+            $status = 'success';
+            $response = 'success';
+        } else if ($territory->machine_store_id != null) {
+            if ($request['store_id'] == $territory->machine_store_id) {
+                $store = MachineStore::find($territory->machine_store_id);
+                $data_stores = $store->machines->first();
+                $stock = $data_stores->pivot->stock;
+            }
+            $status = 'success';
+            $response = 'success';
+        } else if ($territory->service_id != null) {
+            $store = Service::find($territory->service_id);
+            $status = 'success';
+            $response = 'success';
+        }
+
+        return response()->json(array(
+            'response' => $response,
+            'status' => $status,
+            'msg' => $msg,
+            'store' => $store,
+        ),
+            200
+        );
     }
 }

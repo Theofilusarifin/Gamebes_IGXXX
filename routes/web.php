@@ -20,6 +20,8 @@ Route::group(
         Route::post('/map/move', 'Penpos\MapController@move')->name('map.move');
         Route::post('/map/spawn', 'Penpos\MapController@spawn')->name('map.spawn');
         Route::post('/map/action', 'Penpos\MapController@action')->name('map.action');
+        Route::post('/map/action/buy-items', 'Penpos\MapController@buy')->name('map.buy');
+
         
         
         // Fitur Susun Mesin

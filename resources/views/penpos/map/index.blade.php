@@ -220,7 +220,7 @@
                 </div>
 
                 {{-- Team --}}
-                <p class="text-white" id="nama_store">-</p>
+                <p class="text-white" id="nama_store">Nama Store</p>
 
                 <select class="select2 form-select mb-4" id="nama_item" tabindex="-1" aria-hidden="true" disabled>
                     <option selected disabled>-- Pilih Item --</option>
@@ -272,6 +272,9 @@
     function move(arah) {
         $('.btn-control-action').attr('disabled', true);
         $('#nama_item').attr('disabled', true);
+        $('#nama_item').html(`<option selected disabled>-- Pilih Item --</option>`);
+        $('#nama_store').html("Nama Toko");
+        $('#buy_section').html('');
 
         // Ambil current capacity
         var current_capacity = $("#capacity").text() * 1;
@@ -301,6 +304,7 @@
                     else if (data.status == "error") {
                         $('#alert').removeClass("alert-success");
                         $('#alert').addClass("alert-danger");
+                        $('.btn-control-action').attr('disabled', false);
                     }
                 }
             }
@@ -356,7 +360,7 @@
                             $('#buy_section').html(`
                                 <div class="col-9">
                                     <div class="form-group">
-                                        <input class="form-control" id="number" type="number" min=0 placeholder="-- Banyak Barang --" required="">
+                                        <input class="form-control" id="number" type="number" min=0 placeholder="-- Banyak Barang --" id='banyak_item' required="">
                                     </div>
                                 </div>
                                 <div class="col-3">
@@ -372,15 +376,21 @@
         });
     }
     function buy(store_id) {
+        alert($('#nama_item').val());
+        alert(store_id);
+
         $.ajax({
             type: 'POST',
-            url: "{{ route('penpos.map.action') }}",
+            url: "{{ route('penpos.map.buy') }}",
             data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'team_id': $('#team_id').val(),
-                    'nama_item': nama_item,
+                    'item_id': $('#nama_item').val(),
+                    'store_id': store_id,
+                    'banyak_item': $('#banyaK_item').val(),
                 },
             success: function (data) {
+
             }
         });
     }
