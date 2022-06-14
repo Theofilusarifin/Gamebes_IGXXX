@@ -25,6 +25,8 @@ Route::group(
 
         // Marketing
         Route::get('/marketing', 'Penpos\MarketingController@index')->name('marketing');
+        Route::post('/marketing/sell-items', 'Penpos\MarketingController@sell')->name('marketing.sell');
+
         // Investasi
         Route::get('/investasi', 'Penpos\InvestasiController@index')->name('investasi');
     }

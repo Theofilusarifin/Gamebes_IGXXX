@@ -28,13 +28,14 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    {{-- Alert --}}
+                    @include('penpos.layouts.alerts')
                     <div class="row">
                         <div class="col-12">
                             {{-- Pilih Team --}}
                             <div class="mb-4">
-                                <label class="my-1 me-2" for="team">Pilih Team</label> 
-                                <select class="form-select" id="team"
-                                    aria-label="Default select example">
+                                <label class="my-1 me-2" for="team_id">Pilih Team</label>
+                                <select class="form-select" id="team_id" aria-label="Default select example">
                                     <option selected disabled>-- Pilih Nama Team --</option>
                                     @foreach ($teams as $team)
                                     <option value="{{ $team->id }}">
@@ -49,21 +50,27 @@
                         {{-- Pilih Item yang ingin dijual --}}
                         <div class="col-7">
                             <div class="mb-4">
-                                <label class="my-1 me-2" for="product">Pilih Produk</label>
-                                <select disabled class="form-select" id="product" aria-label="Default select example">
+                                <label class="my-1 me-2" for="product_id">Pilih Produk</label>
+                                <select class="form-select" id="product_id" aria-label="Default select example">
                                     <option selected disabled>-- Pilih Nama Produk --</option>
+                                    @foreach ($products as $product)
+                                    <option value="{{ $product->id }}">
+                                        {{ $product->name }}
+                                    </option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
                         {{-- Jumlah Barang --}}
                         <div class="col-5">
                             <label class="my-1 me-2" for="banyak_item">Banyak Penjualan</label>
-                            <input disabled class="form-control" type="number" min=0 placeholder="-- Banyak Penjualan --" id='banyak_item' required="">
+                            <input class="form-control" type="number" min=0 placeholder="-- Banyak Penjualan --"
+                                id='banyak_item' required="">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-success" id="save_saus" type="button" onclick="save('saus')">Save</button>
+                            <button class="btn btn-success" id="jual" type="button" onclick="jual()">Jual</button>
                         </div>
                     </div>
                 </div>
@@ -71,4 +78,40 @@
         </div>
     </div>
 </main>
+@endsection
+
+@section('script')
+<script>
+    function jual() {
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.marketing.sell') }}",
+            data:{
+                '_token': $('meta[name="csrf-token"]').attr('content'),
+                'team_id': $('#team_id').val(),
+                'product_id': $('#product_id').val(),
+                'banyak_item': $('#banyak_item').val(),
+            },
+            success: function (data) {
+                if (data.status != ""){
+                    $('#alert').hide();
+                    $('#alert').show();
+                    $('#alert-body').html(data.msg);
+                    
+                    $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                        $("#alert").hide(1000);
+                    });
+                    if (data.status == "success") {
+                        $('#alert').removeClass("alert-danger");
+                        $('#alert').addClass("alert-success");
+                    }
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                    }
+                }
+            }
+        });
+    }
+</script>
 @endsection

@@ -143,13 +143,7 @@
         <div class="card card-body border-0 shadow mt-4 me-5" style="background-color:#1f2937;">
             <div class="card-body">
                 {{-- Alert --}}
-                <div class="row">
-                    <div class="col-12">
-                        <div class="alert alert-success alert-dismissible fade show" id="alert" style="display:none" role="alert">
-                            <span class="fas fa-bullhorn me-1" id="alert-body"></span>
-                        </div>
-                    </div>
-                </div>
+                @include('penpos.layouts.alerts')
                 {{-- Team --}}
                 <p class="text-white">Nama Team</p>
 
