@@ -103,25 +103,25 @@
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_1" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 1)">
-                      <option selected disabled value="1"></option>
+                      <option selected disabled value="1">1-Washer</option>
                     </select>
                     </th>
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_2" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 2)">
-                      <option disabled selected disabled value="2"></option>
+                      <option disabled selected disabled value="2">2-Steamer</option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_3" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 3)">
-                      <option disabled selected disabled value="3"></option>
+                      <option disabled selected disabled value="3">3-Shrimp Input</option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_4" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 4)">
-                      <option selected disabled value="4"></option>
+                      <option selected disabled value="4">4-Sealer</option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
