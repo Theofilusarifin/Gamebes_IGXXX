@@ -160,7 +160,7 @@
                 <div class="d-flex justify-content-center px-4 mt-4 mb-1">
                     <h5 class="text-white"><b>Timer : <span id="timer">120</span></b></h5>
                 </div>
-                <div class="d-flex justify-content-center px-3">
+                <div class="d-flex justify-content-center px-3 mb-4">
                     <div class="btn-group">
                         <button class="btn btn-success" type="button" id="start">Start</button>
                         <button class="btn btn-warning" type="button" id="pause">Pause</button>
@@ -168,10 +168,10 @@
                     </div>
                 </div>
 
-                {{-- Button Move --}} 
-                <div class="d-flex justify-content-center px-4 mt-4 mb-1">
+                {{-- <div class="d-flex justify-content-center px-4 mt-4 mb-1">
                     <h5 class="text-white"><b>Capacity : <span id="capacity">0</span></b></h5>
-                </div>
+                </div> --}}
+                {{-- Button Move --}} 
                 <div class="d-flex justify-content-center px-4 mt-2">
                     <button type="button" class="btn btn-gray-50 me-3 mb-3 btn-control-action" onclick="move('kanan_atas')" style="width: 58px; height:58px;">
                         <i data-feather='arrow-up-left' style="width: 24px; height:24px;"></i>
@@ -207,14 +207,14 @@
                 </div>
 
                 {{-- Reset capacity Button --}}
-                <div class="d-flex flex-row-reverse mt-4">
+                {{-- <div class="d-flex flex-row-reverse mt-4">
                     <button type="button" class="btn btn-icon btn-info" id ="reset_capacity" style="width: 48px; height:48px;" >
                         <i data-feather='rotate-cw' style="width: 18px; height:18px;"></i>
                     </button>
-                </div>
+                </div> --}}
 
                 {{-- Team --}}
-                <p class="text-white" id="nama_store">Nama Store</p>
+                <p class="text-white mt-4" id="nama_store">Nama Store</p>
 
                 <select class="select2 form-select mb-4" id="nama_item" tabindex="-1" aria-hidden="true" disabled>
                     <option selected disabled>-- Pilih Item --</option>

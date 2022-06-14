@@ -70,7 +70,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-success" id="jual" type="button" onclick="jual()">Jual</button>
+                            <button class="btn btn-success" id="jual" type="button" style="width: 100px" onclick="jual()">Jual</button>
                         </div>
                     </div>
                 </div>

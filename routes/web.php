@@ -29,6 +29,7 @@ Route::group(
 
         // Investasi
         Route::get('/investasi', 'Penpos\InvestasiController@index')->name('investasi');
+        Route::post('/investasi/save', 'Penpos\InvestasiController@save')->name('investasi.save');
     }
 );
 
