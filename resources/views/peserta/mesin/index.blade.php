@@ -451,16 +451,19 @@
       $susunan_mesin = [];
       if (type == "kitosan"){
         for (let i = 1; i<=3; i++) {
+          $('#kitosan_'+i).attr('disabled', true);
           $susunan_mesin[i-1] = $('#kitosan_'+i).val();
         }
       }
       else if (type == "udang"){
         for (let i = 1; i<=10; i++) {
+          $('#udang_'+i).attr('disabled', true);
           $susunan_mesin[i-1] = $('#udang_'+i).val();
         }
       }
       else if (type == "saus"){
         for (let i = 1; i<=2; i++) {
+          $('#saus_'+i).attr('disabled', true);
           $susunan_mesin[i-1] = $('#saus_'+i).val();
         }
       }

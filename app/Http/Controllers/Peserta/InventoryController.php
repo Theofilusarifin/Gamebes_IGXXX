@@ -8,7 +8,8 @@ use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
-    public function index(){
+    public function index()
+    {
         //Declare
         $teams = Auth::user()->team;
         $data_team_belis = "";
@@ -33,9 +34,9 @@ class InventoryController extends Controller
         }
 
         if (!empty($teams->ingridients->all())) {
-            $toko_barang_teams = array(0 => array(), 1 =>array(), 2 => array(), 3 => array()); 
-            for ($i=0; $i < count($data_team_belis) ; $i++) {
-                $nama_barang = $data_team_belis[$i]->name;//Udang Vaname, Udang Pama, Tomat, MSG
+            $toko_barang_teams = array(0 => array(), 1 => array(), 2 => array(), 3 => array());
+            for ($i = 0; $i < count($data_team_belis); $i++) {
+                $nama_barang = $data_team_belis[$i]->name; //Udang Vaname, Udang Pama, Tomat, MSG
                 $nama_toko = $table_store[$nama_barang];
                 $jumlah = $data_team_belis[$i]->pivot->amount_have;
                 $total = $data_team_belis[$i]->pivot->total;
@@ -48,6 +49,7 @@ class InventoryController extends Controller
         if (!empty($teams->products->all())) {
             $data_team_juals = $teams->products->all();
         }
+
 
         return view('peserta.inventory.index', compact(
             'teams',

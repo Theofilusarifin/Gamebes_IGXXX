@@ -8,6 +8,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+Route::post('/map/update-map', 'Penpos\MapController@updateMap')->name('map.update');
 
 // ROUTE PENPOS
 Route::group(
@@ -33,25 +34,28 @@ Route::group(
     }
 );
 
-Route::post('/map/update-map', 'Penpos\MapController@updateMap')->name('map.update');
-
 // ROUTE PESERTA
 Route::group(
     ['prefix' => 'peserta', 'as' => 'peserta.', 'middleware' => 'peserta'],
     function () {
         // Dashboard --> Inventory (Acara)
         Route::get('/', 'Peserta\DashboardController@index')->name('index'); // -> /peserta/
+        
         // List Harga -->
         Route::get('/harga', 'Peserta\ListHargaController@index')->name('harga'); // -> /peserta/harga
+        
         // Inventory --> Gudang (Acara)
         Route::get('/inventory', 'Peserta\InventoryController@index')->name('inventory'); // -> /peserta/inventory
+        
         // Mesin --> 
         Route::get('/mesin', 'Peserta\MesinController@index')->name('mesin'); // -> /peserta/mesin
-        Route::post('/mesin/mesin-available', 'Peserta\MesinController@getAvailableMachine')->name('mesin.get');
+        Route::post('/mespin/mesin-available', 'Peserta\MesinController@getAvailableMachine')->name('mesin.get');
         Route::post('/mesin/set-mesin', 'Peserta\MesinController@setMachine')->name('mesin.set');
         Route::post('/mesin/save-mesin', 'Peserta\MesinController@saveMachine')->name('mesin.save');
         Route::post('/mesin/jual-mesin', 'Peserta\MesinController@sellMachine')->name('mesin.jual');
+
         // produksi -->
         Route::get('/produksi', 'Peserta\ProduksiController@index')->name('produksi'); // -> /peserta/produksi
+        Route::post('/produksi/product', 'Peserta\ProduksiController@production')->name('produksi.produk');
     }
 );

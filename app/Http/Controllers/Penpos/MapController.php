@@ -500,6 +500,42 @@ class MapController extends Controller
                     }
                     $status = 'success';
                     $response = 'success';
+
+                    // Ambil stock dari store
+                    $stock = $item->pivot->stock;
+                    // Check apakah stock tersedia
+                    if ($stock >= $banyak_item) {
+                        $biaya_total = $biaya * $banyak_item;
+                        // Kalau uangnya cukup
+                        if ($team->tc >= $biaya_total) {
+                            // Kurang TC dari team untuk pembayaran
+                            $team->tc = $team->tc - $biaya_total;
+                            // Tambahkan team total spend 
+                            $team->total_spend = $team->total_spend + $biaya_total;
+
+                            $item->pivot->stock = $item->pivot->stock - $banyak_item;
+                            $item->save();
+
+                            // Update tambahkan banyak yang sekarang dengan yang dibeli
+                            $team->transports()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
+                            $team->save();
+
+                            $status = 'success';
+                            $response = 'success';
+                            $msg = 'Pembelian berhasil';
+                        }
+                        // TC ga cukup untuk beli
+                        else {
+                            $status = 'error';
+                            $response = 'error';
+                            $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
+                        }
+                    } else {
+                        // Stock tidak tersedia
+                        $status = 'error';
+                        $response = 'error';
+                        $msg = 'Stock tidak tersedia!';
+                    }
                 }
                 // Ingridient Store
                 else if ($territory->ingridient_store_id != null) {
@@ -523,42 +559,42 @@ class MapController extends Controller
                     }
                     $status = 'success';
                     $response = 'success';
-                }
 
-                // Ambil stock dari store
-                $stock = $item->pivot->stock;
-                // Check apakah stock tersedia
-                if ($stock >= $banyak_item) {
-                    $biaya_total = $biaya * $banyak_item;
-                    // Kalau uangnya cukup
-                    if ($team->tc >= $biaya_total) {
-                        // Kurang TC dari team untuk pembayaran
-                        $team->tc = $team->tc - $biaya_total;
-                        // Tambahkan team total spend 
-                        $team->total_spend = $team->total_spend + $biaya_total;
+                    // Ambil stock dari store
+                    $stock = $item->pivot->stock;
+                    // Check apakah stock tersedia
+                    if ($stock >= $banyak_item) {
+                        $biaya_total = $biaya * $banyak_item;
+                        // Kalau uangnya cukup
+                        if ($team->tc >= $biaya_total) {
+                            // Kurang TC dari team untuk pembayaran
+                            $team->tc = $team->tc - $biaya_total;
+                            // Tambahkan team total spend 
+                            $team->total_spend = $team->total_spend + $biaya_total;
 
-                        $item->pivot->stock = $item->pivot->stock - $banyak_item;
-                        $item->save();
+                            $item->pivot->stock = $item->pivot->stock - $banyak_item;
+                            $item->save();
 
-                        // Update tambahkan banyak yang sekarang dengan yang dibeli
-                        $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
-                        $team->save();
+                            // Update tambahkan banyak yang sekarang dengan yang dibeli
+                            $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
+                            $team->save();
 
-                        $status = 'success';
-                        $response = 'success';
-                        $msg = 'Pembelian berhasil';
-                    }
-                    // TC ga cukup untuk beli
-                    else {
+                            $status = 'success';
+                            $response = 'success';
+                            $msg = 'Pembelian berhasil';
+                        }
+                        // TC ga cukup untuk beli
+                        else {
+                            $status = 'error';
+                            $response = 'error';
+                            $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
+                        }
+                    } else {
+                        // Stock tidak tersedia
                         $status = 'error';
                         $response = 'error';
-                        $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
+                        $msg = 'Stock tidak tersedia!';
                     }
-                } else {
-                    // Stock tidak tersedia
-                    $status = 'error';
-                    $response = 'error';
-                    $msg = 'Stock tidak tersedia!';
                 }
             }
         }

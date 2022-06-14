@@ -25,12 +25,14 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    {{-- Alert --}}
+                    @include('peserta.layouts.alerts')
                     <div class="row mb-2">
                         {{-- Pilih Item yang ingin dijual --}}
                         <div class="col-7">
                             <div class="mb-4">
-                                <label class="my-1 me-2" for="product">Pilih Produk</label>
-                                <select class="form-select" id="product" aria-label="Default select example">
+                                <label class="my-1 me-2" for="product_id">Pilih Produk</label>
+                                <select class="form-select" id="product_id" aria-label="Default select example">
                                     <option selected value="">-- Pilih Nama Produk --</option>
                                     <option selected value="1">-- Udang Kaleng --</option>
                                     <option selected value="2">-- Kitosan --</option>
@@ -40,15 +42,15 @@
                         </div>
                         {{-- Jumlah Barang --}}
                         <div class="col-5">
-                            <label class="my-1 me-2" for="banyak_item">Banyak Produksi</label>
+                            <label class="my-1 me-2" for="banyak_produksi">Banyak Produksi</label>
                             <input class="form-control" type="number" min=0 placeholder="-- Banyak Produksi --"
-                                id='banyak_item' required="">
+                                id='banyak_produksi' required="">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-success" id="save_saus" style="width: 100px" type="button"
-                                onclick="save('saus')" disabled>Save</button>
+                            <button class="btn btn-success" id="produksi" style="width: 100px" type="button"
+                                onclick="produksi()">Produksi</button>
                         </div>
                     </div>
                 </div>
@@ -56,4 +58,39 @@
         </div>
     </div>
 </main>
+@endsection
+
+@section('script')
+    <script>
+        function produksi() {
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('peserta.produksi.produk') }}",
+                data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'product_id': $('#product_id').val(),
+                    'banyak_produksi': $('#banyak_produksi').val(),
+                },
+                success: function (data) {
+                    if (data.status != ""){
+                        $('#alert').hide();
+                        $('#alert').show();
+                        $('#alert-body').html(data.msg);
+                    
+                        $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                            $("#alert").hide(1000);
+                        });
+                        if (data.status == "success") {
+                            $('#alert').removeClass("alert-danger");
+                            $('#alert').addClass("alert-success");
+                        }
+                        else if (data.status == "error") {
+                            $('#alert').removeClass("alert-success");
+                            $('#alert').addClass("alert-danger");
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 @endsection

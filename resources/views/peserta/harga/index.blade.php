@@ -15,8 +15,17 @@
     {{-- Card Season --}}
     <div class="col-12 col-sm-12 col-xl-12">
         <div class="card border-0 shadow">
-            <div class="card-body">
-                SEASON 1.
+            <div class="card-body d-flex align-items-center">
+                <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0"> 
+                    Musim Sekarang :
+                </p>
+                @if ($season_now->number == 1)
+                    <h5 style="margin-bottom:0">Musim Panas</h5>
+                @elseif ($season_now->number == 2)
+                    <h5 style="margin-bottom:0">Musim Hujan</h5>
+                @elseif ($season_now->number == 3)
+                    <h5 style="margin-bottom:0">Musim Salju</h5>
+                @endif
             </div>
         </div>
     </div>
@@ -42,6 +51,15 @@
                                     <th class="border-bottom" scope="col">Stock Tersedia</th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                @foreach ($ingridients as $ingridient)
+                                    <tr>
+                                        <td class="fw-bolder text-gray-500">{{ $ingridient->name }}</td>
+                                        <td class="fw-bolder text-gray-500">{{ $ingridient->pivot->price }}</td>
+                                        <td class="fw-bolder text-gray-500">{{ $ingridient->pivot->price }}</td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
                         </table>
                     </div>
                 </div>

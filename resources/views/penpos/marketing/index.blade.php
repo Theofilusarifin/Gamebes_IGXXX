@@ -47,6 +47,22 @@
                         </div>
                     </div>
                     <div class="row">
+                        <div class="col-12">
+                            {{-- Pilih Team --}}
+                            <div class="mb-4">
+                                <label class="my-1 me-2" for="transport_id">Pilih Transport</label>
+                                <select class="form-select" id="transport_id" aria-label="Default select example">
+                                    <option selected disabled>-- Pilih Transport --</option>
+                                    @foreach ($transports as $transport)
+                                    <option value="{{ $transport->id }}">
+                                        {{ $transport->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
                         {{-- Pilih Item yang ingin dijual --}}
                         <div class="col-7">
                             <div class="mb-4">
@@ -90,6 +106,7 @@
                 '_token': $('meta[name="csrf-token"]').attr('content'),
                 'team_id': $('#team_id').val(),
                 'product_id': $('#product_id').val(),
+                'transport_id': $('#transport_id').val(),
                 'banyak_item': $('#banyak_item').val(),
             },
             success: function (data) {

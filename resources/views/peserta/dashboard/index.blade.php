@@ -77,8 +77,14 @@
                                         </th>
                                         <td class="fw-bolder text-gray-500">{{$toko_barang_teams[$i-1][$j+$counter+1]}}
                                         </td>
+                                        @if ($toko_barangs_teams[$i-1][$j+$counter+2] == null)
+                                        <td class="fw-bolder text-gray-500">0
+                                        </td>
+                                        @else
+                                        </td>
                                         <td class="fw-bolder text-gray-500">{{$toko_barang_teams[$i-1][$j+$counter+2]}}
                                         </td>
+                                        @endif
                                         @php
                                         $counter += 2
                                         @endphp
@@ -114,15 +120,19 @@
                                 </tr>
                             </thead>
                             @empty(!$data_team_juals)
-                            @foreach ($data_team_juals as $product)
                             <tbody>
+                                @foreach ($data_team_juals as $product)
                                 <tr>
                                     <th class="text-gray-900" scope="row">{{$product->name}}</th>
                                     <td class="fw-bolder text-gray-500">{{$product->pivot->amount_have}}</td>
+                                    @if ($product->pivot->total == null)
+                                    <td class="fw-bolder text-gray-500">0</td>
+                                    @else
                                     <td class="fw-bolder text-gray-500">{{$product->pivot->total}}</td>
+                                    @endif
                                 </tr>
+                                @endforeach
                             </tbody>
-                            @endforeach
                             @endempty
                         </table>
                     </div>
