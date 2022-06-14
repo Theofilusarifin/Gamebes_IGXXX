@@ -29,40 +29,18 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-bottom" scope="col">NAMA</th>
-                                    <th class="border-bottom" scope="col">JUMLAH DIMILIKI</th>
-                                    <th class="border-bottom" scope="col">TOTAL (TC)</th>
+                                    <th class="border-bottom" scope="col">Nama</th>
+                                    <th class="border-bottom" scope="col">Jumlah</th>
                                 </tr>
                             </thead>
-                            @empty(!$data_team_belis)
                             <tbody>
-                                @for($i = 1; $i <= 4; $i++) <tr>
-                                    <th class="text-gray-900" scope="row">{{$table_store2[$i-1]}}</th>
-                                    </tr>
-                                    @php
-                                    $counter = 0
-                                    @endphp
-                                    @for ($j = 0; $j < count($toko_barang_teams[$i-1])/3; $j++) <tr>
-                                        <td class="text-gray-900" scope="row">{{$toko_barang_teams[$i-1][$j+$counter]}}
-                                        </td>
-                                        <td class="fw-bolder text-gray-500">{{$toko_barang_teams[$i-1][$j+$counter+1]}}
-                                        </td>
-                                        @if ($toko_barangs_teams[$i-1][$j+$counter+2] == null)
-                                        <td class="fw-bolder text-gray-500">0
-                                        </td>
-                                        @else
-                                        </td>
-                                        <td class="fw-bolder text-gray-500">{{$toko_barang_teams[$i-1][$j+$counter+2]}}
-                                        </td>
-                                        @endif
-                                        @php
-                                        $counter += 2
-                                        @endphp
-                                        </tr>
-                                        @endfor
-                                        @endfor
+                                @foreach ($team_ingridients as $ingridient)
+                                <tr>
+                                    <td class="fw-bolder text-gray-500">{{$ingridient->name}}</td>
+                                    <td class="fw-bolder text-gray-500">{{$ingridient->pivot->amount_have}}</td>
+                                </tr>
+                                @endforeach
                             </tbody>
-                            @endempty
                         </table>
                     </div>
                 </div>
@@ -86,25 +64,16 @@
                                 <tr>
                                     <th class="border-bottom" scope="col">NAMA</th>
                                     <th class="border-bottom" scope="col">JUMLAH DIMILIKI</th>
-                                    <th class="border-bottom" scope="col">TOTAL (TC)</th>
                                 </tr>
                             </thead>
-                            @empty(!$data_team_juals)
                             <tbody>
-                                @foreach ($data_team_juals as $product)
+                                @foreach ($team_products as $product)
                                 <tr>
-                                    <td class="text-gray-900" scope="row">{{$product->name}}</td>
+                                    <td class="fw-bolder text-gray-500">{{$product->name}}</td>
                                     <td class="fw-bolder text-gray-500">{{$product->pivot->amount_have}}</td>
-                                    @if ($product->pivot->total == null)
-                                    <td class="fw-bolder text-gray-500">0</td>
-                                    @else
-                                    <td class="fw-bolder text-gray-500">{{$product->pivot->total}}</td>
-                                    @endif
-
                                 </tr>
                                 @endforeach
                             </tbody>
-                            @endempty
                         </table>
                     </div>
                 </div>

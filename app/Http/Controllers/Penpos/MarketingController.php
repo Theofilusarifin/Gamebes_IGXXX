@@ -36,9 +36,9 @@ class MarketingController extends Controller
             if (isset($transport)) {
                 if (isset($product)) {
                     $team_transport = $team->transports->where('id', $transport->id)->first();
-                    if ($team_transport != null){
+                    if ($team_transport != null) {
                         if (isset($banyak_item)) {
-                            if ($banyak_item <= $team_transport->capacity){
+                            if ($banyak_item <= $team_transport->capacity) {
                                 // Ambil team product
                                 $team_product = $team->products->where('id', $product->id)->first();
                                 // Team punya productnya ga?
@@ -49,15 +49,15 @@ class MarketingController extends Controller
                                         // Punya product banyaknya segitu ga?
                                         if ($banyak_item <= $banyak_product_yang_dimiliki) {
                                             // Tentuin harga jual product di musim sekarang
-                                            $harga_jual = $team_product->seasons->where('id', SeasonNow::first()->id)->first()->pivot->price;
+                                            $harga_jual = $team_product->seasons->where('id', SeasonNow::first()->id)->first()->pivot->price; //Ini problem
+
                                             // Harga total
                                             $harga_total = $banyak_item * $harga_jual;
-    
+
                                             // Kasik uang hasil penjualan ke team
                                             $team->tc = $team->tc + $harga_total;
-                                            $team->tc = $team->total_income + $harga_total;
+                                            $team->total_income = $team->total_income + $harga_total;
                                             $team->save();
-    
                                             // Kurangi amount product yang dijual
                                             $amount_have_new = $banyak_product_yang_dimiliki - $banyak_item;
                                             $amount_sold_new = $team_product->pivot->amount_sold + $banyak_item;
@@ -87,8 +87,7 @@ class MarketingController extends Controller
                                     $status = 'error';
                                     $msg = 'Team ' . $team->name . ' tidak memiliki product ' . $product->name . '!';
                                 }
-                            }
-                            else{
+                            } else {
                                 $status = 'error';
                                 $msg = 'Banyak product yang ingin dijual melebihi kapasitas transportasi!';
                             }
@@ -96,13 +95,11 @@ class MarketingController extends Controller
                             $status = 'error';
                             $msg = 'Isi banyak barang yang ingin dijual!';
                         }
-                    }
-                    else{
+                    } else {
                         $status = 'error';
-                        $msg = 'Team '. $team->name . ' tidak memiliki transport ' . $transport->name. '!';
+                        $msg = 'Team ' . $team->name . ' tidak memiliki transport ' . $transport->name . '!';
                     }
-                }
-                else {
+                } else {
                     $status = 'error';
                     $msg = 'Pilih product terlebih dahulu!';
                 }

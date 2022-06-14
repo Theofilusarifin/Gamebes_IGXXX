@@ -34,9 +34,9 @@
                                 <label class="my-1 me-2" for="product_id">Pilih Produk</label>
                                 <select class="form-select" id="product_id" aria-label="Default select example">
                                     <option selected value="">-- Pilih Nama Produk --</option>
-                                    <option selected value="1">-- Udang Kaleng --</option>
-                                    <option selected value="2">-- Kitosan --</option>
-                                    <option selected value="3">-- Saos Tomat --</option>
+                                    <option selected value="1">Udang Kaleng</option>
+                                    <option selected value="2">Kitosan</option>
+                                    <option selected value="3">Saos Tomat</option>
                                 </select>
                             </div>
                         </div>

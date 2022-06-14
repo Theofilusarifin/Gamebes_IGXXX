@@ -113,11 +113,9 @@ class MesinController extends Controller
         $teams->machine_assembly = $teams->machine_assembly + 1;
         $teams->save();
 
-        // Bug : Tambah Terus
-        if (!empty($teams->machineCombinations->get())) 
-        {
-            $teams->machineCombinations->delete();
-        }
+        // Menghapus kombinasi lama untuk diganti kombinasi baru
+        // $querry = $teams->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->delete()->toSql();
+        // dd($querry);
         $status = '';
         $msg = '';
 
@@ -127,7 +125,7 @@ class MesinController extends Controller
         $team = Auth::user()->team;
 
         // Define banyak mesin berapa
-        $banyak_machine = count(array_filter($susunan_mesin));;
+        $banyak_machine = count(array_filter($susunan_mesin));
 
         // Masukan order dari tiap mesin
         $orders = [];
@@ -210,9 +208,13 @@ class MesinController extends Controller
         $team_machine->save();
         $status = "success";
 
+        // Ambil team mesin
+        $display_team_mesins = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
+
         return response()->json(array(
             'status' => $status,
             'msg' => $msg,
+            'display_team_mesins' => $display_team_mesins,
         ), 200);
     }
 }

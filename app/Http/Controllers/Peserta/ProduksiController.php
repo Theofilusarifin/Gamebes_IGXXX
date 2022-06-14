@@ -34,13 +34,23 @@ class ProduksiController extends Controller
             if ($combination_total > 0) {
                 // Ambil bahan
                 // Ambil Udang vaname
-                $jumlah_udang_vaname = $team->ingridients->where('id', 1)->first()->pivot->amount_have;
-
+                $udang_vaname = $team->ingridients->where('id', 1)->first();
+                $jumlah_udang_vaname = 0;
+                if ($udang_vaname != null) {
+                    $jumlah_udang_vaname = $udang_vaname->pivot->amount_have;
+                }
                 // Ambil Udang pama
-                $jumlah_udang_pama = $team->ingridients->where('id', 2)->first()->pivot->amount_have;
-
+                $udang_pama = $team->ingridients->where('id', 2)->first();
+                $jumlah_udang_pama = 0;
+                if ($udang_pama != null) {
+                    $jumlah_udang_pama = $udang_pama->pivot->amount_have;
+                }
                 // Ambil Udang jerbung
-                $jumlah_udang_jerbung = $team->ingridients->where('id', 3)->first()->pivot->amount_have;
+                $udang_jerbung = $team->ingridients->where('id', 3)->first();
+                $jumlah_udang_jerbung = 0;
+                if ($udang_jerbung != null) {
+                    $jumlah_udang_jerbung = $udang_jerbung->pivot->amount_have;
+                }
 
                 $array_udang = [$jumlah_udang_vaname, $jumlah_udang_pama, $jumlah_udang_jerbung];
                 $jumlah_udang_terbanyak = max($array_udang);
@@ -56,11 +66,25 @@ class ProduksiController extends Controller
                 }
 
                 // Ambil air mineral yang dipunya
-                $air_mineral = $team->ingridients->where('id', 5)->first()->pivot->amount_have;
+                $air_mineral = $team->ingridients->where('id', 5)->first();
+                $jumlah_air_mineral = 0;
+                if ($air_mineral != null) {
+                    $jumlah_air_mineral = $air_mineral->pivot->amount_have;
+                }
+
                 // Ambil garam
-                $garam = $team->ingridients->where('id', 6)->first()->pivot->amount_have;
+                $garam = $team->ingridients->where('id', 6)->first();
+                $jumlah_garam = 0;
+                if ($garam != null) {
+                    $jumlah_garam = $garam->pivot->amount_have;
+                }
+
                 // Ambil gula
-                $gula = $team->ingridients->where('id', 7)->first()->pivot->amount_have;
+                $gula = $team->ingridients->where('id', 7)->first();
+                $jumlah_gula = 0;
+                if ($gula != null) {
+                    $jumlah_gula = $gula->pivot->amount_have;
+                }
 
                 $bahan_udang = $banyak_item * 1;
                 $bahan_air_mineral = $banyak_item * 1;
@@ -68,7 +92,7 @@ class ProduksiController extends Controller
                 $bahan_gula = $banyak_item * 1;
 
                 // Kalau bahan udang cukup
-                if ($bahan_udang >= $udang_dipakai && $bahan_air_mineral && $air_mineral && $bahan_garam >= $garam && $bahan_gula >= $gula) {
+                if ($bahan_udang >= $udang_dipakai && $bahan_air_mineral && $jumlah_air_mineral && $bahan_garam >= $jumlah_garam && $bahan_gula >= $jumlah_gula) {
 
                     // Kalau punya head pealer
                     $team_head_pealer = $team->machines->where('id', 6)->first();
@@ -93,10 +117,10 @@ class ProduksiController extends Controller
                     $team->ingridients()->sync([$index_terbanyak + 1 => ['amount_have' => $udang_dipakai - $bahan_udang, 'amount_use' => $amount_use_udang + $bahan_udang]], false);
                     // Kurangi air mineral
                     $amount_use_air = $team->ingridients->where('id', 5)->first()->pivot->amount_use;
-                    $team->ingridients()->sync([5 => ['amount_have' => $air_mineral - $bahan_air_mineral, 'amount_use' => $amount_use_air + $bahan_air_mineral]], false);
+                    $team->ingridients()->sync([5 => ['amount_have' => $jumlah_air_mineral - $bahan_air_mineral, 'amount_use' => $amount_use_air + $bahan_air_mineral]], false);
                     // Kurangi Garam
                     $amount_use_garam = $team->ingridients->where('id', 6)->first()->pivot->amount_use;
-                    $team->ingridients()->sync([6 => ['amount_have' => $garam - $bahan_garam, 'amount_use' => $amount_use_garam + $bahan_garam]], false);
+                    $team->ingridients()->sync([6 => ['amount_have' => $jumlah_garam - $bahan_garam, 'amount_use' => $amount_use_garam + $bahan_garam]], false);
                     // Kurangi Gula
                     $amount_use_gula = $team->ingridients->where('id', 7)->first()->pivot->amount_use;
                     $team->ingridients()->sync([7 => ['amount_have' => $gula - $bahan_gula, 'amount_use' => $amount_use_gula + $bahan_gula]], false);
@@ -104,6 +128,11 @@ class ProduksiController extends Controller
                     $amount_product = $team->products->where('id', $product->id)->first()->pivot->amount_have;
                     // Tambahkan 4 * banyak item udang kaleng
                     $team->products()->sync([$product->id => ['amount_have' => $amount_product + (4 * $banyak_item)]]);
+                    $team->waste = $team->waste + (2 * $banyak_item);
+                    $team->save();
+
+                    $status = 'success';
+                    $msg = 'Produksi berhasil dilakukan!';
                 } else {
                     $status = 'error';
                     $msg = 'Bahan yang dibutuhkan tidak cukup!';
@@ -119,7 +148,10 @@ class ProduksiController extends Controller
         else if ($product->id == 2) {
             // Ambil kombinasi machine udang kaleng dari team
             $team_machine_combination = $team->machineCombinations->where('id', '101')->first();
-            $combination_total = count($team_machine_combination);
+            $combination_total = 0;
+            if ($team_machine_combination != null) {
+                $combination_total = count($team_machine_combination);
+            }
             // Lihat team punya kombinasi atau nggak?
             if ($combination_total > 0) {
                 //Ambil bahan
@@ -153,6 +185,11 @@ class ProduksiController extends Controller
 
                     //Update data
                     $team->products()->sync([$product->id => ['amount_have' => $amount_product + (4 * $banyak_item)]]);
+                    $team->waste = $team->waste + (2 * $banyak_item);
+                    $team->save();
+
+                    $status = 'success';
+                    $msg = 'Produksi berhasil dilakukan!';
                 } else {
                     $status = 'error';
                     $msg = 'Bahan yang dibutuhkan tidak cukup!';
@@ -169,7 +206,10 @@ class ProduksiController extends Controller
         else if ($product->id == 3) {
             // Ambil kombinasi machine udang kaleng dari team
             $team_machine_combination = $team->machineCombinations->where('id', '102')->first();
-            $combination_total = count($team_machine_combination);
+            $combination_total = 0;
+            if ($team_machine_combination != null) {
+                $combination_total = count($team_machine_combination);
+            }
             // Lihat team punya kombinasi atau nggak?
             if ($combination_total > 0) {
                 //Ambil bahan
@@ -219,20 +259,28 @@ class ProduksiController extends Controller
 
                     //Update data
                     $team->products()->sync([$product->id => ['amount_have' => $amount_product + (4 * $banyak_item)]]);
+                    $team->waste = $team->waste + (2 * $banyak_item);
+                    $team->save();
+
+                    $status = 'success';
+                    $msg = 'Produksi berhasil dilakukan!';
                 }
                 // Ga punya kombinasi mesin 
                 else {
                     $status = 'error';
-                    $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
+                    $msg = 'Bahan yang dibutuhkan tidak cukup!';
                 }
             } else {
                 $status = 'error';
-                $msg = 'Product yang akan diproduksi tidak valid!';
+                $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
             }
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
+        } else {
+            $status = 'error';
+            $msg = 'Product yang akan diproduksi tidak valid!';
         }
+        return response()->json(array(
+            'status' => $status,
+            'msg' => $msg,
+        ), 200);
     }
 }

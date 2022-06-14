@@ -246,6 +246,7 @@ class MapController extends Controller
                         } else if ($jalan_diagonal) {
                             $team->d_moves = $team->d_moves + 1;
                         }
+                        $team->total_spend = $team->total_spend + $harga_jalan;
 
                         // Ambil territory
                         $new_territory = Territory::find($t_id);
@@ -413,7 +414,8 @@ class MapController extends Controller
                     $response = 'error';
                     $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
                 }
-            } else {
+            } 
+            else {
                 // Stock tidak tersedia
                 $status = 'error';
                 $response = 'error';
@@ -448,18 +450,20 @@ class MapController extends Controller
                         // Tambahkan team total spend 
                         $team->total_spend = $team->total_spend + $biaya_total;
 
-                        $item->pivot->stock = $item->pivot->stock - $banyak_item;
                         // Simpan perubahan
-                        $item->save();
+                        $item->machineStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
 
-                        // Tambahkan data baru
-                        $team_machine = new TeamMachine;
-                        $team_machine->performance = 100;
-                        $team_machine->season_buy = SeasonNow::first()->number;
-                        $team_machine->team_id = $team->id;
-                        $team_machine->machine_id = $item->id;
-                        // Simpan Data Baru
-                        $team_machine->save();
+                        for ($i=0; $i < $banyak_item ; $i++) { 
+                            // Tambahkan data baru
+                            $team_machine = new TeamMachine;
+                            $team_machine->performance = 100;
+                            $team_machine->season_buy = SeasonNow::first()->number;
+                            $team_machine->team_id = $team->id;
+                            $team_machine->machine_id = $item->id;
+                            $team_machine->selected = 0;
+                            // Simpan Data Baru
+                            $team_machine->save();
+                        }
 
                         $status = 'success';
                         $response = 'success';
@@ -498,9 +502,6 @@ class MapController extends Controller
                             $amount_have = $team_item->pivot->amount_have;
                         }
                     }
-                    $status = 'success';
-                    $response = 'success';
-
                     // Ambil stock dari store
                     $stock = $item->pivot->stock;
                     // Check apakah stock tersedia
@@ -513,9 +514,8 @@ class MapController extends Controller
                             // Tambahkan team total spend 
                             $team->total_spend = $team->total_spend + $biaya_total;
 
-                            $item->pivot->stock = $item->pivot->stock - $banyak_item;
-                            $item->save();
-
+                            $item->transportStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
+                            
                             // Update tambahkan banyak yang sekarang dengan yang dibeli
                             $team->transports()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
                             $team->save();
@@ -557,9 +557,6 @@ class MapController extends Controller
                             $amount_have = $team_item->pivot->amount_have;
                         }
                     }
-                    $status = 'success';
-                    $response = 'success';
-
                     // Ambil stock dari store
                     $stock = $item->pivot->stock;
                     // Check apakah stock tersedia
@@ -572,8 +569,7 @@ class MapController extends Controller
                             // Tambahkan team total spend 
                             $team->total_spend = $team->total_spend + $biaya_total;
 
-                            $item->pivot->stock = $item->pivot->stock - $banyak_item;
-                            $item->save();
+                            $item->ingridientStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
 
                             // Update tambahkan banyak yang sekarang dengan yang dibeli
                             $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
@@ -599,7 +595,6 @@ class MapController extends Controller
             }
         }
 
-        if ($response != 'error') event(new UpdateMap("updateMap"));
         return response()->json(
             array(
                 'response' => $response,

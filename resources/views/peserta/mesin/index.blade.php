@@ -20,16 +20,14 @@
   </div>
 
   {{-- Mesin Tambahan --}}
-  <div class="row my-5">
+  {{-- <div class="row my-5">
     <div class="col-12 col-sm-3 col-xl-3">
       <div class="card border-0 shadow">
         <div class="card-header">
           <div class="row d-flex justify-content-center align-items-center">
-            {{-- Judul --}}
             <div class="col-6">
               <h1 class="fs-5 fw-bold text-white mb-0">Mesin Tambahan</h1>
             </div>
-            {{-- Buton Save/ Edit --}}
             <div class="col-6 d-flex justify-content-end">
               <button class="btn btn-danger me-3" id="edit_ac" type="button" onclick="edit('ac')">Edit</button>
               <button disabled class="btn btn-success" id="save_ac" type="button" onclick="save('ac')">Save</button>
@@ -58,7 +56,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> --}}
 
   {{-- Card Udang Kaleng --}}
   <div class="row my-5">
@@ -105,25 +103,25 @@
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_1" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 1)">
-                      <option selected disabled value="">-- Lakukan Edit --</option>
+                      <option selected disabled value="1"></option>
                     </select>
                     </th>
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_2" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 2)">
-                      <option disabled selected disabled value="">-- Pilih Mesin 1 --</option>
+                      <option disabled selected disabled value="2"></option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_3" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 3)">
-                      <option disabled selected disabled value="">-- Pilih Mesin 2 --</option>
+                      <option disabled selected disabled value="3"></option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_4" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 4)">
-                      <option selected disabled value="">-- Pilih Mesin 3 --</option>
+                      <option selected disabled value="4"></option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
@@ -157,7 +155,7 @@
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="udang_7" tabindex="-1" aria-hidden="true"
                       onchange="setMachine('udang', 7)">
-                      <option selected disable dvalue="">-- Pilih Mesin 6 --</option>
+                      <option selected disabled value="">-- Pilih Mesin 6 --</option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
@@ -334,7 +332,7 @@
                   <th class="border-bottom" scope="col">Nama Mesin</th>
                   <th class="border-bottom" scope="col">Peforma Mesin</th>
                   <th class="border-bottom" scope="col">Season Beli</th>
-                  <th class="border-bottom" scope="col">Action</th>
+                  {{-- <th class="border-bottom" scope="col">Action</th> --}}
                 </tr>
               </thead>
               <tbody>
@@ -347,11 +345,11 @@
                   <th class="text-gray-900" scope="row">{{$mesin->machine->name}}</th>
                   <td class="fw-bolder text-gray-500">{{$mesin->performance}}</td>
                   <td class="fw-bolder text-gray-500">{{$mesin->season_buy}}</td>
-                  <td class="fw-bolder text-gray-500">
+                  {{-- <td class="fw-bolder text-gray-500">
                     <button class="btn btn-danger me-3" id="edit_saus" type="button" onclick="jual('{{$mesin->id}}')">
                       Jual
                     </button>
-                  </td>
+                  </td> --}}
                 </tr>
                 @php
                 $counter1+=1;
@@ -446,6 +444,20 @@
       }
     }
 
+    function jual(id) {
+	      $.ajax({
+        type: 'POST',
+        url: "{{ route('peserta.mesin.save') }}",
+        data:{
+          '_token': $('meta[name="csrf-token"]').attr('content'),
+          'mesin_id': id,
+        },    success: function (data) {
+
+        },  error: function (data) {
+
+        }
+      })
+    }
 
     function save(type) {
       $susunan_mesin = [];

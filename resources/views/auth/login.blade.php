@@ -66,15 +66,15 @@
                         </form>
 
                         @foreach($errors->all() as $error)
-                        {{ $error }}
+                        <p class="text-danger">{{ $error }}</p>
                         @endforeach
 
-                        <div class="d-flex justify-content-center align-items-center mt-4">
+                        {{-- <div class="d-flex justify-content-center align-items-center mt-4">
                             <span class="fw-normal">
                                 Not registered?
                                 <a href="register" class="fw-bold">Create account</a>
                             </span>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
             </div>

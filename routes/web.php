@@ -31,6 +31,11 @@ Route::group(
         // Investasi
         Route::get('/investasi', 'Penpos\InvestasiController@index')->name('investasi');
         Route::post('/investasi/save', 'Penpos\InvestasiController@save')->name('investasi.save');
+
+        // Update Season
+        Route::get('/update-season', 'Penpos\DashboardController@updateSeason')->name('update.season');
+        Route::post('/update-season/now', 'Penpos\DashboardController@updateNow')->name('update.now');
+
     }
 );
 

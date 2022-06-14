@@ -7,6 +7,7 @@ use App\IngridientStore;
 use App\Investation;
 use App\Machine;
 use App\SeasonNow;
+use App\Service;
 use App\Team;
 use App\TeamMachine;
 use Illuminate\Http\Request;
@@ -17,145 +18,68 @@ class DashboardController extends Controller
     public function index()
     {
         //Deklarasi
-        $teams = Auth::user()->team;
-        $data_teams = "";
-        $data_team_transports = "";
-        $data_team_belis = "";
-        $data_team_mesins = "";
-        $data_team_juals = "";
-        $harga_total_susuns = "";
-        $data_team_storeIngridients = "";
-        $toko_barang_teams = "";
-        $profits = array();
+        $team = Auth::user()->team;
 
-        //Cek apakah investasinya ada atau tidak?
-        if (!empty($teams->investations->all())) {
-            $data_teams = $teams->investations->all();
-            // Ini data untuk menampilkan Investasi
-            foreach ($data_teams as $team_profit) {
-                $profits[$team_profit->pivot->investation_id] = $team_profit->pivot->total_profit;
-            }
+        // Pembelian
+        $team_ingridients = $team->ingridients->all();
+        $team_machines2 = TeamMachine::where('team_id', $team->id)->get();
+
+        $index = 0;
+        foreach ($team_machines2 as $team_mesin) {
+            $mesin = Machine::where('id', $team_mesin->machine_id)->first();
+            $nama_mesin = $team_mesin->machine->name;
+            $team_machines2[$index]->name = $nama_mesin;
+            $index++;
         }
-        //Hardcode table_store buat cek
-        $table_store = array(
-            "Udang Vaname" => 0,
-            "Udang Pama" => 0,
-            "Udang Jerbung" => 0,
-            "Tomat" => 1,
-            "Air Mineral" => 2,
-            "Garam" => 2,
-            "Gula" => 2,
-            "MSG" => 2,
-            "NaOH" => 3,
-            "HCl" => 3
-        );
-        //Hardcode untuk nama storenya
-        $table_store2 = array("Seafood Store", "Tomat Store", "Kelontong Store", "Chemical Store");
 
-        //Ini data untuk menampilkan data pembelian SUDAH URUT!
-        if (!empty($teams->ingridients->all())) {
-            $data_team_belis = $teams->ingridients->all();
-        }
-        //dd($data_team_belis);
+        $team_transports = $team->transports->all();
+        $team_services = Service::find($team->service_id);
 
-        //Ini untuk nama toko dari ingridientsnya -->harus 2D
-        if (!empty($teams->ingridients->all())) {
-            $toko_barang_teams = array(0 => array(), 1 => array(), 2 => array(), 3 => array());
-            for ($i = 0; $i < count($data_team_belis); $i++) {
-                $nama_barang = $data_team_belis[$i]->name; //Udang Vaname, Udang Pama, Tomat, MSG
-                $nama_toko = $table_store[$nama_barang];
-                $jumlah = $data_team_belis[$i]->pivot->amount_have;
-                $total = $data_team_belis[$i]->pivot->total;
-                $toko_barang_teams[$nama_toko][] = $nama_barang;
-                $toko_barang_teams[$nama_toko][] = $jumlah;
-                $toko_barang_teams[$nama_toko][] = $total;
-            }
-        }
-        //dd($toko_barang_teams);
+        // Penjualan
+        $team_products = $team->products->where('pivot.amount_sold', '>', '0')->all();
 
-        //Ini data untuk menampilkan data TeamMachine
-        // if (!empty($teams->teamMachines->all())) {
-        //     $data_team_mesins = $teams->teamMachines->all();
-        //     $counter = 0;
-        //     foreach ($data_team_mesins as $spesifikMesin) {
-        //         if ($spesifikMesin->season_sell >= 1) {
-        //             //lanjut proses
-        //             $spesifikMesinData = Machine::where('id', $spesifikMesin->machine_id)->get();
-        //             $hargaJualDasar = $spesifikMesinData[0]->price_var; //harga jual dasar
-        //             $hargaBeliDasar = $spesifikMesinData[0]->price; //harga beli
-        //             $dT = ($hargaBeliDasar - $hargaJualDasar) / 3;
-        //             $hargaJualMesin = round($hargaBeliDasar - ($spesifikMesin->season_sell * $dT), 2);
-        //             $hargaMesins[$counter] = $spesifikMesinData[0]->name;
-        //             $seasonBeli = $spesifikMesin->season_buy;
-        //             if ($seasonBeli == 1) {
-        //                 $namaSeasonBeli = "Panas";
-        //             } elseif ($seasonBeli == 2) {
-        //                 $namaSeasonBeli = "Hujan";
-        //             } else {
-        //                 $namaSeasonBeli = "Salju";
-        //             }
-        //             $seasonJual = $spesifikMesin->season_sell;
-        //             if ($seasonJual == 1) {
-        //                 $namaSeasonJual = "Panas";
-        //             } elseif ($seasonJual == 2) {
-        //                 $namaSeasonJual = "Hujan";
-        //             } else {
-        //                 $namaSeasonJual = "Salju";
-        //             }
-        //             $hargaMesins[$counter + 1] = $namaSeasonBeli;
-        //             $hargaMesins[$counter + 2] = $namaSeasonJual;
-        //             $hargaMesins[$counter + 3] = $hargaJualMesin;
-        //             $counter += 4;
-        //         }
-        //     }
-        // }
+        // Investasi
+        $team_investations = $team->investations->all();
 
-        //Tampilin Penjualan Mesin
-        $hargaMesins = [];
+        // Penjualan Mesin
+        $team_machines = TeamMachine::where('team_id', $team->id)->where('season_sell', '!=', null)->get();
+
+        // Masukkan detail machine kedalam array Penjualan machine
         $counter = 0;
+        foreach ($team_machines as $team_machine) {
+            // ambil mesin
+            $machine = Machine::where('id', $team_machine->machine_id)->first();
+
+            // spesifikasi season
+            $season_buy = $team_machine->season_buy;
+            $season_sell = $team_machine->season_sell;
+
+            // Variable yang dibutuhkan
+            $price_var = $team_machine->machine->price_var;
+            $buy_price = $team_machine->machine->price;
+            $nama_machine = $team_machine->machine->name;
+
+            // rumus DT
+            $dT = ($buy_price - $price_var) / 3;
+            $sell_price = round($buy_price - ($season_sell * $dT), 2);
+
+            $team_machines[$counter]->sell_price = $sell_price;
+            $team_machines[$counter]->name = $nama_machine;
+            $counter++;
+        }
         $arraySeason = array(1 => "Musim Panas", 2 => "Musim Hujan", 3 => "Musim Salju");
-        $team_machine = $teams->teamMachines->all();
-        foreach ($team_machine as $mesinku) {
-            $season_sell = $mesinku->season_sell;
-            //CEK udah KEJUAL APA BLM
-            if ($season_sell >= 1) {
-                $season_buy = $mesinku->season_buy;
-                $price_var = $mesinku->machine->price_var;
-                $buy_price = $mesinku->machine->price;
-                $spesifikMesinData = Machine::where('id', $mesinku->machine_id)->get();
-
-                // Perhitungan Harga jual
-                $dT = ($buy_price - $price_var) / 3;
-                $sell_price = round($buy_price - ($season_sell * $dT), 2);
-
-                // Masukin Array buat tampilin
-                $hargaMesins[$counter] = $spesifikMesinData[0]->name;
-                $hargaMesins[$counter + 1] = $arraySeason[$season_buy];
-                $hargaMesins[$counter + 2] = $arraySeason[$season_sell];
-                $hargaMesins[$counter + 3] = $sell_price;
-                $counter += 4;
-            }
-        }
-
-        if (!empty($teams->products->all())) {
-            $data_team_juals = $teams->products->all();
-        }
-        //dd($data_team_juals);
-
 
         return view('peserta.dashboard.index', compact(
-            'teams',
-            'data_teams',
-            'data_team_transports',
-            'data_team_belis',
-            'data_team_mesins',
-            'hargaMesins',
-            'data_team_juals',
-            'data_team_storeIngridients',
-            'profits',
-            'table_store',
-            'table_store2',
-            'toko_barang_teams'
+            'team',
+            'team_ingridients',
+            'team_machines',
+            'team_machines2',
+            'team_transports',
+            'team_services',
+            'team_products',
+            'team_investations',
+            'team_machines',
+            'arraySeason'
         ));
     }
 }

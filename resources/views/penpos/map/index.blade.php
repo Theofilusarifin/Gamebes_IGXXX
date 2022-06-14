@@ -121,6 +121,45 @@
                     @php($alias = $territory->service_id)
                 @endif
 
+                {{-- Kasik nama ke pelabuhan --}}
+                @if($territory->id == 170) @php($alias = "P1")
+                @elseif($territory->id == 221) @php($alias = "P2")
+                @elseif($territory->id == 272) @php($alias = "P3")
+                @elseif($territory->id == 322) @php($alias = "P4")
+                @elseif($territory->id == 372) @php($alias = "P5")
+                @elseif($territory->id == 423) @php($alias = "P6")
+                @elseif($territory->id == 474) @php($alias = "P7")
+                @elseif($territory->id == 524) @php($alias = "P8")
+                @elseif($territory->id == 574) @php($alias = "P9")
+                @elseif($territory->id == 625) @php($alias = "P10")
+                @elseif($territory->id == 676) @php($alias = "P11")
+                @elseif($territory->id == 726) @php($alias = "P12")
+                @elseif($territory->id == 776) @php($alias = "P13")
+                @elseif($territory->id == 827) @php($alias = "P14")
+                @elseif($territory->id == 878) @php($alias = "P15")
+                @elseif($territory->id == 928) @php($alias = "P16")
+                @elseif($territory->id == 978) @php($alias = "P17")
+                @elseif($territory->id == 1029) @php($alias = "P18")
+                @elseif($territory->id == 209) @php($alias = "P19")
+                @elseif($territory->id == 260) @php($alias = "P20")
+                @elseif($territory->id == 311) @php($alias = "P21")
+                @elseif($territory->id == 361) @php($alias = "P22")
+                @elseif($territory->id == 411) @php($alias = "P23")
+                @elseif($territory->id == 462) @php($alias = "P24")
+                @elseif($territory->id == 513) @php($alias = "P25")
+                @elseif($territory->id == 563) @php($alias = "P26")
+                @elseif($territory->id == 613) @php($alias = "P27")
+                @elseif($territory->id == 664) @php($alias = "P28")
+                @elseif($territory->id == 715) @php($alias = "P29")
+                @elseif($territory->id == 765) @php($alias = "P30")
+                @elseif($territory->id == 815) @php($alias = "P31")
+                @elseif($territory->id == 866) @php($alias = "P32")
+                @elseif($territory->id == 917) @php($alias = "P33")
+                @elseif($territory->id == 967) @php($alias = "P34")
+                @elseif($territory->id == 1017) @php($alias = "P35")
+                @elseif($territory->id == 1068) @php($alias = "P36")
+                @endif
+
                 {{-- Buat Td --}}
                 @if($onclick)
                     <td class="{{ $class }}" id="{{ $territory->id }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}" onclick="setSpawnPoint({{ $territory->id }})">
@@ -167,13 +206,25 @@
 
                 {{-- Button Timer --}}
                 <div class="d-flex justify-content-center px-4 mt-4 mb-1">
-                    <h5 class="text-white"><b>Timer : <span id="timer">120</span></b></h5>
+                    <h5 class="text-white"><b>Timer : <span id="timer">60</span></b></h5>
                 </div>
                 <div class="d-flex justify-content-center px-3 mb-4">
                     <div class="btn-group">
                         <button class="btn btn-success" type="button" id="start">Start</button>
                         <button class="btn btn-warning" type="button" id="pause">Pause</button>
                         <button class="btn btn-danger" type="button" id="reset">Reset</button>
+                    </div>
+                </div>
+
+                {{-- Button Timer 2 --}}
+                <div class="d-flex justify-content-center px-4 mt-4 mb-1">
+                    <h5 class="text-white"><b>Timer : <span id="timer_2">30</span></b></h5>
+                </div>
+                <div class="d-flex justify-content-center px-3 mb-4">
+                    <div class="btn-group">
+                        <button class="btn btn-success" type="button" id="start_2">Start</button>
+                        <button class="btn btn-warning" type="button" id="pause_2">Pause</button>
+                        <button class="btn btn-danger" type="button" id="reset_2">Reset</button>
                     </div>
                 </div>
 
@@ -350,28 +401,48 @@
 
                         $('#nama_store').html("Toko " + data.store.name);
 
-                        $option_item = "";
-                        if (data.store_items != null){
+                        if (data.store.name == 'Jasa Pembersih'){
                             $('#nama_item').attr('disabled', false);
-                            $.each(data.store_items, (key, store_item) => {
-                                $option_item += 
-                                `<option value=" ${store_item.id} ">
-                                    ${store_item.name} - (${store_item.pivot.stock})
-                                </option>`
-                            });
+                            $option_item = "";
+                            $option_item +=
+                            `<option value=" ${data.store.id} ">
+                                ${data.store.name} - (${data.store.stock})
+                            </option>`
                             $('#nama_item').append($option_item);
                             $('#buy_section').html(`
-                                <div class="col-9">
-                                    <div class="form-group">
-                                        <input class="form-control" id="number" type="number" min=0 placeholder="-- Banyak Barang --" id='banyak_item' required="">
+                            <input class="form-control" type="hidden" id='banyak_item' value="1">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item"
+                                    onclick="buy('${data.store.id}')">
+                                    Buy
+                                </button>
+                            </div>`
+                            );
+                        }
+                        else{
+                            $option_item = "";
+                            if (data.store_items != null){
+                                $('#nama_item').attr('disabled', false);
+                                $.each(data.store_items, (key, store_item) => {
+                                    $option_item += 
+                                    `<option value=" ${store_item.id} ">
+                                        ${store_item.name} - (${store_item.pivot.stock})
+                                    </option>`
+                                });
+                                $('#nama_item').append($option_item);
+                                $('#buy_section').html(`
+                                    <div class="col-9">
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" min=0 placeholder="-- Banyak Barang --" id='banyak_item' required="">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-3">
-                                    <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item" onclick="buy('${data.store.id}')">
-                                        Buy
-                                    </button>
-                                </div>`
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item" onclick="buy('${data.store.id}')">
+                                            Buy
+                                        </button>
+                                    </div>`
                                 );
+                            }
                         }
                     }
                     else if (data.status == "error") {
@@ -392,10 +463,26 @@
                     'team_id': $('#team_id').val(),
                     'item_id': $('#nama_item').val(),
                     'store_id': store_id,
-                    'banyak_item': $('#banyaK_item').val(),
+                    'banyak_item': $('#banyak_item').val(),
                 },
             success: function (data) {
+                if (data.status != ""){
+                    $('#alert').hide();
+                    $('#alert').show();
+                    $('#alert-body').html(data.msg);
 
+                    $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                        $("#alert").hide(1000);
+                    });
+                    if (data.status == "success") {
+                        $('#alert').removeClass("alert-danger");
+                        $('#alert').addClass("alert-success");
+                    } 
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                    }
+                }
             }
         });
     }
@@ -421,7 +508,7 @@
 </script>
 <script>
     var timer;
-    var second = 120;
+    var second = 60;
     var running = false;
     $(document).on('click', '#start', function() {
         if (!running){
@@ -435,7 +522,7 @@
                     alert('Waktu Habis');
                     running = false;
                     clearInterval(timer);
-                    second = 120;
+                    second = 60;
                 }
             }, 1000);
         }
@@ -449,10 +536,48 @@
     });
     
     $(document).on('click','#reset', function(){
-        $("#timer").text('120');
+        $("#timer").text('60');
         running = false;
         clearInterval(timer);
-        second = 120;
+        second = 60;
+    });
+
+</script>
+
+<script>
+    var timer_2;
+    var second_2 = 30;
+    var running_2 = false;
+    $(document).on('click', '#start_2', function() {
+        if (!running_2){
+            $("#timer_2").css('display','inline');
+            running_2 = true;
+            timer_2 = setInterval(function() {
+                second_2--;
+                $("#timer_2").text(second_2);
+                if (second_2 <= 0) {
+                    $("#timer_2").text('Waktu Habis');
+                    alert('Waktu Habis');
+                    running_2 = false;
+                    clearInterval(timer_2);
+                    second_2 = 30;
+                }
+            }, 1000);
+        }
+    });
+
+    
+    $(document).on('click','#pause_2', function(){
+        $("#timer_2").text(second_2);
+        running_2 = false
+        clearInterval(timer_2);
+    });
+    
+    $(document).on('click','#reset_2', function(){
+        $("#timer_2").text('30');
+        running_2 = false;
+        clearInterval(timer_2);
+        second_2 = 30;
     });
 
 </script>
