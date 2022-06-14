@@ -113,7 +113,8 @@ class MesinController extends Controller
         $teams->machine_assembly = $teams->machine_assembly + 1;
         $teams->save();
 
-        if (!empty($teams->machineCombinations->get())) // Bug : Tambah Terus
+        // Bug : Tambah Terus
+        if (!empty($teams->machineCombinations->get())) 
         {
             $teams->machineCombinations->delete();
         }
