@@ -75,9 +75,17 @@
 @endsection
 
 @section('content')
+<div class="row mx-4">
+    <div class="col mx-2">
+        <div class="form-check form-switch">
+            <input class="form-check-input" type="checkbox" id="map_view" onchange="change_view()"> 
+            <label class="form-check-label" for="map_view">Map View</label>
+        </div>
+    </div>
+</div>
 <div class="row my-2 d-flex mx-2">
     {{-- Map --}}
-    <div class="col-9">
+    <div class="col-9" id="col_map">
         @php($column = 60)
         <table id="mainTable" class="m-4">
             @foreach ($territories as $territory)
@@ -139,7 +147,8 @@
             @endforeach
         </table>
     </div>
-    <div class="col-3">
+    {{-- Controller --}}
+    <div class="col-3" id="col_controller">
         <div class="card card-body border-0 shadow mt-4 me-5" style="background-color:#1f2937;">
             <div class="card-body">
                 {{-- Alert --}}
@@ -389,6 +398,25 @@
 
             }
         });
+    }
+</script>
+<script>
+    function change_view() {
+        status_check = $('#map_view').is(":checked");
+        if (status_check){
+            $('#col_map').attr('class', 'col-12')
+            $('#col_map').addClass('d-flex')
+            $('#col_map').addClass('justify-content-center')
+            $('#col_controller').attr('class', '')
+            $('#col_controller').css('display', 'none')
+        }
+        else{
+            $('#col_map').attr('class', 'col-9')
+            $('#col_map').removeClass('d-flex')
+            $('#col_map').removeClass('justify-content-center')
+            $('#col_controller').attr('class', 'col-3')
+            $('#col_controller').css('display', 'flex')
+        }
     }
 </script>
 <script>
