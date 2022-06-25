@@ -9,6 +9,7 @@ use App\SeasonNow;
 use App\TeamMachine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MesinController extends Controller
 {
@@ -18,20 +19,40 @@ class MesinController extends Controller
         $teams = Auth::user()->team;
 
         // Ambil team machine untuk diubah selectednya
-        $team_machine = TeamMachine::where('team_id', $teams->id)->get();
+        $team_machines = TeamMachine::where('team_id', $teams->id)->where('season_sell', null)->get();
 
         // reset selected
-        foreach ($team_machine as $mesin) {
-            $mesin->selected = 0;
-            $mesin->save();
+        foreach ($team_machines as $team_machine) {
+            $team_machine->selected = 0;
+            $team_machine->save();
         }
 
-        // Ambil team mesin
-        $display_team_mesins = TeamMachine::where('team_id', $teams->id)->where('season_sell', null)->get();
+        // Ambil machine combination sebagai default dari combobox
+        //101 --> saus tomat, 102 --> kitosan
+        $machine_combination_udang = $teams->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->first();
+        $machine_combination_saus = $teams->machineCombinations->where("id", "101")->first();
+        $machine_combination_kitosan = $teams->machineCombinations->where("id", "102")->first();
+
+        $machine_udang_tersimpan = "";
+        $machine_saus_tersimpan = "";
+        $machine_kitosan_tersimpan = "";
+
+        if ($machine_combination_udang != null) {
+            $machine_udang_tersimpan = $machine_combination_udang->machines->sortBy('pivot.order');
+        }
+        if ($machine_combination_saus != null) {
+            $machine_saus_tersimpan = $machine_combination_saus->machines->sortBy('pivot.order');
+        }
+        if ($machine_combination_kitosan != null) {
+            $machine_kitosan_tersimpan = $machine_combination_kitosan->machines->sortBy('pivot.order');
+        }
 
         return view('peserta.mesin.index', compact(
             'teams',
-            'display_team_mesins'
+            'team_machines',
+            'machine_udang_tersimpan',
+            'machine_saus_tersimpan',
+            'machine_kitosan_tersimpan'
         ));
     }
 
@@ -40,20 +61,20 @@ class MesinController extends Controller
         // Ambil Team
         $team = Auth::user()->team;
         // Ambil team machine yang not selected dan belum dijual 
-        $avaiable_machines = TeamMachine::where('team_id', $team->id)->where('selected', 0)->where('season_sell', null)->get();
+        $available_machines = TeamMachine::where('team_id', $team->id)->where('selected', 0)->where('season_sell', null)->get();
 
         // Masukkan detail machine kedalam array available machine
         $index = 0;
-        foreach ($avaiable_machines as $avaiable_machine) {
-            $machine = Machine::where('id', $avaiable_machine->machine_id)->first();
-            $avaiable_machines[$index]->machine = $machine;
+        foreach ($available_machines as $available_machine) {
+            $machine = Machine::where('id', $available_machine->machine_id)->first();
+            $available_machines[$index]->machine = $machine;
             $index++;
         }
 
         $status = 'success';
 
         return response()->json(array(
-            'avaiable_machines' => $avaiable_machines,
+            'available_machines' => $available_machines,
             'status' => $status,
         ), 200);
     }
@@ -64,24 +85,25 @@ class MesinController extends Controller
         $team = Auth::user()->team;
 
         // Ambil team machine untuk diubah selectednya
-        $team_machine = TeamMachine::find($request['team_machine_id']);
+        $team_machine = $team->teamMachines->where('id', $request['team_machine_id'])->first();
+
         //Ubah selected
         $team_machine->selected = 1;
         $team_machine->save();
 
         // Ambil team machine yang not selected dan belum dijual 
-        $avaiable_machines = TeamMachine::where('team_id', $team->id)->where('selected', 0)->where('season_sell', null)->get();
+        $available_machines = TeamMachine::where('team_id', $team->id)->where('selected', 0)->where('season_sell', null)->get();
         // Masukkan detail machine kedalam array available machine
         $index = 0;
-        foreach ($avaiable_machines as $avaiable_machine) {
-            $machine = Machine::where('id', $avaiable_machine->machine_id)->first();
-            $avaiable_machines[$index]->machine = $machine;
+        foreach ($available_machines as $available_machine) {
+            $machine = Machine::where('id', $available_machine->machine_id)->first();
+            $available_machines[$index]->machine = $machine;
             $index++;
         }
         $status = 'success';
 
         return response()->json(array(
-            'avaiable_machines' => $avaiable_machines,
+            'available_machines' => $available_machines,
             'status' => $status,
         ), 200);
     }
@@ -89,48 +111,78 @@ class MesinController extends Controller
     public function saveMachine(Request $request)
     {
         //Declare
-        $teams = Auth::user()->team;
+        $team = Auth::user()->team;
         // Ambil team machine untuk diubah selectednya
-        $team_machine = TeamMachine::where('team_id', $teams->id)->get();
+        $team_machines = TeamMachine::where('team_id', $team->id)->get();
 
         // reset selected
-        foreach ($team_machine as $mesin) {
-            $mesin->selected = 0;
-            $mesin->save();
+        foreach ($team_machines as $team_machine) {
+            $team_machine->selected = 0;
+            $team_machine->save();
         }
 
-        // uang cukup atau tidak?
-        if ($teams->tc >= 5) {
-            // kurang 5 
-            $teams->tc = $teams->tc - 5;
-            $teams->total_spend = $teams->total_spend + 5;
-        } else { //Tidak cukup uang
+        //Tidak cukup uang
+        if ($team->tc < 5) {
             // kurang sesuai tc 
-            $teams->tc = 0;
-            $teams->total_spend = $teams->total_spend + $teams->tc;
+            $team->tc = 0;
+            $team->total_spend = $team->total_spend + $team->tc;
+            $status = "error";
+            $msg = "Tiggie coin anda tidak cukup untuk melakukan penyusunan mesin!";
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
         }
+
+        // Apabila cukup tc kurangi 5 
+        $team->tc = $team->tc - 5;
+        $team->total_spend = $team->total_spend + 5;
+
         // total mesin assembly + 1
-        $teams->machine_assembly = $teams->machine_assembly + 1;
-        $teams->save();
+        $team->machine_assembly = $team->machine_assembly + 1;
+        $team->save();
+
+        // Ambil tipenya
+        $tipe = $request['tipe'];
 
         // Menghapus kombinasi lama untuk diganti kombinasi baru
-        // $querry = $teams->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->delete()->toSql();
-        // dd($querry);
+        if ($tipe == "udang") {
+            //101 --> saus tomat, 102 --> kitosan
+            DB::table('team_machine_combination')
+                ->where('machine_combination_id', "!=", 101)
+                ->where('machine_combination_id', "!=", 102)
+                ->where('team_id', $team->id)
+                ->delete();
+        } else if ($tipe = "saus") {
+            DB::table('team_machine_combination')
+                ->where('machine_combination_id', 101)
+                ->where('team_id', $team->id)
+                ->delete();
+        } else if ($tipe = "kitosan") {
+            DB::table('team_machine_combination')
+                ->where('machine_combination_id', 102)
+                ->where('team_id', $team->id)
+                ->delete();
+        }
+
         $status = '';
         $msg = '';
 
         // Ambil susunan mesin dari AJAX
-        $susunan_mesin = $request['susunan_mesin'];
-        // Define Variablex
-        $team = Auth::user()->team;
+        $susunan_mesin = $request['susunan_mesin']; //array yang berisikan team_machine_id [1,2,3,4]
 
-        // Define banyak mesin berapa
+        // Define banyak mesin berapa (buang yang isinya null menggunakan array filter)
         $banyak_machine = count(array_filter($susunan_mesin));
 
         // Masukan order dari tiap mesin
         $orders = [];
-        foreach ($susunan_mesin as $idx => $machine_id) {
-            $orders[$idx + 1] = Machine::find($machine_id);
+
+        for ($i = 0; $i < $banyak_machine; $i++) {
+            // dd($susunan_mesin[$i]);
+            // Cari machine_idnya dulu pakai team_machine_id
+            $tm = TeamMachine::find($susunan_mesin[$i]);
+            // Masukkan machine ke dalam order
+            $orders[$i + 1] = Machine::find($tm->machine_id);
         }
 
         // Dapatkan semua kombinasi dari mesin yang berada pada order yang disusun
@@ -170,10 +222,11 @@ class MesinController extends Controller
             $team->save();
 
             $status = 'success';
-            $msg = 'Kombinasi yang dimasukkan sudah benar';
+            $msg = 'Kombinasi yang dimasukkan sudah benar! Kombinasi akan disimpan.';
         } else {
             $status = 'error';
-            $msg = 'Kombinasi yang dimasukkan belum tepat!';
+            $msg = 'Kombinasi yang dimasukkan belum tepat! Kombinasi tidak akan disimpan.';
+            //Semisal team sudah pernah benar kemudian coba kombinasi baru dan salah maka kombinasi lama akan hilang.
         }
 
         return response()->json(array(
@@ -209,12 +262,12 @@ class MesinController extends Controller
         $status = "success";
 
         // Ambil team mesin
-        $display_team_mesins = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
+        $team_mesins = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
 
         return response()->json(array(
             'status' => $status,
             'msg' => $msg,
-            'display_team_mesins' => $display_team_mesins,
+            'team_mesins' => $team_mesins,
         ), 200);
     }
 }

@@ -13,36 +13,61 @@
 @section('content')
 
 <main class="px-5">
-    <div class="row my-5 d-flex">
-        <div class="col">
-            <div class="card h-50">
-                <svg class="icon icon-md col bg-success" width="100%" height="180">
-                </svg>
+
+    <div class="row my-5 d-flex" style="">
+        {{-- Card Pemasukan --}}
+        <div class="col-12 col-sm-12 col-xl-4">
+            <div class="card border-0 shadow">
+                <div class="card-header" style="background-color: #10B981 !important;">
+                    <div class="row d-flex justify-content-start align-items-center">
+                        {{-- Judul --}}
+                        <div class="col-12">
+                            <h1 class="fs-5 fw-bold text-white mb-0">Pemasukan</h1>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title">Pemasukan {{ $team->total_income }} TC</h4>
+                    <h4>{{ $team->total_income }} TC</h4>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card h-50">
-                <svg class="icon icon-md col bg-danger" width="100%" height="180">
-                </svg>
+
+        {{-- Card Pengeluaran --}}
+        <div class="col-12 col-sm-12 col-xl-4">
+            <div class="card border-0 shadow">
+                <div class="card-header" style="background-color: #E11D48 !important;">
+                    <div class="row d-flex justify-content-start align-items-center">
+                        {{-- Judul --}}
+                        <div class="col-12">
+                            <h1 class="fs-5 fw-bold text-white mb-0">Pengeluaran</h1>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title">Pengeluaran {{ $team->total_spend }} TC</h4>
+                    <h4>{{ $team->total_spend }} TC</h4>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card h-50">
-                <svg class="icon icon-md col bg-warning" width="100%" height="180">
-                </svg>
+
+        {{-- Card Sisa Uang --}}
+        <div class="col-12 col-sm-12 col-xl-4">
+            <div class="card border-0 shadow">
+                <div class="card-header" style="background-color: #FBA918 !important;">
+                    <div class="row d-flex justify-content-start align-items-center">
+                        {{-- Judul --}}
+                        <div class="col-12">
+                            <h1 class="fs-5 fw-bold text-white mb-0">Sisa Uang</h1>
+                        </div>
+                    </div>
+                </div>
                 <div class="card-body">
-                    <h4 class="card-title">Sisa Uang {{ $team->tc }} TC</h4>
+                    <h4>{{ $team->tc }} TC</h4>
                 </div>
             </div>
         </div>
     </div>
-    <div class="row mb-5 d-flex" style="margin-top:-100px">
+
+    <div class="row mb-5 d-flex" style="">
         {{-- Card Pembelian --}}
         <div class="col-12 col-sm-12 col-xl-6">
             <div class="card border-0 shadow">
