@@ -51,20 +51,7 @@
                         <div class="col-7">
                             <div class="mb-4">
                                 <label class="my-1 me-2" for="investasi_id">Pilih Mesin</label>
-                                <select class="form-select" id="investasi_id" aria-label="Default select example">
-                                    <option selected disabled>-- Pilih Mesin --</option>
-                                    @foreach ($investations as $investation)
-                                    <option value="{{ $investation->id }}">
-                                        {{ $investation->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
                             </div>
-                        </div>
-                        {{-- Jumlah Barang --}}
-                        <div class="col-5">
-                            <label class="my-1 me-2" for="nilai_investasi">Nilai Investasi</label>
-                            <input class="form-control" type="number" min=0 placeholder="-- Nilai Investasi --" id='nilai_investasi' required="">
                         </div>
                     </div>
                     <div class="row">
@@ -77,40 +64,4 @@
         </div>
     </div>
 </main>
-@endsection
-
-@section('script')
-    <script>
-        function save() {
-            $.ajax({
-                type: 'POST',
-                url: "{{ route('penpos.investasi.save') }}",
-                data:{
-                    '_token': $('meta[name="csrf-token"]').attr('content'),
-                    'team_id': $('#team_id').val(),
-                    'investation_id': $('#investasi_id').val(),
-                    'nilai_investasi': $('#nilai_investasi').val(),
-                },
-                success: function (data) {
-                    if (data.status != ""){
-                        $('#alert').hide();
-                        $('#alert').show();
-                        $('#alert-body').html(data.msg);
-                    
-                        $("#alert").fadeTo(5000, 500).hide(1000, function(){
-                            $("#alert").hide(1000);
-                        });
-                        if (data.status == "success") {
-                            $('#alert').removeClass("alert-danger");
-                            $('#alert').addClass("alert-success");
-                        }
-                        else if (data.status == "error") {
-                            $('#alert').removeClass("alert-success");
-                            $('#alert').addClass("alert-danger");
-                        }
-                    }
-                }
-            });
-        }
-    </script>
 @endsection
