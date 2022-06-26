@@ -30,6 +30,7 @@ class InvestasiController extends Controller
             'total_profit' => $nilai_investasi
         ]], false);
         //update total_income
+        //update team_tcnya salah!
         $team->total_income = $team->total_income + $nilai_investasi;
         $team->tc = $team->tc + $nilai_investasi;
         $team->save();

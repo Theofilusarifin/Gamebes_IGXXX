@@ -15,4 +15,10 @@ class Question extends Model
     {
         return $this->belongsTo(Question::class, 'investation_id');
     }
+
+    public function teams()
+    {
+        return $this->belongsToMany(Team::class, 'team_question', 'question_id', 'team_id')
+        ->withPivot(['answer']);
+    }
 }

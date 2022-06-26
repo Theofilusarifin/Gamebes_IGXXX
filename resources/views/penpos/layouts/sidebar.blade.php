@@ -63,6 +63,14 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ request()->is('penpos/maintenance') ? ' active' : '' }} {{ request()->is('penpos/maintenance/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.maintenance') }}" class="nav-link">
+                    <i data-feather='tool' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Maintenance</span>
+                </a>
+            </li>
             {{-- <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li> --}}
 
         </ul>

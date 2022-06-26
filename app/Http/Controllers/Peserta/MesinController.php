@@ -33,6 +33,7 @@ class MesinController extends Controller
         $machine_combination_saus = $teams->machineCombinations->where("id", "101")->first();
         $machine_combination_kitosan = $teams->machineCombinations->where("id", "102")->first();
 
+        //Deklarasi untuk nampung efektivitas dari kombinasi yang dipakai
         $machine_udang_tersimpan = "";
         $machine_saus_tersimpan = "";
         $machine_kitosan_tersimpan = "";
@@ -50,6 +51,9 @@ class MesinController extends Controller
         return view('peserta.mesin.index', compact(
             'teams',
             'team_machines',
+            'machine_combination_udang',
+            'machine_combination_saus',
+            'machine_combination_kitosan',
             'machine_udang_tersimpan',
             'machine_saus_tersimpan',
             'machine_kitosan_tersimpan'
@@ -174,64 +178,78 @@ class MesinController extends Controller
         // Define banyak mesin berapa (buang yang isinya null menggunakan array filter)
         $banyak_machine = count(array_filter($susunan_mesin));
 
-        // Masukan order dari tiap mesin
-        $orders = [];
+        if ($banyak_machine >= 4) {
+            // Masukan order dari tiap mesin
+            $orders = [];
 
-        for ($i = 0; $i < $banyak_machine; $i++) {
-            // dd($susunan_mesin[$i]);
-            // Cari machine_idnya dulu pakai team_machine_id
-            $tm = TeamMachine::find($susunan_mesin[$i]);
-            // Masukkan machine ke dalam order
-            $orders[$i + 1] = Machine::find($tm->machine_id);
-        }
-
-        // Dapatkan semua kombinasi dari mesin yang berada pada order yang disusun
-        $combinations = [];
-        for ($i = 1; $i <= $banyak_machine; $i++) {
-            $all_combinations = $orders[$i]->machineCombinations()->wherePivot('order', $i)->get();
-            $combination_id = [];
-            foreach ($all_combinations as $combination) {
-                $combination_id[] = $combination->id;
+            for ($i = 0; $i < $banyak_machine; $i++) {
+                // dd($susunan_mesin[$i]);
+                // Cari machine_idnya dulu pakai team_machine_id
+                $tm = TeamMachine::find($susunan_mesin[$i]);
+                // Masukkan machine ke dalam order
+                $orders[$i + 1] = Machine::find($tm->machine_id);
             }
-            $combinations[] = $combination_id;
-        }
 
-        $combination_found = [];
-        if ($banyak_machine > 1) {
-            // Lakukan intersect untuk mengetahui apakah ada kombinasi yang cocok
-            $combination_found = array_intersect(...$combinations);
-        }
+            // Dapatkan semua kombinasi dari mesin yang berada pada order yang disusun
+            $combinations = [];
+            for ($i = 1; $i <= $banyak_machine; $i++) {
+                $all_combinations = $orders[$i]->machineCombinations()->wherePivot('order', $i)->get();
+                // dd($all_combinations);
+                $combination_id = [];
+                foreach ($all_combinations as $combination) {
+                    $combination_id[] = $combination->id;
+                }
+                $combinations[] = $combination_id;
+            }
+            // dd($combinations);
+            $combination_found = [];
+            if ($banyak_machine > 1) {
+                // Lakukan intersect untuk mengetahui apakah ada kombinasi yang cocok
+                $combination_found = array_intersect(...$combinations);
+            }
+            // dd($combination_found);
+            // Apabila terdapat persis satu kombinasi yang cocok maka foundnya true
+            $found = (count($combination_found) >= 1) ? true : false;
+            // Kombinasi ada
+            if ($found) {
+                // Hapus kombinasi kecuali kombinasi kitosan  dan saus tomat
 
-        // Apabila terdapat persis satu kombinasi yang cocok maka foundnya true
-        $found = (count($combination_found) >= 1) ? true : false;
-        // Kombinasi ada
-        if ($found) {
-            // Hapus kombinasi kecuali kombinasi kitosan  dan saus tomat
+                // Ambil Kombinasi
+                if (count($combination_found) > 1) {
+                    //Ini set di team_machine_combination
+                    $combination = MachineCombination::find($combination_found[0]);
+                    $team->machineCombinations()->attach($combination->id);
+                } else {
+                    //Ini set di team_machine_combination
+                    $combination = MachineCombination::find($combination_found);
+                    $team->machineCombinations()->attach($combination[0]->id);
+                }
+                // Update tambahkan machine combination
+                $team->save();
 
-            // Ambil Kombinasi
-            if (count($combination_found) > 1) {
-                //Ini set di team_machine_combination
-                $combination = MachineCombination::find($combination_found[0]);
-                $team->machineCombinations()->attach($combination->id);
+                $status = 'success';
+                $msg = 'Kombinasi yang dimasukkan sudah benar! Kombinasi akan disimpan.';
             } else {
-                //Ini set di team_machine_combination
-                $combination = MachineCombination::find($combination_found);
-                $team->machineCombinations()->attach($combination[0]->id);
+                $status = 'error';
+                $msg = 'Kombinasi yang dimasukkan belum tepat! Kombinasi tidak akan disimpan.';
+                //Semisal team sudah pernah benar kemudian coba kombinasi baru dan salah maka kombinasi lama akan hilang.
             }
-            // Update tambahkan machine combination
-            $team->save();
-
-            $status = 'success';
-            $msg = 'Kombinasi yang dimasukkan sudah benar! Kombinasi akan disimpan.';
         } else {
             $status = 'error';
             $msg = 'Kombinasi yang dimasukkan belum tepat! Kombinasi tidak akan disimpan.';
-            //Semisal team sudah pernah benar kemudian coba kombinasi baru dan salah maka kombinasi lama akan hilang.
         }
+
+        //Deklarasi untuk nampung efektivitas dari kombinasi yang dipakai
+        $machine_combination_udang = $team->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->first();
+        $machine_combination_saus = $team->machineCombinations->where("id", "101")->first();
+        $machine_combination_kitosan = $team->machineCombinations->where("id", "102")->first();
 
         return response()->json(array(
             'status' => $status,
             'msg' => $msg,
+            'machine_combination_saus' => $machine_combination_saus,
+            'machine_combination_kitosan' => $machine_combination_kitosan,
+            'machine_combination_udang' => $machine_combination_udang,
         ), 200);
     }
 
@@ -243,10 +261,10 @@ class MesinController extends Controller
         // Define Variable
         $team = Auth::user()->team;
         $team_machine = TeamMachine::find($request['team_machine_id']);
-        $season_sell = SeasonNow::first()->number;
-        $season_buy = $team_machine->season_buy;
-        $price_var = $team_machine->machine->price_var;
-        $buy_price = $team_machine->machine->price;
+        $season_sell = SeasonNow::first()->number; //ambil season sekarang dan simpan di season_sell
+        $season_buy = $team_machine->season_buy; //ambil season beli dari mesin
+        $price_var = $team_machine->machine->price_var; //ambil harga jual
+        $buy_price = $team_machine->machine->price; //ambil harga beli
 
         // Perhitungan Harga jual
         $dT = ($buy_price - $price_var) / 3;

@@ -58,4 +58,10 @@ class Team extends Model
     {
         return $this->belongsToMany(machineCombination::class, 'team_machine_combination', 'team_id', 'machine_combination_id');
     }
+
+    public function questions()
+    {
+        return $this->belongsToMany(Question::class, 'team_question', 'team_id', 'question_id')
+        ->withPivot(['answer']);
+    }
 }

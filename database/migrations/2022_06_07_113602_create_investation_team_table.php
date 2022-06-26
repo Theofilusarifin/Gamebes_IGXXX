@@ -20,7 +20,10 @@ class CreateInvestationTeamTable extends Migration
             $table->foreignId('investation_id');
             $table->foreign('investation_id')->references('id')->on('investations')->onUpdate('cascade')->onDelete('cascade');
 
-            $table->integer('total_profit');
+            $table->integer('total_profit')->nullable();
+
+            $table->tinyInteger('start')->nullable();
+            $table->tinyInteger('finish')->nullable();
         });
     }
 

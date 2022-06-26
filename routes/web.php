@@ -36,6 +36,10 @@ Route::group(
         Route::get('/update-season', 'Penpos\DashboardController@updateSeason')->name('update.season');
         Route::post('/update-season/now', 'Penpos\DashboardController@updateNow')->name('update.now');
 
+        // Maintenance
+        Route::get('/maintenance', 'Penpos\MaintenanceController@index')->name('maintenance');
+        Route::post('/maintenance/save', 'Penpos\MaintenanceController@save')->name('maintenance.save');
+
     }
 );
 
@@ -62,5 +66,10 @@ Route::group(
         // produksi -->
         Route::get('/produksi', 'Peserta\ProduksiController@index')->name('produksi'); // -> /peserta/produksi
         Route::post('/produksi/product', 'Peserta\ProduksiController@production')->name('produksi.produk');
+
+        // Investasi
+        Route::get('/investasi', 'Peserta\InvestasiController@index')->name('investasi');
+        Route::get('/investasi/{investation}/{question:nomor}', 'Peserta\InvestasiController@show')->name('investasi.show');
+
     }
 );

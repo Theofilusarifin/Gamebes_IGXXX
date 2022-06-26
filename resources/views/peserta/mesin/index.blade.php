@@ -71,7 +71,8 @@
             {{-- Buton Save/ Edit --}}
             <div class="col-6 d-flex justify-content-end">
               <button class="btn btn-danger me-3" id="edit_udang" tipe="button" onclick="edit('udang')">Edit</button>
-              <button disabled class="btn btn-success" id="save_udang" tipe="button" onclick="save('udang')">Save</button>
+              <button disabled class="btn btn-success" id="save_udang" tipe="button"
+                onclick="save('udang')">Save</button>
             </div>
           </div>
         </div>
@@ -79,50 +80,98 @@
           {{-- Alert --}}
           <div class="row">
             <div class="col-12">
-              <div class="alert alert-success alert-dismissible fade show" id="alert_udang" style="display:none" role="alert">
+              <div class="alert alert-success alert-dismissible fade show" id="alert_udang" style="display:none"
+                role="alert">
                 <span class="fas fa-bullhorn me-1" id="alert-body_udang"></span>
               </div>
             </div>
           </div>
+
+          {{-- Effectivity dan Higenity --}}
+          <div class="row mb-4">
+            {{-- Effectivity --}}
+            <div class="col-6">
+              @php($udang_efektivitas = 0)
+              @if ($machine_combination_udang != null)
+              @php($udang_efektivitas = $machine_combination_udang->effectivity)
+              @endif
+              <div class="progress-wrapper">
+                <div class="progress-info">
+                  <div class="progress-label">
+                    <span class="text-primary">Efektivitas</span>
+                  </div>
+                  <div class="progress-percentage">
+                    <span id="efektivitas-percentage_udang">{{ $udang_efektivitas }}%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar bg-info" role="progressbar" id="progress-efektivitas-percentage_udang"
+                    style="width: {{ $udang_efektivitas }}%;" aria-valuenow="{{ $udang_efektivitas }}" aria-valuemin="0"
+                    aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+            {{-- Higenity --}}
+            <div class="col-6">
+              @php($udang_kehigenisan = 0)
+              @if ($machine_combination_udang != null)
+              @php($udang_kehigenisan = $machine_combination_udang->higenity)
+              @endif
+              <div class="progress-wrapper">
+                <div class="progress-info">
+                  <div class="progress-label">
+                    <span class="text-primary">Kehigenisan</span>
+                  </div>
+                  <div class="progress-percentage">
+                    <span id="kehigenisan-percentage_udang">{{ $udang_kehigenisan }}%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar bg-info" role="progressbar" id="progress-kehigenisan-percentage_udang"
+                    style="width: {{ $udang_kehigenisan }}%;" aria-valuenow="{{ $udang_kehigenisan }}" aria-valuemin="0"
+                    aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="table-responsive">
             {{-- Table mesin 1-5 --}}
-            <table class="table align-items-center table-flush mb-3">
+            <table class="table align-items-center table-flush mb-4">
               <thead class="thead-light">
                 <tr>
-                  <th class="border-bottom" scope="col" style="width: 20%">Mesin 1</th>
-                  <th class="border-bottom" scope="col" style="width: 20%">Mesin 2</th>
-                  <th class="border-bottom" scope="col" style="width: 20%">Mesin 3</th>
-                  <th class="border-bottom" scope="col" style="width: 20%">Mesin 4</th>
-                  <th class="border-bottom" scope="col" style="width: 20%">Mesin 5</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 1</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 2</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 3</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 4</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 5</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_1" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 1)">
-                      <option selected disabled value="1">1-Washer</option>
+                  @for ($i = 0; $i < 5; $i++) <td class="text-gray-900" scope="row">
+                    <select disabled class="select2 form-select" id="udang_{{$i+1}}" tabindex="-1" aria-hidden="true"
+                      onchange="setMachine('udang', {{$i+1}})">
+                      @if ($machine_udang_tersimpan != null)
+                      @if (count($machine_udang_tersimpan) >= $i+1)
+                      <option selected disabled value="">{{ $machine_udang_tersimpan[$i]->name }}</option>
+                      @else
+                      @if ($i == 0)
+                      <option selected disabled value="">-- Lakukan Edit --</option>
+                      @else
+                      <option selected disabled value="">-- Pilih Mesin {{ $i }} --</option>
+                      @endif
+                      @endif
+                      @else
+                      @if ($i == 0)
+                      <option selected disabled value="">-- Lakukan Edit --</option>
+                      @else
+                      <option selected disabled value="">-- Pilih Mesin {{ $i }} --</option>
+                      @endif
+                      @endif
                     </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_2" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 2)">
-                      <option disabled selected disabled value="2">2-Steamer</option>
-                    </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_3" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 3)">
-                      <option disabled selected disabled value="3">3-Shrimp Input</option>
-                    </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_4" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 4)">
-                      <option selected disabled value="4">4-Sealer</option>
-                    </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_5" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 5)">
-                      <option selected disabled value="">-- Pilih Mesin 4 --</option>
-                    </select>
-                  </td>
+                    </td>
+                    @endfor
                 </tr>
               </tbody>
             </table>
@@ -130,40 +179,30 @@
             <table class="table align-items-center table-flush">
               <thead class="thead-light">
                 <tr>
-                  <th class="border-bottom" scope="col">Mesin 6</th>
-                  <th class="border-bottom" scope="col">Mesin 7</th>
-                  <th class="border-bottom" scope="col">Mesin 8</th>
-                  <th class="border-bottom" scope="col">Mesin 9</th>
-                  <th class="border-bottom" scope="col">Mesin 10</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 6</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 7</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 8</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 9</th>
+                  <th class="border-bottom" scope="col" style="width: 20%; text-align:center">Mesin 10</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_6" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 6)">
-                      <option selected disabled value="">-- Pilih Mesin 5 --</option>
+                  @for ($i = 5; $i < 10; $i++) <td class="text-gray-900" scope="row">
+                    <select disabled class="select2 form-select" id="udang_{{$i+1}}" tabindex="-1" aria-hidden="true"
+                      onchange="setMachine('udang', {{$i+1}})">
+                      @if ($machine_udang_tersimpan != null)
+                      @if (count($machine_udang_tersimpan) >= $i+1)
+                      <option selected disabled value="">{{ $machine_udang_tersimpan[$i]->name }}</option>
+                      @else
+                      <option selected disabled value="">-- Pilih Mesin {{ $i }} --</option>
+                      @endif
+                      @else
+                      <option selected disabled value="">-- Pilih Mesin {{ $i }} --</option>
+                      @endif
                     </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_7" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 7)">
-                      <option selected disabled value="">-- Pilih Mesin 6 --</option>
-                    </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_8" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 8)">
-                      <option selected disabled value="">-- Pilih Mesin 7 --</option>
-                    </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_9" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 9)">
-                      <option selected disabled value="">-- Pilih Mesin 8 --</option>
-                    </select>
-                  </td>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="udang_10" tabindex="-1" aria-hidden="true" onchange="setMachine('udang', 10)">
-                      <option selected disabled value="">-- Pilih Mesin 9 --</option>
-                    </select>
-                  </td>
+                    </td>
+                    @endfor
                 </tr>
               </tbody>
             </table>
@@ -186,8 +225,10 @@
             </div>
             {{-- Buton Save/ Edit --}}
             <div class="col-6 d-flex justify-content-end">
-              <button class="btn btn-danger me-3" id="edit_kitosan" tipe="button" onclick="edit('kitosan')">Edit</button>
-              <button disabled class="btn btn-success" id="save_kitosan" tipe="button" onclick="save('kitosan')">Save</button>
+              <button class="btn btn-danger me-3" id="edit_kitosan" tipe="button"
+                onclick="edit('kitosan')">Edit</button>
+              <button disabled class="btn btn-success" id="save_kitosan" tipe="button"
+                onclick="save('kitosan')">Save</button>
             </div>
           </div>
         </div>
@@ -195,18 +236,68 @@
           {{-- Alert --}}
           <div class="row">
             <div class="col-12">
-              <div class="alert alert-success alert-dismissible fade show" id="alert_kitosan" style="display:none" role="alert">
+              <div class="alert alert-success alert-dismissible fade show" id="alert_kitosan" style="display:none"
+                role="alert">
                 <span class="fas fa-bullhorn me-1" id="alert-body_kitosan"></span>
               </div>
             </div>
           </div>
+
+          {{-- Effectivity dan Higenity --}}
+          <div class="row mb-4">
+            {{-- Effectivity --}}
+            <div class="col-6">
+              @php($kitosan_efektivitas = 0)
+              @if ($machine_combination_kitosan != null)
+              @php($kitosan_efektivitas = $machine_combination_kitosan->effectivity)
+              @endif
+              <div class="progress-wrapper">
+                <div class="progress-info">
+                  <div class="progress-label">
+                    <span class="text-primary">Efektivitas</span>
+                  </div>
+                  <div class="progress-percentage">
+                    <span id="efektivitas-percentage_kitosan">{{ $kitosan_efektivitas }}%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar bg-info" role="progressbar" id="progress-efektivitas-percentage_kitosan"
+                    style="width: {{ $kitosan_efektivitas }}%;" aria-valuenow="{{ $kitosan_efektivitas }}"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+            {{-- Higenity --}}
+            <div class="col-6">
+              @php($kitosan_kehigenisan = 0)
+              @if ($machine_combination_kitosan != null)
+              @php($kitosan_kehigenisan = $machine_combination_kitosan->higenity)
+              @endif
+              <div class="progress-wrapper">
+                <div class="progress-info">
+                  <div class="progress-label">
+                    <span class="text-primary">Kehigenisan</span>
+                  </div>
+                  <div class="progress-percentage">
+                    <span id="kehigenisan-percentage_kitosan">{{ $kitosan_kehigenisan }}%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar bg-info" role="progressbar" id="progress-kehigenisan-percentage_kitosan"
+                    style="width: {{ $kitosan_kehigenisan }}%;" aria-valuenow="{{ $kitosan_kehigenisan }}"
+                    aria-valuemin="0" aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="table-responsive">
             <table class="table align-items-center table-flush">
               <thead class="thead-light">
                 <tr>
-                  <th class="border-bottom" scope="col">Mesin 1</th>
-                  <th class="border-bottom" scope="col">Mesin 2</th>
-                  <th class="border-bottom" scope="col">Mesin 3</th>
+                  <th class="border-bottom" scope="col" style="width: 33%; text-align:center">Mesin 1</th>
+                  <th class="border-bottom" scope="col" style="width: 33%; text-align:center">Mesin 2</th>
+                  <th class="border-bottom" scope="col" style="width: 33%; text-align:center">Mesin 3</th>
                 </tr>
               </thead>
               <tbody>
@@ -214,24 +305,28 @@
                   @if ($machine_kitosan_tersimpan != null)
                   @foreach ($machine_kitosan_tersimpan as $kitosan_machine)
                   <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="kitosan_{{ $loop->index+1 }}" tabindex="-1" aria-hidden="true" onchange="setMachine('kitosan', {{ $loop->index+1 }})">
+                    <select disabled class="select2 form-select" id="kitosan_{{ $loop->index+1 }}" tabindex="-1"
+                      aria-hidden="true" onchange="setMachine('kitosan', {{ $loop->index+1 }})">
                       <option selected disabled value="">{{ $kitosan_machine->name }}</option>
                     </select>
                   </td>
                   @endforeach
                   @else
                   <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="kitosan_1" tabindex="-1" aria-hidden="true" onchange="setMachine('kitosan', 1)">
+                    <select disabled class="select2 form-select" id="kitosan_1" tabindex="-1" aria-hidden="true"
+                      onchange="setMachine('kitosan', 1)">
                       <option selected disabled value="">-- Lakukan Edit --</option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="kitosan_2" tabindex="-1" aria-hidden="true" onchange="setMachine('kitosan', 2)">
+                    <select disabled class="select2 form-select" id="kitosan_2" tabindex="-1" aria-hidden="true"
+                      onchange="setMachine('kitosan', 2)">
                       <option selected disabled value="">-- Pilih Mesin 1 --</option>
                     </select>
                   </td>
                   <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="kitosan_3" tabindex="-1" aria-hidden="true" onchange="setMachine('kitosan', 3)">
+                    <select disabled class="select2 form-select" id="kitosan_3" tabindex="-1" aria-hidden="true"
+                      onchange="setMachine('kitosan', 3)">
                       <option selected disabled value="">-- Pilih Mesin 2 --</option>
                     </select>
                   </td>
@@ -263,17 +358,67 @@
           {{-- Alert --}}
           <div class="row">
             <div class="col-12">
-              <div class="alert alert-success alert-dismissible fade show" id="alert_saus" style="display:none" role="alert">
+              <div class="alert alert-success alert-dismissible fade show" id="alert_saus" style="display:none"
+                role="alert">
                 <span class="fas fa-bullhorn me-1" id="alert-body_saus"></span>
               </div>
             </div>
           </div>
+
+          {{-- Effectivity dan Higenity --}}
+          <div class="row mb-4">
+            {{-- Effectivity --}}
+            <div class="col-6">
+              @php($saus_efektivitas = 0)
+              @if ($machine_combination_saus != null)
+              @php($saus_efektivitas = $machine_combination_saus->effectivity)
+              @endif
+              <div class="progress-wrapper">
+                <div class="progress-info">
+                  <div class="progress-label">
+                    <span class="text-primary">Efektivitas</span>
+                  </div>
+                  <div class="progress-percentage">
+                    <span id="efektivitas-percentage_saus">{{ $saus_efektivitas }}%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar bg-info" role="progressbar" id="progress-efektivitas-percentage_saus"
+                    style="width: {{ $saus_efektivitas }}%;" aria-valuenow="{{ $saus_efektivitas }}" aria-valuemin="0"
+                    aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+            {{-- Higenity --}}
+            <div class="col-6">
+              @php($saus_kehigenisan = 0)
+              @if ($machine_combination_saus != null)
+              @php($saus_kehigenisan = $machine_combination_saus->higenity)
+              @endif
+              <div class="progress-wrapper">
+                <div class="progress-info">
+                  <div class="progress-label">
+                    <span class="text-primary">Kehigenisan</span>
+                  </div>
+                  <div class="progress-percentage">
+                    <span id="kehigenisan-percentage_saus">{{ $saus_kehigenisan }}%</span>
+                  </div>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar bg-info" role="progressbar" id="progress-kehigenisan-percentage_saus"
+                    style="width: {{ $saus_kehigenisan }}%;" aria-valuenow="{{ $saus_kehigenisan }}" aria-valuemin="0"
+                    aria-valuemax="100"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <div class="table-responsive">
             <table class="table align-items-center table-flush">
               <thead class="thead-light">
                 <tr>
-                  <th class="border-bottom" scope="col">Mesin 1</th>
-                  <th class="border-bottom" scope="col">Mesin 2</th>
+                  <th class="border-bottom" scope="col" style="width: 50%; text-align:center">Mesin 1</th>
+                  <th class="border-bottom" scope="col" style="width: 50%; text-align:center">Mesin 2</th>
                 </tr>
               </thead>
               <tbody>
@@ -281,24 +426,22 @@
                   @if ($machine_saus_tersimpan != null)
                   @foreach ($machine_saus_tersimpan as $saus_machine)
                   <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="saus_1" tabindex="-1" aria-hidden="true" onchange="setMachine('saus', {{ $loop->index+1 }})">
-                      <option selected disabled value="">{{ $saus_machine->name }}</option>
-                    </select>
-                    </th>
-                  <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="saus_{{ $loop->index+1 }}" tabindex="-1" aria-hidden="true" onchange="setMachine('saus', {{ $loop->index+1 }})">
+                    <select disabled class="select2 form-select" id="saus_{{ $loop->index+1 }}" tabindex="-1"
+                      aria-hidden="true" onchange="setMachine('saus', {{ $loop->index+1 }})">
                       <option selected disabled value="">{{ $saus_machine->name }}</option>
                     </select>
                   </td>
                   @endforeach
                   @else
                   <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="saus_1" tabindex="-1" aria-hidden="true" onchange="setMachine('saus', 1)">
+                    <select disabled class="select2 form-select" id="saus_1" tabindex="-1" aria-hidden="true"
+                      onchange="setMachine('saus', 1)">
                       <option selected disabled value="">-- Lakukan Edit --</option>
                     </select>
-                    </th>
+                  </td>
                   <td class="text-gray-900" scope="row">
-                    <select disabled class="select2 form-select" id="saus_2" tabindex="-1" aria-hidden="true" onchange="setMachine('saus', 2)">
+                    <select disabled class="select2 form-select" id="saus_2" tabindex="-1" aria-hidden="true"
+                      onchange="setMachine('saus', 2)">
                       <option selected disabled value="">-- Pilih Mesin 1 --</option>
                     </select>
                   </td>
@@ -323,7 +466,8 @@
           {{-- Alert --}}
           <div class="row">
             <div class="col-12">
-              <div class="alert alert-success alert-dismissible fade show" id="alert_inventory" style="display:none" role="alert">
+              <div class="alert alert-success alert-dismissible fade show" id="alert_inventory" style="display:none"
+                role="alert">
                 <span class="fas fa-bullhorn me-1" id="alert-body_inventory"></span>
               </div>
             </div>
@@ -355,7 +499,8 @@
                     {{$team_machine->season_buy}}
                   </td>
                   <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
-                    <button class="btn btn-danger me-3" id="edit_saus" tipe="button" onclick="jual('{{$team_machine->id}}')">
+                    <button class="btn btn-danger me-3" id="edit_saus" tipe="button"
+                      onclick="jual('{{$team_machine->id}}')">
                       Jual
                     </button>
                   </td>
@@ -382,11 +527,11 @@
         '_token': $('meta[name="csrf-token"]').attr('content'),
       },
       success: function(data) {
-        $option_variable = "<option selected disabled>-- Pilih Mesin --</option>";
+        var option_variable = "<option selected disabled>-- Pilih Mesin --</option>";
         $.each(data.available_machines, (key, available_machine) => {
-          $option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
+          option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
         });
-        $('#' + tipe + '_1').html($option_variable);
+        $('#' + tipe + '_1').html(option_variable);
       }
     });
 
@@ -428,12 +573,12 @@
         'team_machine_id': $('#' + tipe + '_' + index).val(),
       },
       success: function(data) {
-        $option_variable = "<option selected disabled>-- Pilih Mesin --</option>";
+        var option_variable = "<option selected disabled>-- Pilih Mesin --</option>";
         $.each(data.available_machines, (key, available_machine) => {
-          $option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name}
+          option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name}
     (${available_machine.performance})</option>`;
         });
-        $('#' + tipe + '_' + index_berikutnya).html($option_variable);
+        $('#' + tipe + '_' + index_berikutnya).html(option_variable);
       }
     });
     // Kitosan
@@ -462,22 +607,18 @@
         'team_machine_id': id,
       },
       success: function(data) {
-        $table_data = "<tr>";
-        $.each(data.team_mesins, (key, team_mesin)) => {
-          $table_data += `
-    <th class='text-gray-900' scope='row' style='width:20%; text-align:center'>${team_mesin.id}</th>
-    <th class='text-gray-900' scope='row' style='width:20%; text-align:center'>${team_mesin.machine.name}</th>
-    <td class='fw-bolder text-gray-500' scope='row' style='width:20%; text-align:center'>${team_mesin.performance}</td>
-    <td class='fw-bolder text-gray-500' scope='row' style='width:20%; text-align:center'>${team_mesin.season_buy}</td>
-    <td class='fw-bolder text-gray-500' scope='row' style='width:20%; text-align:center'>
-    <button class="btn btn-danger me-3" id="edit_saus" tipe="button" onclick="jual(${$team_mesin.id})">Jual</button>
-    </td>`;
-        }
-        $table_data += "</tr>";
-        $('#inventory_mesin').html($table_data);
-      },
-      error: function(data) {
-
+        var table_data = "<tr>";
+        $.each(data.team_mesins, (key, team_mesin) => {
+          table_data += `<th class="text-gray-900" scope="row" style="width:20%;  text-align:center">${team_mesin.id}</th>
+          <th class="text-gray-900" scope="row" style="width:20%; text-align:center">${team_mesin.machine.name}</th>
+          <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.performance}</td>
+          <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.season_buy}</td>
+          <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
+            <button class="btn btn-danger me-3" id="edit_saus" tipe="button" onclick="jual(${$team_mesin.id})">Jual</button>
+          </td>`;
+        });
+        table_data += "</tr>";
+        $('#inventory_mesin').html(table_data);
       }
     })
   }
@@ -510,6 +651,43 @@
         'tipe': tipe,
       },
       success: function(data) {
+        var efektivitas = 0;
+        var kehigenisan = 0;
+        // Logic disini
+        // Untuk Udang
+        if (tipe == "udang"){
+          if (data.machine_combination_udang != null){
+            efektivitas = data.machine_combination_udang.effectivity;
+            kehigenisan = data.machine_combination_udang.higenity;
+          }
+        }
+
+        // Untuk Kitosan
+        if (tipe == "kitosan"){
+          if (data.machine_combination_kitosan != null){
+            efektivitas = data.machine_combination_kitosan.effectivity;
+            kehigenisan = data.machine_combination_kitosan.higenity;
+          }
+        }
+
+        // Untuk Saus
+        if (tipe == "saus"){
+          if (data.machine_combination_saus != null){
+            efektivitas = data.machine_combination_saus.effectivity;
+            kehigenisan = data.machine_combination_saus.higenity;
+          }
+        }
+        // Ubah percentage
+        $("#efektivitas-percentage_"+tipe).html(efektivitas + "%");
+        $("#kehigenisan-percentage_"+tipe).html(kehigenisan + "%");
+        // Ubah progress bar
+        $("#progress-kehigenisan-percentage_"+tipe).css("width",kehigenisan +"%");
+        $("#progress-efektivitas-percentage_"+tipe).css("width",efektivitas +"%");
+        $("#progress-kehigenisan-percentage_"+tipe).attr("aria-valuenow",kehigenisan);
+        $("#progress-efektivitas-percentage_"+tipe).attr("aria-valuenow",efektivitas);
+
+
+        //Message
         $('#edit_' + tipe).attr('disabled', false);
         $('#save_' + tipe).attr('disabled', true);
         $('#alert_' + tipe).hide();

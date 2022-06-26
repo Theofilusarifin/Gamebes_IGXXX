@@ -10,6 +10,8 @@
         color: #fff !important;
     }
 </style>
+@endsection
+
 @section('content')
 <main class="px-5">
     {{-- Card Ingredient --}}

@@ -27,6 +27,15 @@
                     <span class="sidebar-text">Dashboard</span>
                 </a>
             </li>
+            {{-- Investasi --}}
+            <li class="nav-item {{ request()->is('peserta/investasi') ? ' active' : '' }}">
+                <a href="{{ route("peserta.investasi") }}" class="nav-link">
+                    <i data-feather='dollar-sign' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Investasi</span>
+                </a>
+            </li>
             {{-- List Harga --}}
             <li class="nav-item {{ request()->is('peserta/harga') ? ' active' : '' }}">
                 <a href="{{ route("peserta.harga") }}" class="nav-link">
