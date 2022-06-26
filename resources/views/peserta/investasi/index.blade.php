@@ -28,6 +28,46 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    @if (session()->has('success'))
+                    <div class="col-8" id="alert-success">
+                        <div class="alert alert-success alert-dismissible" role="alert">
+                            <div class="alert-body">
+                                {{-- <p>test pop up</p> --}}
+                                {{session()->get('success')}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <script>
+                        window.setTimeout("hideAlert();", 1000);
+                        function hideAlert() {
+                            $("#alert-success").fadeTo(2500, 500).hide(500, function(){
+                                $("#alert-success").hide(500);
+                            });
+                        }
+                    </script>
+                    @endif
+                    @if (session()->has('error'))
+                    <div class="col-8" id="alert-error">
+                        <div class="alert alert-danger alert-dismissible" role="alert">
+                            <div class="alert-body">
+                                {{session()->get('error')}}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert">
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <script>
+                        window.setTimeout("hideAlert();", 1000);
+                        function hideAlert() {
+                            $("#alert-error").fadeTo(2500, 500).hide(500, function(){
+                                $("#alert-error").hide(500);
+                            });
+                        }
+                    </script>
+                    @endif
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
@@ -42,21 +82,26 @@
                                 @if (count($investation_team) >= $i+1)
                                     <tr>
                                         <td class="fw-bolder">Investasi {{ $i+1 }}</td>
-                                    @if ($investation_team[$i]->start != null)
-                                    
-                                    @else
-                                        <td class="fw-bolder text-success">{{ $investation_team[$i]->profit }} TC</td>
-                                        <td class="fw-bolder text-gray-500">
-                                            <button disabled class="btn btn-secondary" type="button">Start</button>
+                                    @if ($investation_team[$i]->pivot->start == 1 && $investation_team[$i]->pivot->finish == null)
+                                        <td class="fw-bolder text-gray-500">Investasi belum selesai dikerjakan</td>
+                                        <td class="fw-bolder">
+                                            <form action="{{ route('peserta.investasi.show', [$i+1, 1]) }}">
+                                                <input type="submit" class="btn btn-secondary" value="Continue">
+                                            </form>
                                         </td>
-                                    </tr>
+                                    @else
+                                        <td class="fw-bolder text-success">{{ $investation_team[$i]->pivot->total_profit }} TC</td>
+                                        <td class="fw-bolder text-gray-500">
+                                            <button disabled class="btn btn-secondary" type="button">Finished</button>
+                                        </td>
                                     @endif
+                                    </tr>
                                 @else
                                     <tr>
                                         <td class="fw-bolder">Investasi {{ $i+1 }}</td>
-                                        <td class="fw-bolder text-gray-500">Investasi belum dikerjakan</td>
+                                        <td class="fw-bolder text-gray-500">Investasi belum dimulai</td>
                                         <td class="fw-bolder">
-                                            <form action="{{ route('peserta.investasi.show', [$i, 1]) }}">
+                                            <form action="{{ route('peserta.investasi.show', [$i+1, 1]) }}">
                                                 <input type="submit" class="btn btn-secondary" value="Start">
                                             </form>
                                         </td>

@@ -11,7 +11,7 @@ class Question extends Model
         return $this->hasMany(Answer::class, 'question_id');
     }
 
-    public function questions()
+    public function investation()
     {
         return $this->belongsTo(Question::class, 'investation_id');
     }
@@ -19,6 +19,6 @@ class Question extends Model
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'team_question', 'question_id', 'team_id')
-        ->withPivot(['answer']);
+        ->withPivot(['answer', 'is_correct']);
     }
 }

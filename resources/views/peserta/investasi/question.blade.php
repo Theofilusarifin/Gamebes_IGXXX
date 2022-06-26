@@ -60,6 +60,10 @@
         margin: 2px;
     }
 
+    .pilihan>.row>.col-auto {
+        cursor: pointer;
+    }
+
 
     @media (max-width: 1360px) {
         .mc-list-number {
@@ -111,22 +115,39 @@
                         // Default background putih text hitam
                         $classWarna = 'bg-light text-black';
                         if($question->number == $number) {
-                            $classWarna = 'bg-primary text-white';
+                        $classWarna = 'bg-primary text-white';
                         }
-                        else if(isset($question->teams()->where('team_id', Auth::user()->team->id)->first()->pivot->answer)){
-                            $classWarna = 'bg-success text-white';
+                        else if(isset($question->teams()->where('team_id',
+                        Auth::user()->team->id)->first()->pivot->answer)){
+                        $classWarna = 'bg-success text-white';
                         }
                         @endphp
 
                         <button form="submit_submission" style='border: none;' name="tujuan"
-                            value='{{ $question->number }}' class="badge rounded-pill {{ " $classWarna" }}">{{
-                            $question->number }}
+                            value='{{ $question->number }}' class="badge rounded-pill {{ " $classWarna" }}">
+                            {{$question->number }}
                         </button>
                         @endforeach
                     </div>
                 </div>
             </div>
             <br>
+            @if (!is_null($previous))
+            <button form="submit_submission" name="tujuan" value='{{ $previous }}' class="btn btn-secondary"
+                style='float: left; padding: 5px 10px'>
+                <span class='badge rounded-pill badge-light-secondary'>
+                    <i data-feather='arrow-left'></i>
+                </span>
+            </button>
+            @endif
+            @if ($number != $last_number)
+            <button form="submit_submission" name="tujuan" value='{{ $next }}' class="btn btn-secondary"
+                style='float: right; padding: 5px 10px'>
+                <span class='badge rounded-pill badge-light-secondary'>
+                    <i data-feather='arrow-right'></i>
+                </span>
+            </button>
+            @endif
         </div>
     </div>
 
@@ -137,7 +158,7 @@
                 <h5 class="px-4">Nomor {{ $number }}</h5>
             </div>
             <div class="card-body">
-                <form action="" method='POST' id='submit_submission'>
+                <form action="{{ route('peserta.investasi.submit') }}" method='POST' id='submit_submission'>
                     @csrf
                     <input type="hidden" name="question_id" value="{{ $questionNow->id }}">
                     <div class="card-text px-4">
@@ -151,16 +172,16 @@
                             <br>
                             <div class="row">
                                 <div class="col-auto">
-                                    <input class="form-check-input mb-1" type="radio" id='pilihan_{{ $choice->id }}'
-                                        name="jawaban" value="{{ Str::upper($choice->letter) }}"
+                                    <input class="form-check-input mb-1" style="cursor: pointer !important" type="radio" id='pilihan_{{ $choice->id }}'
+                                        name="answer" value="{{ Str::upper($choice->letter) }}"
                                         {{!is_null($currentSubmission) ? (Str::upper($currentSubmission->pivot->answer)
                                     == Str::upper($choice->letter) ? "checked" : "") : "" }}>
                                 </div>
                                 <div class='col-auto'>
-                                    <label for='pilihan_{{ $choice->id }}'>{{ $choice->letter}}.</label>
+                                    <label for='pilihan_{{ $choice->id }}' style="cursor: pointer !important">{{ $choice->letter}}.</label>
                                 </div>
                                 <div class="col-10">
-                                    <label for='pilihan_{{ $choice->id }}'>{{ $choice->answer }}</label>
+                                    <label for='pilihan_{{ $choice->id }}' style="cursor: pointer !important">{{ $choice->answer }}</label>
                                 </div>
                             </div>
                             @endforeach
@@ -184,7 +205,26 @@
         </div>
     </div>
 </div>
-@endsection
+{{-- MODAL FINISH ATTEMPT --}}
+<div class="modal fade" id="finishAttemptModal" tabindex="-1" aria-labelledby="finishAttemptModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Finish Attempt</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
 
-@section('script')
+            <div class="modal-body">
+                <p>Submit All and Finish?</p>
+            </div>
+            <div class="modal-footer">
+                <button class='btn btn-secondary' data-bs-dismiss="modal" aria-label="Close">Cancel</button>
+                <button type='submit' form="submit_submission" name="tujuan" value='end' class="btn btn-danger"
+                    data-bs-dismiss="modal">Submit</button>
+            </div>
+        </div>
+    </div>
+</div>
+{{-- END OF MODAL FINISH ATTEMPT --}}
 @endsection
