@@ -22,10 +22,15 @@ class InvestasiController extends Controller
     public function show(Investation $investation, $number)
     {
         $team = Auth::user()->team;
+        $other_investation_on_doing = $team->investations->where('pivot.start', 1)->where('pivot.finish', 0)->where('id', "!=",$investation->id)->first();
         $investation_on_doing = $team->investations->where('id', $investation->id)->first();
         if ($investation_on_doing != null && $investation_on_doing->pivot->finish == 1) {
-            return redirect()->back()->with("error", "Investasi ini sudah dikerjakan!");
-        } else {
+            return redirect()->route('peserta.investasi')->with("error", "Investasi ini sudah dikerjakan!");
+        }
+        else if ($other_investation_on_doing != null) {
+            return redirect()->route('peserta.investasi')->with("error", "Selesaikan investasi $other_investation_on_doing->id terlebih dahulu!");
+        }
+        else {
             $investation->teams()->sync([
                 $team->id =>
                 [
@@ -51,8 +56,6 @@ class InvestasiController extends Controller
 
             $questionNow = $questions->where('number', '=', $number)->first();
             // dd($questionNow);
-
-            // dd($questionNow->teams()->where('team_id', '=', 1)->first());
 
             $currentSubmission = $questionNow->teams()->where('team_id', '=', Auth::user()->team->id)->first();
 

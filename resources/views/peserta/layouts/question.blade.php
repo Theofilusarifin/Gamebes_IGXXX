@@ -2,6 +2,13 @@
 <html lang="en">
 
 <head>
+    {{-- Kalau Peserta Back, Pagenya Refresh --}}
+    <script>
+        if(performance.navigation.type == 2){
+                            location.reload(true);
+                        }
+    </script>
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- Primary Meta Tags -->
     <title>Industrial Games XXX</title>
