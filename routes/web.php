@@ -38,6 +38,7 @@ Route::group(
 
         // Maintenance
         Route::get('/maintenance', 'Penpos\MaintenanceController@index')->name('maintenance');
+        Route::post('/maintenance/get-team-machines', 'Penpos\MaintenanceController@getTeamMachine')->name('maintenance.get.machine');
         Route::post('/maintenance/save', 'Penpos\MaintenanceController@save')->name('maintenance.save');
 
     }

@@ -35,7 +35,8 @@
                             {{-- Pilih Team --}}
                             <div class="mb-4">
                                 <label class="my-1 me-2" for="team_id">Pilih Team</label>
-                                <select class="form-select" id="team_id" aria-label="Default select example">
+                                <select class="form-select" id="team_id" aria-label="Default select example"
+                                    onchange="getTeamMachines()">
                                     <option selected disabled>-- Pilih Nama Team --</option>
                                     @foreach ($teams as $team)
                                     <option value="{{ $team->id }}">
@@ -50,13 +51,24 @@
                         {{-- Pilih Mesin --}}
                         <div class="col-7">
                             <div class="mb-4">
-                                <label class="my-1 me-2" for="investasi_id">Pilih Mesin</label>
+                                <label class="my-1 me-2" for="team_machine_id">Pilih Mesin</label>
+                                <select disabled class="form-select" id="team_machine_id"
+                                    aria-label="Default select example">
+                                    <option selected disabled>-- Pilih Team Terlebih Dahulu --</option>
+                                </select>
                             </div>
+                        </div>
+                        {{-- Jumlah Barang --}}
+                        <div class="col-5">
+                            <label class="my-1 me-2" for="nilai_maintenance">Persentase Maintenance (%)</label>
+                            <input class="form-control" type="number" min=0 placeholder="-- Persetase Maintenance --"
+                                id='nilai_maintenance' required="">
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-success" id="save_saus" style="width: 100px" type="button" onclick="save()">Save</button>
+                            <button class="btn btn-success" id="save_saus" style="width: 100px" type="button"
+                                onclick="maintenance()">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -64,4 +76,60 @@
         </div>
     </div>
 </main>
+@endsection
+
+@section('script')
+<script>
+    function getTeamMachines() {
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.maintenance.get.machine') }}",
+            data: {
+                '_token': $('meta[name="csrf-token"]').attr('content'),
+                'team_id': $('#team_id').val()
+            },
+            success: function(data) {
+                var option_variable = "<option selected disabled>-- Pilih Mesin --</option>";
+                $.each(data.team_machines, (key, team_machine) => {
+                    option_variable += `<option value=${team_machine.id}>${team_machine.id}-${team_machine.machine.name}
+                    (${team_machine.performance})</option>`;
+                });
+                $('#team_machine_id').attr('disabled', false)
+                $('#team_machine_id').html(option_variable);
+            }
+        });
+    }
+
+    function maintenance() {
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.maintenance.save') }}",
+            data: {
+                '_token': $('meta[name="csrf-token"]').attr('content'),
+                'team_id': $('#team_id').val(),
+                'team_machine_id': $('#team_machine_id').val(),
+                'nilai_maintenance': $('#nilai_maintenance').val(),
+            },
+            success: function(data) {
+                if (data.status != ""){
+                    $('#alert').hide();
+                    $('#alert').show();
+                    $('#alert-body').html(data.msg);
+                
+                    $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                        $("#alert").hide(1000);
+                    });
+                    if (data.status == "success") {
+                        $('#alert').removeClass("alert-danger");
+                        $('#alert').addClass("alert-success");
+                    }
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                    }
+                }
+            }
+        });
+    }
+</script>
 @endsection

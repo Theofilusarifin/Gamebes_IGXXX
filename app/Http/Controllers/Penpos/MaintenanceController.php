@@ -3,11 +3,76 @@
 namespace App\Http\Controllers\Penpos;
 
 use App\Http\Controllers\Controller;
+use App\Machine;
+use App\Team;
+use App\TeamMachine;
 use Illuminate\Http\Request;
 
 class MaintenanceController extends Controller
 {
     public function index(){
-        return view('penpos.maintenance.index');
+        $teams = Team::all();
+        return view('penpos.maintenance.index', compact('teams'));
+    }
+
+    public function getTeamMachine(Request $request){
+        $team_id = $request['team_id'];
+        $team_machines = TeamMachine::where('team_id', $team_id)->where('season_sell', null)->get();
+
+        // Masukkan detail machine kedalam array available machine
+        $index = 0;
+        foreach ($team_machines as $team_machine) {
+            $machine = Machine::where('id', $team_machine->machine_id)->first();
+            $team_machines[$index]->machine = $machine;
+            $index++;
+        }
+
+        return response()->json(
+            array(
+                'team_machines' => $team_machines,
+            ),
+            200
+        );
+    }
+
+    public function save(Request $request){
+        $team = Team::find($request['team_id']);
+        $team_machine = TeamMachine::find($request['team_machine_id']);
+        $nilai_maintenance = $request['nilai_maintenance'];
+        
+        $msg = '';
+        $status = '';
+
+        // Logic harga maintenance
+        $total_price = 10;
+
+        // Uang tidak cukup
+        if ($team->tc < $total_price){
+            $status = 'error';
+            $msg = 'Tiggie Coin yang dimiliki tidak cukup untuk melakukan Maintenance Mesin!';
+        }
+
+        else{
+            // Tambahkan performance dari mesin
+            $team_machine->performance = $team_machine->performance + $nilai_maintenance;
+            if ($team_machine->performance > 100) $team_machine->performance = 100;
+            $team_machine->save();
+
+            // Update status team
+            $team->tc = $team->tc - $total_price;
+            $team->total_spend = $team->total_spend + $total_price;
+            $team->total_maintenance = $team->total_maintenance+1;
+            $team->save();
+
+            $status = 'success';
+            $msg = 'Maintenance berhasil dilakukan';
+        }
+        return response()->json(
+            array(
+                'status' => $status,
+                'msg' => $msg,
+            ),
+            200
+        );
     }
 }

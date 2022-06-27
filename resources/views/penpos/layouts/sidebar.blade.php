@@ -27,7 +27,8 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ request()->is('penpos/map') ? ' active' : '' }} {{ request()->is('penpos/map/*') ? ' active' : '' }}">
+            <li
+                class="nav-item {{ request()->is('penpos/map') ? ' active' : '' }} {{ request()->is('penpos/map/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.map') }}" class="nav-link">
                     <i data-feather='map' style="width: 24px; height:24px;"></i>
                     <span class="sidebar-icon">
@@ -36,7 +37,8 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ request()->is('penpos/marketing') ? ' active' : '' }} {{ request()->is('penpos/marketing/*') ? ' active' : '' }}">
+            <li
+                class="nav-item {{ request()->is('penpos/marketing') ? ' active' : '' }} {{ request()->is('penpos/marketing/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.marketing') }}" class="nav-link">
                     <i data-feather='shopping-cart' style="width: 24px; height:24px;"></i>
                     <span class="sidebar-icon">
@@ -45,7 +47,18 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ request()->is('penpos/investasi') ? ' active' : '' }} {{ request()->is('penpos/investasi/*') ? ' active' : '' }}">
+            <li
+                class="nav-item {{ request()->is('penpos/maintenance') ? ' active' : '' }} {{ request()->is('penpos/maintenance/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.maintenance') }}" class="nav-link">
+                    <i data-feather='tool' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Maintenance</span>
+                </a>
+            </li>
+
+            <li
+                class="nav-item {{ request()->is('penpos/investasi') ? ' active' : '' }} {{ request()->is('penpos/investasi/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.investasi') }}" class="nav-link">
                     <i data-feather='dollar-sign' style="width: 24px; height:24px;"></i>
                     <span class="sidebar-icon">
@@ -54,7 +67,8 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ request()->is('penpos/update-season') ? ' active' : '' }} {{ request()->is('penpos/update-season/*') ? ' active' : '' }}">
+            <li
+                class="nav-item {{ request()->is('penpos/update-season') ? ' active' : '' }} {{ request()->is('penpos/update-season/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.update.season') }}" class="nav-link">
                     <i data-feather='arrow-up' style="width: 24px; height:24px;"></i>
                     <span class="sidebar-icon">
@@ -63,14 +77,6 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ request()->is('penpos/maintenance') ? ' active' : '' }} {{ request()->is('penpos/maintenance/*') ? ' active' : '' }}">
-                <a href="{{ route('penpos.maintenance') }}" class="nav-link">
-                    <i data-feather='tool' style="width: 24px; height:24px;"></i>
-                    <span class="sidebar-icon">
-                    </span>
-                    <span class="sidebar-text">Maintenance</span>
-                </a>
-            </li>
             {{-- <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li> --}}
 
         </ul>

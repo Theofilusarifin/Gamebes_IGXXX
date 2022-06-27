@@ -72,7 +72,7 @@ class InvestasiController extends Controller
         $answer = $request['answer'];
 
         if (isset($answer)) {
-            $team_id = Auth::user()->team->id;
+            $team = Auth::user()->team;
 
             //Get Jawaban Benar
             $correct_answer = $questionNow->answers->where('letter', $answer)->first();
@@ -86,7 +86,7 @@ class InvestasiController extends Controller
                 $is_correct = 0;
 
             $questionNow->teams()->sync([
-                $team_id =>
+                $team->id =>
                 [
                     'answer' => $answer,
                     'is_correct' => $is_correct
@@ -97,18 +97,22 @@ class InvestasiController extends Controller
         // Navigation
         $number = $request["tujuan"];
 
-        $total_correct = Auth::user()->team->questions->where('investation_id', '=', $investation->id)->sum("pivot.is_correct");
+        $total_correct = $team->questions->where('investation_id', '=', $investation->id)->sum("pivot.is_correct");
 
         // Logic Score
         $total_profit = $total_correct * ($investation->profit / 10);
 
-        Auth::user()->team->investations()->sync([$investation->id => ['total_profit' => $total_profit]], false);
+        $team->investations()->sync([$investation->id => ['total_profit' => $total_profit]], false);
 
         // Jika bukan submit, di return langsung
         if ($number != 'end') return redirect(route('peserta.investasi.show', [$investation->id, $number]));
 
         // Jika end attempt, update total skor & waktu selesai
-        Auth::user()->team->investations()->sync([$investation->id => ['finish' => 1]], false);
+        $team->investations()->sync([$investation->id => ['finish' => 1]], false);
+        $team->tc = $team->tc + $total_profit;
+        $team->total_income = $team->total_income + $total_profit;
+        $team->save();
+
         session()->flash("success", "Investasi berhasil diselesaikan");
         return redirect(route('peserta.investasi'));
     }
