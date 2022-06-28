@@ -14,7 +14,7 @@
     }
 
     .water{
-        width: 10px;
+        width: 15px;
         height: 15px;
         background-color: #8DB5F8
     }
@@ -86,15 +86,14 @@
 <div class="row my-2 d-flex mx-2">
     {{-- Map --}}
     <div class="col-9" id="col_map">
-        @php($column = 60)
+        @php($column = 44)
+        @php($index_pelabuhan = 1)
         <table id="mainTable" class="m-4">
             @foreach ($territories as $territory)
+            {{-- Buka Tr --}}
+            @if ($loop->index == 0 || $loop->index % $column == 0)@php($dibuka = $loop->index)<tr>@endif
+                
                 @php($alias = "")
-                {{-- Buka Tr --}}
-                @if($territory->open_tr)
-                    <tr>
-                @endif
-
                 {{-- Inisialisasi Class --}}
                 @php($class="")
                 @php($onclick=false)
@@ -104,6 +103,9 @@
                 @elseif ($territory->is_harbour) 
                     @php($class="harbour")
                     @php($onclick=true)
+                    {{-- Kasik nama ke pelabuhan --}}
+                    @php($alias = "P".$index_pelabuhan)
+                    @php($index_pelabuhan+=1)
                 @elseif ($territory->is_company) @php($class="company")
                 
                 {{-- Store --}}
@@ -121,48 +123,9 @@
                     @php($alias = $territory->service_id)
                 @endif
 
-                {{-- Kasik nama ke pelabuhan --}}
-                @if($territory->id == 170) @php($alias = "P1")
-                @elseif($territory->id == 221) @php($alias = "P2")
-                @elseif($territory->id == 272) @php($alias = "P3")
-                @elseif($territory->id == 322) @php($alias = "P4")
-                @elseif($territory->id == 372) @php($alias = "P5")
-                @elseif($territory->id == 423) @php($alias = "P6")
-                @elseif($territory->id == 474) @php($alias = "P7")
-                @elseif($territory->id == 524) @php($alias = "P8")
-                @elseif($territory->id == 574) @php($alias = "P9")
-                @elseif($territory->id == 625) @php($alias = "P10")
-                @elseif($territory->id == 676) @php($alias = "P11")
-                @elseif($territory->id == 726) @php($alias = "P12")
-                @elseif($territory->id == 776) @php($alias = "P13")
-                @elseif($territory->id == 827) @php($alias = "P14")
-                @elseif($territory->id == 878) @php($alias = "P15")
-                @elseif($territory->id == 928) @php($alias = "P16")
-                @elseif($territory->id == 978) @php($alias = "P17")
-                @elseif($territory->id == 1029) @php($alias = "P18")
-                @elseif($territory->id == 209) @php($alias = "P19")
-                @elseif($territory->id == 260) @php($alias = "P20")
-                @elseif($territory->id == 311) @php($alias = "P21")
-                @elseif($territory->id == 361) @php($alias = "P22")
-                @elseif($territory->id == 411) @php($alias = "P23")
-                @elseif($territory->id == 462) @php($alias = "P24")
-                @elseif($territory->id == 513) @php($alias = "P25")
-                @elseif($territory->id == 563) @php($alias = "P26")
-                @elseif($territory->id == 613) @php($alias = "P27")
-                @elseif($territory->id == 664) @php($alias = "P28")
-                @elseif($territory->id == 715) @php($alias = "P29")
-                @elseif($territory->id == 765) @php($alias = "P30")
-                @elseif($territory->id == 815) @php($alias = "P31")
-                @elseif($territory->id == 866) @php($alias = "P32")
-                @elseif($territory->id == 917) @php($alias = "P33")
-                @elseif($territory->id == 967) @php($alias = "P34")
-                @elseif($territory->id == 1017) @php($alias = "P35")
-                @elseif($territory->id == 1068) @php($alias = "P36")
-                @endif
-
                 {{-- Buat Td --}}
                 @if($onclick)
-                    <td class="{{ $class }}" id="{{ $territory->id }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}" onclick="setSpawnPoint({{ $territory->id }})">
+                    <td class="{{ $class }}" id="{{ $territory->id }}" onclick="setSpawnPoint({{ $territory->id }})">
                         @if($territory->num_occupant > 0)
                             <div class="dot">{{ $territory->teams->first()->id }}</div>
                             @php($alias = "")
@@ -170,7 +133,7 @@
                         {{ $alias }}
                     </td>
                 @else
-                    <td class="{{ $class }}" num_occupants="{{ $territory->num_occupant }}" id="{{ $territory->id }}" rowspan="{{ $territory->rowspan }}" colspan="{{ $territory->colspan }}">
+                    <td class="{{ $class }}" num_occupants="{{ $territory->num_occupant }}" id="{{ $territory->id }}">
                         @if($territory->num_occupant > 0)
                             <div class="dot">{{ $territory->teams->first()->id }}</div>
                             @php($alias = "")
@@ -180,9 +143,7 @@
                 @endif
                 
                 {{-- Nutup tr --}}
-                @if($territory->close_tr)
-                    </tr>
-                @endif
+                @if($loop->index == $dibuka + $column)</tr>@endif
             @endforeach
         </table>
     </div>

@@ -125,8 +125,6 @@ class MapController extends Controller
         // Ambil variabel awal yang dibutuhkan
         $team = Team::find($request['team_id']);
         $arah = $request['arah'];
-        $lebar_atas = 0;
-        $lebar_bawah = 0;
         $jalan_lurus = false;
         $jalan_diagonal = false;
         $harga_jalan = 0;
@@ -153,71 +151,17 @@ class MapController extends Controller
                     $old_territory = Territory::find($t_id);
 
                     // Menentukan lebar map
-                    if ($t_id < 210) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 261) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 312) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 362) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 412) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 463) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 514) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 564) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 615) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 665) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 716) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 766) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 816) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 867) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 918) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 968) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 50;
-                    } else if ($t_id < 1018) {
-                        $lebar_atas = 50;
-                        $lebar_bawah = 51;
-                    } else if ($t_id < 1069) {
-                        $lebar_atas = 51;
-                        $lebar_bawah = 51;
-                    }
+                    $lebar_map = 44;
 
                     // Menentukan Posisi
                     if ($arah == 'atas') {
-                        $t_id -= $lebar_atas;
+                        $t_id -= $lebar_map;
                         $jalan_lurus = true;
                     } else if ($arah == 'kanan_atas') {
-                        $t_id -= ($lebar_atas + 1);
+                        $t_id -= ($lebar_map + 1);
                         $jalan_diagonal = true;
                     } else if ($arah == 'kiri_atas') {
-                        $t_id -= ($lebar_atas - 1);
+                        $t_id -= ($lebar_map - 1);
                         $jalan_diagonal = true;
                     } else if ($arah == 'kanan') {
                         $t_id += 1;
@@ -226,13 +170,13 @@ class MapController extends Controller
                         $t_id -= 1;
                         $jalan_lurus = true;
                     } else if ($arah == 'bawah') {
-                        $t_id += $lebar_bawah;
+                        $t_id += $lebar_map;
                         $jalan_lurus = true;
                     } else if ($arah == 'kanan_bawah') {
-                        $t_id += ($lebar_bawah + 1);
+                        $t_id += ($lebar_map + 1);
                         $jalan_diagonal = true;
                     } else if ($arah == 'kiri_bawah') {
-                        $t_id += ($lebar_bawah - 1);
+                        $t_id += ($lebar_map - 1);
                         $jalan_diagonal = true;
                     }
 
@@ -323,7 +267,7 @@ class MapController extends Controller
         $territory = Territory::find($team->territory_id);
 
         // Status dan message yang diberikan
-        $msg = '';
+        $msg = 'Daerah yang dipilih bukan merupakan sebuah store!';
         $status = 'error';
         $response = 'error';
 

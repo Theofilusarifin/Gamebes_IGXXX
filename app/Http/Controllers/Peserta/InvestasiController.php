@@ -22,15 +22,13 @@ class InvestasiController extends Controller
     public function show(Investation $investation, $number)
     {
         $team = Auth::user()->team;
-        $other_investation_on_doing = $team->investations->where('pivot.start', 1)->where('pivot.finish', 0)->where('id', "!=",$investation->id)->first();
+        $other_investation_on_doing = $team->investations->where('pivot.start', 1)->where('pivot.finish', 0)->where('id', "!=", $investation->id)->first();
         $investation_on_doing = $team->investations->where('id', $investation->id)->first();
         if ($investation_on_doing != null && $investation_on_doing->pivot->finish == 1) {
             return redirect()->route('peserta.investasi')->with("error", "Investasi ini sudah dikerjakan!");
-        }
-        else if ($other_investation_on_doing != null) {
+        } else if ($other_investation_on_doing != null) {
             return redirect()->route('peserta.investasi')->with("error", "Selesaikan investasi $other_investation_on_doing->id terlebih dahulu!");
-        }
-        else {
+        } else {
             $investation->teams()->sync([
                 $team->id =>
                 [
@@ -75,9 +73,9 @@ class InvestasiController extends Controller
             $team = Auth::user()->team;
 
             //Get Jawaban Benar
-            $correct_answer = $questionNow->answers->where('letter', $answer)->first();
+            $user_answer = $questionNow->answers->where('letter', $answer)->first();
 
-            $correct = $correct_answer->is_correct == 1 ? true : false;
+            $correct = $user_answer == $questionNow->correct_answer ? true : false;
 
             //Get Skor
             if ($correct)

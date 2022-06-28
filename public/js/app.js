@@ -43685,18 +43685,25 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
       _token: $('meta[name="csrf-token"]').attr("content")
     },
     success: function success(data) {
+      var column = 44;
+      var index_pelabuhan = 1;
+      var dibuka = "";
       $.each(data.territories, function (key, territory) {
-        var alias = "";
-
-        if (territory.open_tr) {
+        // Buka TR
+        if (key == 0 || key % column == 0) {
+          dibuka = key;
           tableData += "<tr>";
-        }
+        } // Inisiasi Class
 
+
+        var alias = "";
         var classes = "";
         var onclick = false;
         if (territory.is_wall) classes = "wall";else if (territory.is_water) classes = "water";else if (territory.is_harbour) {
           classes = "harbour";
           onclick = true;
+          alias = "P" + index_pelabuhan;
+          index_pelabuhan++;
         } else if (territory.is_company) classes = "company"; // Store
         else if (territory.transport_store_id != null) {
           classes = "transport_store";
@@ -43710,11 +43717,10 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         } else if (territory.service_id != null) {
           classes = "service";
           alias = territory.service_id;
-        }
-        if (territory.id == 170) alias = "P1";else if (territory.id == 221) alias = "P2";else if (territory.id == 272) alias = "P3";else if (territory.id == 322) alias = "P4";else if (territory.id == 372) alias = "P5";else if (territory.id == 423) alias = "P6";else if (territory.id == 474) alias = "P7";else if (territory.id == 524) alias = "P8";else if (territory.id == 574) alias = "P9";else if (territory.id == 625) alias = "P10";else if (territory.id == 676) alias = "P11";else if (territory.id == 726) alias = "P12";else if (territory.id == 776) alias = "P13";else if (territory.id == 827) alias = "P14";else if (territory.id == 878) alias = "P15";else if (territory.id == 928) alias = "P16";else if (territory.id == 978) alias = "P17";else if (territory.id == 1029) alias = "P18";else if (territory.id == 209) alias = "P19";else if (territory.id == 260) alias = "P20";else if (territory.id == 311) alias = "P21";else if (territory.id == 361) alias = "P22";else if (territory.id == 411) alias = "P23";else if (territory.id == 462) alias = "P24";else if (territory.id == 513) alias = "P25";else if (territory.id == 563) alias = "P26";else if (territory.id == 613) alias = "P27";else if (territory.id == 664) alias = "P28";else if (territory.id == 715) alias = "P29";else if (territory.id == 765) alias = "P30";else if (territory.id == 815) alias = "P31";else if (territory.id == 866) alias = "P32";else if (territory.id == 917) alias = "P33";else if (territory.id == 967) alias = "P34";else if (territory.id == 1017) alias = "P35";else if (territory.id == 1068) alias = "P36"; // Buat TD
+        } // Buat TD
 
         if (onclick) {
-          tableData += "<td class='".concat(classes, "' id='").concat(territory.id, "' rowspan='").concat(territory.rowspan, "' colspan='").concat(territory.colspan, "' onclick=\"setSpawnPoint(").concat(territory.id, ")\">");
+          tableData += "<td class='".concat(classes, "' id='").concat(territory.id, "' onclick=\"setSpawnPoint(").concat(territory.id, ")\">");
 
           if (territory.num_occupant > 0) {
             tableData += "<div class='dot'> ".concat(territory.teams[0].id, " </div>");
@@ -43724,7 +43730,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
           tableData += " ".concat(alias, " ");
           tableData += "</td>";
         } else {
-          tableData += "<td class='".concat(classes, "' id='").concat(territory.id, "' rowspan='").concat(territory.rowspan, "' colspan='").concat(territory.colspan, "'>");
+          tableData += "<td class='".concat(classes, "' id='").concat(territory.id, "'>");
 
           if (territory.num_occupant > 0) {
             tableData += "<div class='dot'> ".concat(territory.teams[0].id, " </div>");

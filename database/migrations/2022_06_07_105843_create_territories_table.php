@@ -16,11 +16,6 @@ class CreateTerritoriesTable extends Migration
         Schema::create('territories', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('num_occupant');
-            $table->integer('rowspan');
-            $table->integer('colspan');
-
-            $table->tinyInteger('open_tr');
-            $table->tinyInteger('close_tr');
 
             $table->tinyInteger('is_wall');
             $table->tinyInteger('is_water');
