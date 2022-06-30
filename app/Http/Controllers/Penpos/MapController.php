@@ -55,11 +55,17 @@ class MapController extends Controller
         // Kalau penpos sudah select team
         if (isset($team)) {
             // Kalau team memang belum berada pada suatu territory (Territory idnya null)
-            if (!isset($team->territory_id)) {
+            if ((!isset($team->territory_id)) || ($team->territory_id > 1000)) {
                 // Kalau territory yang dipilih adalah territory valid
                 if (isset($territory)) {
                     // Territory yang dipilih adalah daerah spawn
                     if ($territory->is_harbour) {
+                        if ($team->territory_id > 1000) {
+                            $team_company = Territory::find($team->territory_id);
+                            $team_company->num_occupant = $team_company->num_occupant - 1;
+                            $team_company->save();
+                        }
+
                         // Update territory team ke territory Pelabuhan
                         $team->territory_id = $territory->id;
                         // Kalau panas hujan harganya 30
@@ -356,8 +362,7 @@ class MapController extends Controller
             $response = 'error';
             $status = 'error';
             $msg = 'Capacity ingridient yang dibawa telah mencapai maksimum!';
-        } 
-        else{
+        } else {
             // Check Apakah Service
             if ($territory->service_id != null) {
                 $store = Service::find($territory->service_id);
@@ -550,7 +555,13 @@ class MapController extends Controller
 
                                 // Update tambahkan banyak yang sekarang dengan yang dibeli
                                 $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
+
+                                if ($territory->ingridient_store_id != null){
+                                    // Tambahkan capacity team
+                                    $team->current_capacity = $team->capacity + $item->capacity;
+                                }
                                 $team->save();
+
 
                                 $status = 'success';
                                 $response = 'success';
@@ -599,38 +610,45 @@ class MapController extends Controller
         if ($team->id <= 10) {
             $territory_id = 1002 + (2 * ($team->id - 1));
         } else if ($team->id <= 20) {
-            $territory_id = 1023 + (2 * ($team->id - 1));
+            $territory_id = 1023 + (2 * ($team->id - 11));
         } else if ($team->id <= 30) {
-            $territory_id = 1046 + (2 * ($team->id - 1));
+            $territory_id = 1046 + (2 * ($team->id - 21));
         } else if ($team->id <= 40) {
-            $territory_id = 1067 + (2 * ($team->id - 1));
+            $territory_id = 1067 + (2 * ($team->id - 31));
         }
 
         // Companynya
         $team_company = Territory::find($territory_id);
 
-        // Territory baru adalah territory valid
-        if (isset($new_territory)) {
-            // Territory aman
-            // Update Posisi ke database
-            $team->territory_id = $team_company;
-            $team->current_capacity = 0;
-            $team->save();
-
-            // Update num occupant di territory lama
-            $old_territory->num_occupant = $old_territory->num_occupant - 1;
-            $old_territory->save();
-            // Update num occupant di territory baru
-            $team_company->num_occupant = $team_company->num_occupant + 1;
-            $team_company->save();
-
-            $status = 'success';
-            $msg = 'Berhasil kembali ke company';
-        } else {
+        if ($team_company->id == $old_territory->id) {
             $status = 'error';
             $response = 'error';
-            $msg = 'Territory tidak valid!';
+            $msg = 'Team ini sudah berada pada company!';
+        } else {
+            // Territory baru adalah territory valid
+            if (isset($team_company)) {
+                // Territory aman
+                // Update Posisi ke database
+                $team->territory_id = $team_company->id;
+                $team->current_capacity = 0;
+                $team->save();
+
+                // Update num occupant di territory lama
+                $old_territory->num_occupant = $old_territory->num_occupant - 1;
+                $old_territory->save();
+                // Update num occupant di territory baru
+                $team_company->num_occupant = $team_company->num_occupant + 1;
+                $team_company->save();
+
+                $status = 'success';
+                $msg = 'Berhasil kembali ke company';
+            } else {
+                $status = 'error';
+                $response = 'error';
+                $msg = 'Territory tidak valid!';
+            }
         }
+
 
         if ($response != 'error') event(new UpdateMap("updateMap"));
         return response()->json(array(

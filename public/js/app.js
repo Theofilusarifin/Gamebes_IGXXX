@@ -43678,6 +43678,8 @@ __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
   console.log(e.message);
   var tableData = "";
+  var tableDataUpper = "";
+  var tableDataLower = "";
   $.ajax({
     type: "POST",
     url: "/map/update-map",
@@ -43685,6 +43687,22 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
       _token: $('meta[name="csrf-token"]').attr("content")
     },
     success: function success(data) {
+      tableDataUpper += "<tr>";
+      $.each(data.upper_companies, function (key, upper_company) {
+        var classUpper = "empty";
+
+        if (upper_company.is_company) {
+          classUpper = "company";
+        }
+
+        if (upper_company.num_occupant > 0) {
+          tableDataUpper += "<td class='".concat(classUpper, "' id='").concat(upper_company.id, "'>\n                        <div class=\"dot\">").concat(upper_company.teams[0].id, "</div>\n                    </td>");
+        } else {
+          tableDataUpper += "<td class='".concat(classUpper, "' id='").concat(upper_company.id, "'></td>");
+        }
+      });
+      tableDataUpper += "</tr>";
+      $("#mainTableUpper").html(tableDataUpper);
       var column = 44;
       var index_pelabuhan = 1;
       var dibuka = "";
@@ -43744,6 +43762,22 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
 
         if (territory.close_tr) tableData += "</tr>";
       }), $("#mainTable").html(tableData);
+      tableDataLower += "<tr>";
+      $.each(data.lower_companies, function (key, lower_company) {
+        var classLower = "empty";
+
+        if (lower_company.is_company) {
+          classLower = "company";
+        }
+
+        if (lower_company.num_occupant > 0) {
+          tableDataLower += "<td class='".concat(classLower, "' id='").concat(lower_company.id, "'>\n                        <div class=\"dot\">").concat(lower_company.teams[0].id, "</div>\n                    </td>");
+        } else {
+          tableDataLower += "<td class='".concat(classLower, "' id='").concat(lower_company.id, "'></td>");
+        }
+      });
+      tableDataLower += "</tr>";
+      $("#mainTableLower").html(tableDataLower);
       $(".btn-control-action").attr("disabled", false);
     }
   });

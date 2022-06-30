@@ -3,6 +3,9 @@ require("./bootstrap");
 window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
     console.log(e.message);
     let tableData = "";
+    let tableDataUpper = "";
+    let tableDataLower = "";
+
     $.ajax({
         type: "POST",
         url: "/map/update-map",
@@ -10,6 +13,23 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
         success: function (data) {
+            tableDataUpper += `<tr>`;
+            $.each(data.upper_companies, (key, upper_company) => {
+                let classUpper = "empty";
+                if (upper_company.is_company) {
+                    classUpper = "company";
+                }
+                if (upper_company.num_occupant > 0) {
+                    tableDataUpper += `<td class='${classUpper}' id='${upper_company.id}'>
+                        <div class="dot">${upper_company.teams[0].id}</div>
+                    </td>`;
+                } else {
+                    tableDataUpper += `<td class='${classUpper}' id='${upper_company.id}'></td>`;
+                }
+            });
+            tableDataUpper += `</tr>`;
+            $("#mainTableUpper").html(tableDataUpper);
+
             let column = 44;
             let index_pelabuhan = 1;
             let dibuka = "";
@@ -72,6 +92,24 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 if (territory.close_tr) tableData += `</tr>`;
             }),
             $("#mainTable").html(tableData);
+
+            tableDataLower += `<tr>`;
+            $.each(data.lower_companies, (key, lower_company) => {
+                let classLower = "empty";
+                if (lower_company.is_company) {
+                    classLower = "company";
+                }
+                if (lower_company.num_occupant > 0) {
+                    tableDataLower += `<td class='${classLower}' id='${lower_company.id}'>
+                        <div class="dot">${lower_company.teams[0].id}</div>
+                    </td>`;
+                } else {
+                    tableDataLower += `<td class='${classLower}' id='${lower_company.id}'></td>`;
+                }
+            });
+            tableDataLower += `</tr>`;
+            $("#mainTableLower").html(tableDataLower);
+
             $(".btn-control-action").attr("disabled", false);
         },
     });

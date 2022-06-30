@@ -89,7 +89,7 @@
 <div class="row my-2 d-flex mx-2">
     {{-- Map --}}
     <div class="col-9" id="col_map">
-        <table id="mainTable" class="m-4">
+        <table id="mainTableUpper" class="m-4">
             <tr>
                 @foreach ($upper_companies as $upper_company)
                     {{-- Tentukan Class --}}
@@ -169,7 +169,7 @@
             @endforeach
         </table>
 
-        <table id="mainTable" class="m-4">
+        <table id="mainTableLower" class="m-4">
             <tr>
                 @foreach ($lower_companies as $lower_company)
                     {{-- Tentukan Class --}}
