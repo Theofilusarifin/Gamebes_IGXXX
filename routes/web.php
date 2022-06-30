@@ -23,6 +23,8 @@ Route::group(
         Route::post('/map/spawn', 'Penpos\MapController@spawn')->name('map.spawn');
         Route::post('/map/action', 'Penpos\MapController@action')->name('map.action');
         Route::post('/map/action/buy-items', 'Penpos\MapController@buy')->name('map.buy');
+        Route::post('/map/get/capacity', 'Penpos\MapController@getCapacity')->name('map.get.capacity');
+        Route::post('/map/back/to/company', 'Penpos\MapController@backToCompany')->name('map.back.to.company');
 
         // Marketing
         Route::get('/marketing', 'Penpos\MarketingController@index')->name('marketing');

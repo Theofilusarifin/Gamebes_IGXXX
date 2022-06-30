@@ -24,6 +24,7 @@ class CreateTeamsTable extends Migration
             $table->integer('d_moves')->nullable();
             $table->integer('total_income')->nullable();
             $table->integer('total_spend')->nullable();
+            $table->integer('current_capacity')->default(0);
 
             $table->integer('machine_assembly')->nullable();
             $table->integer('total_spawn')->nullable();

@@ -21,16 +21,22 @@ class MapController extends Controller
 {
     public function index()
     {
-        $territories = Territory::all();
+        $territories = Territory::where('id', '<=', 968)->get();
+        $upper_companies = Territory::where('id', '>=', 1000)->where('id', '<=', 1043)->get();
+        $lower_companies = Territory::where('id', '>=', 1044)->where('id', '<=', 1087)->get();
         $teams = Team::all();
-        return view('penpos.map.index', compact('territories', 'teams'));
+        return view('penpos.map.index', compact('territories', 'teams', 'upper_companies', 'lower_companies'));
     }
 
     public function updateMap()
     {
-        $territories = Territory::with('teams')->get();
+        $territories = Territory::with('teams')->where('id', '<=', 968)->get();
+        $upper_companies = Territory::with('teams')->where('id', '>=', 1000)->where('id', '<=', 1043)->get();
+        $lower_companies = Territory::with('teams')->where('id', '>=', 1044)->where('id', '<=', 1087)->get();
         return response()->json(array(
             'territories' => $territories,
+            'upper_companies' => $upper_companies,
+            'lower_companies' => $lower_companies,
         ), 200);
     }
 
@@ -139,11 +145,11 @@ class MapController extends Controller
             // Kalau dia sudah di map  
             if (isset($team->territory_id)) {
                 // Pengecekan apakah capacity sudah melebihi
-                // $sisa_move = $request['sisa_move'];
-                if (false) {
-                    // $response = 'error';
-                    // $status = 'error';
-                    // $msg = 'Sisa langkah telah habis!';
+                $current_capacity = $request['current_capacity'];
+                if ($current_capacity > 100) {
+                    $response = 'error';
+                    $status = 'error';
+                    $msg = 'Capacity ingridient yang dibawa telah mencapai maksimum!';
                 } else {
                     // Posisi lama pemain
                     $t_id = $team->territory_id;
@@ -260,6 +266,17 @@ class MapController extends Controller
         ), 200);
     }
 
+    public function getCapacity(Request $request)
+    {
+        // Ambil variabel awal yang dibutuhkan
+        $team = Team::find($request['team_id']);
+        $status = 'success';
+        return response()->json(array(
+            'team' => $team,
+            'status' => $status,
+        ), 200);
+    }
+
     public function action(Request $request)
     {
         // Ambil variabel awal yang dibutuhkan
@@ -273,30 +290,39 @@ class MapController extends Controller
 
         $store = null;
         $store_items = null;
-        // Check Terrirory
-        if ($territory->transport_store_id != null) {
-            // inisialisasi store
-            $store = TransportStore::find($territory->transport_store_id);
-            $store_items = $store->transports->all();
-            $status = 'success';
-            $response = 'success';
-        } else if ($territory->ingridient_store_id != null) {
-            // inisialisasi store
-            $store = IngridientStore::find($territory->ingridient_store_id);
-            $store_items = $store->ingridients->all();
-            $status = 'success';
-            $response = 'success';
-        } else if ($territory->machine_store_id != null) {
-            // inisialisasi store
-            $store = MachineStore::find($territory->machine_store_id);
-            $store_items = $store->machines->all();
-            $status = 'success';
-            $response = 'success';
-        } else if ($territory->service_id != null) {
-            // inisialisasi store
-            $store = Service::find($territory->service_id);
-            $status = 'success';
-            $response = 'success';
+        // Pengecekan apakah capacity sudah melebihi
+        $current_capacity = $request['current_capacity'];
+        if ($current_capacity > 100) {
+            $response = 'error';
+            $status = 'error';
+            $msg = 'Capacity ingridient yang dibawa telah mencapai maksimum!';
+        } else {
+
+            // Check Terrirory
+            if ($territory->transport_store_id != null) {
+                // inisialisasi store
+                $store = TransportStore::find($territory->transport_store_id);
+                $store_items = $store->transports->all();
+                $status = 'success';
+                $response = 'success';
+            } else if ($territory->ingridient_store_id != null) {
+                // inisialisasi store
+                $store = IngridientStore::find($territory->ingridient_store_id);
+                $store_items = $store->ingridients->all();
+                $status = 'success';
+                $response = 'success';
+            } else if ($territory->machine_store_id != null) {
+                // inisialisasi store
+                $store = MachineStore::find($territory->machine_store_id);
+                $store_items = $store->machines->all();
+                $status = 'success';
+                $response = 'success';
+            } else if ($territory->service_id != null) {
+                // inisialisasi store
+                $store = Service::find($territory->service_id);
+                $status = 'success';
+                $response = 'success';
+            }
         }
 
         if ($status == 'success') $msg = "Berhasil melakukan action pada store yang dipilih";
@@ -324,90 +350,37 @@ class MapController extends Controller
         $status = 'error';
         $response = 'error';
 
-        // Check Apakah Service
-        if ($territory->service_id != null) {
-            $store = Service::find($territory->service_id);
-            $biaya = $store->price;
-
-            // Ambil stock dari store
-            $stock = $store->stock;
-            // Check apakah stock tersedia
-            if ($stock >= $banyak_item) {
-                // Kalau uangnya cukup
-                if ($team->tc >= $biaya) {
-                    // Kurang TC dari team untuk pembayaran
-                    $team->tc = $team->tc - $biaya;
-                    // Tambahkan team total spend 
-                    $team->total_spend = $team->total_spend + $biaya;
-                    // Kurangi stock
-                    $store->stock = $store->stock - $banyak_item;
-                    // Simpan perubahan
-                    $store->save();
-                    // Team memiliki jasa service
-                    $team->service_id = $store->id;
-                    // Simpan data team
-                    $team->save();
-
-                    $status = 'success';
-                    $response = 'success';
-                    $msg = 'Pembelian berhasil';
-                }
-                // TC ga cukup untuk beli
-                else {
-                    $status = 'error';
-                    $response = 'error';
-                    $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
-                }
-            } 
-            else {
-                // Stock tidak tersedia
-                $status = 'error';
-                $response = 'error';
-                $msg = 'Stock tidak tersedia!';
-            }
-        }
-        // Bukan Service
-        else {
-            // Apakah Machine Store ?
-            if ($territory->machine_store_id != null) {
-                // Check apakah store id yang dikirim sama dengan yang sedang di tempati
-                if ($request['store_id'] == $territory->machine_store_id) {
-                    // Ambil Store
-                    $store = MachineStore::find($territory->machine_store_id);
-                    // Ambil Item di store sesuai dengan yang dipilih
-                    $item = $store->machines->where('id', $item_id)->first();
-                    // Ambil biaya
-                    $biaya = $item->price;
-                }
-                $status = 'success';
-                $response = 'success';
+        // Pengecekan apakah capacity sudah melebihi
+        $current_capacity = $request['current_capacity'];
+        if ($current_capacity > 100) {
+            $response = 'error';
+            $status = 'error';
+            $msg = 'Capacity ingridient yang dibawa telah mencapai maksimum!';
+        } 
+        else{
+            // Check Apakah Service
+            if ($territory->service_id != null) {
+                $store = Service::find($territory->service_id);
+                $biaya = $store->price;
 
                 // Ambil stock dari store
-                $stock = $item->pivot->stock;
+                $stock = $store->stock;
                 // Check apakah stock tersedia
                 if ($stock >= $banyak_item) {
-                    $biaya_total = $biaya * $banyak_item;
                     // Kalau uangnya cukup
-                    if ($team->tc >= $biaya_total) {
+                    if ($team->tc >= $biaya) {
                         // Kurang TC dari team untuk pembayaran
-                        $team->tc = $team->tc - $biaya_total;
+                        $team->tc = $team->tc - $biaya;
                         // Tambahkan team total spend 
-                        $team->total_spend = $team->total_spend + $biaya_total;
-
+                        $team->total_spend = $team->total_spend + $biaya;
+                        // Kurangi stock
+                        $store->stock = $store->stock - $banyak_item;
                         // Simpan perubahan
-                        $item->machineStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
-
-                        for ($i=0; $i < $banyak_item ; $i++) { 
-                            // Tambahkan data baru
-                            $team_machine = new TeamMachine;
-                            $team_machine->performance = 100;
-                            $team_machine->season_buy = SeasonNow::first()->number;
-                            $team_machine->team_id = $team->id;
-                            $team_machine->machine_id = $item->id;
-                            $team_machine->selected = 0;
-                            // Simpan Data Baru
-                            $team_machine->save();
-                        }
+                        $store->save();
+                        // Team memiliki jasa service
+                        $team->service_id = $store->id;
+                        // Simpan data team
+                        $team->save();
 
                         $status = 'success';
                         $response = 'success';
@@ -425,27 +398,23 @@ class MapController extends Controller
                     $response = 'error';
                     $msg = 'Stock tidak tersedia!';
                 }
-            } else {
-                // Transport Store
-                if ($territory->transport_store_id != null) {
+            }
+            // Bukan Service
+            else {
+                // Apakah Machine Store ?
+                if ($territory->machine_store_id != null) {
                     // Check apakah store id yang dikirim sama dengan yang sedang di tempati
-                    if ($request['store_id'] == $territory->transport_store_id) {
+                    if ($request['store_id'] == $territory->machine_store_id) {
                         // Ambil Store
-                        $store = TransportStore::find($territory->transport_store_id);
+                        $store = MachineStore::find($territory->machine_store_id);
                         // Ambil Item di store sesuai dengan yang dipilih
-                        $item = $store->transports->where('id', $item_id)->first();
+                        $item = $store->machines->where('id', $item_id)->first();
                         // Ambil biaya
                         $biaya = $item->price;
-                        // Ambil data item dari team
-                        $team_item = $team->transports->where('id', $item_id)->first();
-
-                        $amount_have = 0;
-                        // Kalau punya barang ganti amount have sesuai yang dipunyai
-                        if ($team_item != null) {
-                            // Ambil banyaknya yang dimiliki sekarang
-                            $amount_have = $team_item->pivot->amount_have;
-                        }
                     }
+                    $status = 'success';
+                    $response = 'success';
+
                     // Ambil stock dari store
                     $stock = $item->pivot->stock;
                     // Check apakah stock tersedia
@@ -458,11 +427,20 @@ class MapController extends Controller
                             // Tambahkan team total spend 
                             $team->total_spend = $team->total_spend + $biaya_total;
 
-                            $item->transportStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
-                            
-                            // Update tambahkan banyak yang sekarang dengan yang dibeli
-                            $team->transports()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
-                            $team->save();
+                            // Simpan perubahan
+                            $item->machineStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
+
+                            for ($i = 0; $i < $banyak_item; $i++) {
+                                // Tambahkan data baru
+                                $team_machine = new TeamMachine;
+                                $team_machine->performance = 100;
+                                $team_machine->season_buy = SeasonNow::first()->number;
+                                $team_machine->team_id = $team->id;
+                                $team_machine->machine_id = $item->id;
+                                $team_machine->selected = 0;
+                                // Simpan Data Baru
+                                $team_machine->save();
+                            }
 
                             $status = 'success';
                             $response = 'success';
@@ -480,60 +458,116 @@ class MapController extends Controller
                         $response = 'error';
                         $msg = 'Stock tidak tersedia!';
                     }
-                }
-                // Ingridient Store
-                else if ($territory->ingridient_store_id != null) {
-                    // Check apakah store id yang dikirim sama dengan yang sedang di tempati
-                    if ($request['store_id'] == $territory->ingridient_store_id) {
-                        // Ambil Store
-                        $store = IngridientStore::find($territory->ingridient_store_id);
-                        // Ambil Item di store sesuai dengan yang dipilih
-                        $item = $store->ingridients->where('id', $item_id)->first();
-                        // Ambil biaya dari season sekarang
-                        $biaya = $item->seasons->where('id', SeasonNow::first()->id)->first()->pivot->price;
-                        // Ambil data item dari team
-                        $team_item = $team->ingridients->where('id', $item_id)->first();
+                } else {
+                    // Transport Store
+                    if ($territory->transport_store_id != null) {
+                        // Check apakah store id yang dikirim sama dengan yang sedang di tempati
+                        if ($request['store_id'] == $territory->transport_store_id) {
+                            // Ambil Store
+                            $store = TransportStore::find($territory->transport_store_id);
+                            // Ambil Item di store sesuai dengan yang dipilih
+                            $item = $store->transports->where('id', $item_id)->first();
+                            // Ambil biaya
+                            $biaya = $item->price;
+                            // Ambil data item dari team
+                            $team_item = $team->transports->where('id', $item_id)->first();
 
-                        $amount_have = 0;
-                        // Kalau punya barang ganti amount have sesuai yang dipunyai
-                        if ($team_item != null) {
-                            // Ambil banyaknya yang dimiliki sekarang
-                            $amount_have = $team_item->pivot->amount_have;
+                            $amount_have = 0;
+                            // Kalau punya barang ganti amount have sesuai yang dipunyai
+                            if ($team_item != null) {
+                                // Ambil banyaknya yang dimiliki sekarang
+                                $amount_have = $team_item->pivot->amount_have;
+                            }
                         }
-                    }
-                    // Ambil stock dari store
-                    $stock = $item->pivot->stock;
-                    // Check apakah stock tersedia
-                    if ($stock >= $banyak_item) {
-                        $biaya_total = $biaya * $banyak_item;
-                        // Kalau uangnya cukup
-                        if ($team->tc >= $biaya_total) {
-                            // Kurang TC dari team untuk pembayaran
-                            $team->tc = $team->tc - $biaya_total;
-                            // Tambahkan team total spend 
-                            $team->total_spend = $team->total_spend + $biaya_total;
+                        // Ambil stock dari store
+                        $stock = $item->pivot->stock;
+                        // Check apakah stock tersedia
+                        if ($stock >= $banyak_item) {
+                            $biaya_total = $biaya * $banyak_item;
+                            // Kalau uangnya cukup
+                            if ($team->tc >= $biaya_total) {
+                                // Kurang TC dari team untuk pembayaran
+                                $team->tc = $team->tc - $biaya_total;
+                                // Tambahkan team total spend 
+                                $team->total_spend = $team->total_spend + $biaya_total;
 
-                            $item->ingridientStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
+                                $item->transportStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
 
-                            // Update tambahkan banyak yang sekarang dengan yang dibeli
-                            $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
-                            $team->save();
+                                // Update tambahkan banyak yang sekarang dengan yang dibeli
+                                $team->transports()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
+                                $team->save();
 
-                            $status = 'success';
-                            $response = 'success';
-                            $msg = 'Pembelian berhasil';
-                        }
-                        // TC ga cukup untuk beli
-                        else {
+                                $status = 'success';
+                                $response = 'success';
+                                $msg = 'Pembelian berhasil';
+                            }
+                            // TC ga cukup untuk beli
+                            else {
+                                $status = 'error';
+                                $response = 'error';
+                                $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
+                            }
+                        } else {
+                            // Stock tidak tersedia
                             $status = 'error';
                             $response = 'error';
-                            $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
+                            $msg = 'Stock tidak tersedia!';
                         }
-                    } else {
-                        // Stock tidak tersedia
-                        $status = 'error';
-                        $response = 'error';
-                        $msg = 'Stock tidak tersedia!';
+                    }
+                    // Ingridient Store
+                    else if ($territory->ingridient_store_id != null) {
+                        // Check apakah store id yang dikirim sama dengan yang sedang di tempati
+                        if ($request['store_id'] == $territory->ingridient_store_id) {
+                            // Ambil Store
+                            $store = IngridientStore::find($territory->ingridient_store_id);
+                            // Ambil Item di store sesuai dengan yang dipilih
+                            $item = $store->ingridients->where('id', $item_id)->first();
+                            // Ambil biaya dari season sekarang
+                            $biaya = $item->seasons->where('id', SeasonNow::first()->id)->first()->pivot->price;
+                            // Ambil data item dari team
+                            $team_item = $team->ingridients->where('id', $item_id)->first();
+
+                            $amount_have = 0;
+                            // Kalau punya barang ganti amount have sesuai yang dipunyai
+                            if ($team_item != null) {
+                                // Ambil banyaknya yang dimiliki sekarang
+                                $amount_have = $team_item->pivot->amount_have;
+                            }
+                        }
+                        // Ambil stock dari store
+                        $stock = $item->pivot->stock;
+                        // Check apakah stock tersedia
+                        if ($stock >= $banyak_item) {
+                            $biaya_total = $biaya * $banyak_item;
+                            // Kalau uangnya cukup
+                            if ($team->tc >= $biaya_total) {
+                                // Kurang TC dari team untuk pembayaran
+                                $team->tc = $team->tc - $biaya_total;
+                                // Tambahkan team total spend 
+                                $team->total_spend = $team->total_spend + $biaya_total;
+
+                                $item->ingridientStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
+
+                                // Update tambahkan banyak yang sekarang dengan yang dibeli
+                                $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
+                                $team->save();
+
+                                $status = 'success';
+                                $response = 'success';
+                                $msg = 'Pembelian berhasil';
+                            }
+                            // TC ga cukup untuk beli
+                            else {
+                                $status = 'error';
+                                $response = 'error';
+                                $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
+                            }
+                        } else {
+                            // Stock tidak tersedia
+                            $status = 'error';
+                            $response = 'error';
+                            $msg = 'Stock tidak tersedia!';
+                        }
                     }
                 }
             }
@@ -547,5 +581,62 @@ class MapController extends Controller
             ),
             200
         );
+    }
+
+    public function backToCompany(Request $request)
+    {
+        // Status dan message yang diberikan
+        $status = '';
+        $msg = '';
+        $response = 'success';
+
+        // Ambil variabel awal yang dibutuhkan
+        $team = Team::find($request['team_id']);
+        // Territory Lama
+        $old_territory = Territory::find($team->territory_id);
+
+        // Check Company
+        if ($team->id <= 10) {
+            $territory_id = 1002 + (2 * ($team->id - 1));
+        } else if ($team->id <= 20) {
+            $territory_id = 1023 + (2 * ($team->id - 1));
+        } else if ($team->id <= 30) {
+            $territory_id = 1046 + (2 * ($team->id - 1));
+        } else if ($team->id <= 40) {
+            $territory_id = 1067 + (2 * ($team->id - 1));
+        }
+
+        // Companynya
+        $team_company = Territory::find($territory_id);
+
+        // Territory baru adalah territory valid
+        if (isset($new_territory)) {
+            // Territory aman
+            // Update Posisi ke database
+            $team->territory_id = $team_company;
+            $team->current_capacity = 0;
+            $team->save();
+
+            // Update num occupant di territory lama
+            $old_territory->num_occupant = $old_territory->num_occupant - 1;
+            $old_territory->save();
+            // Update num occupant di territory baru
+            $team_company->num_occupant = $team_company->num_occupant + 1;
+            $team_company->save();
+
+            $status = 'success';
+            $msg = 'Berhasil kembali ke company';
+        } else {
+            $status = 'error';
+            $response = 'error';
+            $msg = 'Territory tidak valid!';
+        }
+
+        if ($response != 'error') event(new UpdateMap("updateMap"));
+        return response()->json(array(
+            'response' => $response,
+            'status' => $status,
+            'msg' => $msg,
+        ), 200);
     }
 }
