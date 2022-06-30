@@ -44,7 +44,18 @@ class MaintenanceController extends Controller
         $status = '';
 
         // Logic harga maintenance
-        $total_price = 10;
+        if($nilai_maintenance == 25){
+            $total_price = 10;
+        }
+        else if ($nilai_maintenance == 50) {
+            $total_price = 15;
+        }
+        else if ($nilai_maintenance == 75) {
+            $total_price = 20;
+        }
+        else if ($nilai_maintenance == 100) {
+            $total_price = 25;
+        }
 
         // Uang tidak cukup
         if ($team->tc < $total_price){

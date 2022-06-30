@@ -13,11 +13,6 @@
 @endsection
 @section('content')
 <main class="px-5">
-  <div class="alert alert-danger alert-dismissible fade show mt-3" role="alert">
-    <span class="fas fa-bullhorn me-1"></span>
-    Jangan refresh saat melakukan susun mesin!
-    <button tipe="button" class="btn-close btn-sm" data-bs-dismiss="alert" aria-label="Close"></button>
-  </div>
 
   {{-- Mesin Tambahan --}}
   <div class="row my-5">
@@ -486,12 +481,12 @@
               <tbody id="inventory_mesin">
                 @foreach ($team_machines as $team_machine)
                 <tr>
-                  <th class="text-gray-900" scope="row" style="width:20%; text-align:center">
+                  <td class="text-gray-900" scope="row" style="width:20%; text-align:center">
                     {{$team_machine->id}}
-                  </th>
-                  <th class="text-gray-900" scope="row" style="width:20%; text-align:center">
+                  </td>
+                  <td class="text-gray-900" scope="row" style="width:20%; text-align:center">
                     {{$team_machine->machine->name}}
-                  </th>
+                  </td>
                   <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
                     {{$team_machine->performance}}
                   </td>
@@ -499,8 +494,7 @@
                     {{$team_machine->season_buy}}
                   </td>
                   <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
-                    <button class="btn btn-danger me-3" id="edit_saus" tipe="button"
-                      onclick="jual('{{$team_machine->id}}')">
+                    <button class="btn btn-danger me-3" tipe="button" onclick="jual('{{$team_machine->id}}')">
                       Jual
                     </button>
                   </td>
@@ -601,26 +595,43 @@
   function jual(id) {
     $.ajax({
       type: 'POST',
-      url: "{{ route('peserta.mesin.save') }}",
+      url: "{{ route('peserta.mesin.jual') }}",
       data: {
         '_token': $('meta[name="csrf-token"]').attr('content'),
         'team_machine_id': id,
       },
       success: function(data) {
-        var table_data = "<tr>";
+        var table_data = "";
         $.each(data.team_mesins, (key, team_mesin) => {
-          table_data += `<th class="text-gray-900" scope="row" style="width:20%;  text-align:center">${team_mesin.id}</th>
-          <th class="text-gray-900" scope="row" style="width:20%; text-align:center">${team_mesin.machine.name}</th>
-          <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.performance}</td>
-          <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.season_buy}</td>
-          <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
-            <button class="btn btn-danger me-3" id="edit_saus" tipe="button" onclick="jual(${$team_mesin.id})">Jual</button>
-          </td>`;
+          table_data +=
+          ` <tr>
+              <td class="text-gray-900" scope="row" style="width:20%;  text-align:center">${team_mesin.id}</td>
+              <td class="text-gray-900" scope="row" style="width:20%; text-align:center">${team_mesin.name}</td>
+              <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.performance}</td>
+              <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.season_buy}</td>
+              <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
+                <button class="btn btn-danger me-3" tipe="button" onclick="jual(${team_mesin.id})">Jual</button>
+              </td>
+            </tr>`;
         });
-        table_data += "</tr>";
+        
         $('#inventory_mesin').html(table_data);
+
+        $('#alert_inventory').hide();
+        $('#alert_inventory').show();
+        $('#alert-body_inventory').html(data.msg);
+        $("#alert_inventory").fadeTo(5000, 500).hide(1000, function() {
+            $("#alert_inventory").hide(1000);
+          });
+        if (data.status == "success") {
+          $('#alert_inventory').removeClass("alert-danger");
+          $('#alert_inventory').addClass("alert-success");
+        } else if (data.status == "error") {
+          $('#alert_inventory').removeClass("alert-success");
+          $('#alert_inventory').addClass("alert-danger");
+        }
       }
-    })
+    });
   }
 
   function save(tipe) {

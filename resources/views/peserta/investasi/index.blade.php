@@ -78,24 +78,38 @@
                                 </tr>
                             </thead>
                             <tbody>
+                                @php($index_investation = 1)
                                 @for ($i = 0; $i < 5; $i++)
-                                @if (count($investation_team) >= $i+1)
+                                @if (count($investation_team) >= $index_investation)
+                                    @if($investation_team[$index_investation-1]->id == $i+1)
+                                        <tr>
+                                            <td class="fw-bolder">Investasi {{ $i+1 }}</td>
+                                        @if ($investation_team[$index_investation-1]->pivot->start == 1 && $investation_team[$index_investation-1]->pivot->finish == null)
+                                            <td class="fw-bolder text-gray-500">Investasi belum selesai dikerjakan</td>
+                                            <td class="fw-bolder">
+                                                <form action="{{ route('peserta.investasi.show', [$i+1, 1]) }}">
+                                                    <input type="submit" class="btn btn-secondary" value="Continue">
+                                                </form>
+                                            </td>
+                                        @else
+                                            <td class="fw-bolder text-success">{{ $investation_team[$index_investation-1]->pivot->total_profit }} TC</td>
+                                            <td class="fw-bolder text-gray-500">
+                                                <button disabled class="btn btn-secondary" type="button">Finished</button>
+                                            </td>
+                                        @endif
+                                        </tr>
+                                        @php($index_investation += 1)
+                                    @else
                                     <tr>
                                         <td class="fw-bolder">Investasi {{ $i+1 }}</td>
-                                    @if ($investation_team[$i]->pivot->start == 1 && $investation_team[$i]->pivot->finish == null)
-                                        <td class="fw-bolder text-gray-500">Investasi belum selesai dikerjakan</td>
+                                        <td class="fw-bolder text-gray-500">Investasi belum dimulai</td>
                                         <td class="fw-bolder">
                                             <form action="{{ route('peserta.investasi.show', [$i+1, 1]) }}">
-                                                <input type="submit" class="btn btn-secondary" value="Continue">
+                                                <input type="submit" class="btn btn-secondary" value="Start">
                                             </form>
                                         </td>
-                                    @else
-                                        <td class="fw-bolder text-success">{{ $investation_team[$i]->pivot->total_profit }} TC</td>
-                                        <td class="fw-bolder text-gray-500">
-                                            <button disabled class="btn btn-secondary" type="button">Finished</button>
-                                        </td>
-                                    @endif
                                     </tr>
+                                    @endif
                                 @else
                                     <tr>
                                         <td class="fw-bolder">Investasi {{ $i+1 }}</td>

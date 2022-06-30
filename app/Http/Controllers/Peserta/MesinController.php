@@ -194,14 +194,14 @@ class MesinController extends Controller
             $combinations = [];
             for ($i = 1; $i <= $banyak_machine; $i++) {
                 $all_combinations = $orders[$i]->machineCombinations()->wherePivot('order', $i)->get();
-                // dd($all_combinations);
+                //dd($all_combinations);
                 $combination_id = [];
                 foreach ($all_combinations as $combination) {
                     $combination_id[] = $combination->id;
                 }
                 $combinations[] = $combination_id;
             }
-            // dd($combinations);
+            //dd($combinations);
             $combination_found = [];
             if ($banyak_machine > 1) {
                 // Lakukan intersect untuk mengetahui apakah ada kombinasi yang cocok
@@ -278,9 +278,20 @@ class MesinController extends Controller
         $team_machine->season_sell = $season_sell;
         $team_machine->save();
         $status = "success";
+        $msg = 'Penjualan mesin berhasil dilakukan';
 
         // Ambil team mesin
         $team_mesins = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
+
+        // Masukkan detail machine kedalam array available machine
+        $index = 0;
+        foreach ($team_mesins as $team_mesin) {
+            //Ngambil mesin
+            $machine_name = Machine::where('id', $team_mesin->machine_id)->first()->name;
+            $team_mesins[$index]->name = $machine_name;
+            $index++;
+        }
+        // dd($team_mesins);
 
         return response()->json(array(
             'status' => $status,

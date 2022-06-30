@@ -1,4 +1,4 @@
-@extends('peserta.layouts.app')
+@extends('penpos.layouts.app')
 @section('style')
 <style>
     .btn {
@@ -13,6 +13,46 @@
 @section('content')
 
 <main class="px-5">
+
+    <div class="row my-5">
+        <div class="col-12 col-sm-6 col-xl-6">
+            <div class="card border-0 shadow">
+                <div class="card-header">
+                    <div class="row d-flex align-items-center">
+                        {{-- Judul --}}
+                        <div class="col-6">
+                            <h1 class="fs-5 fw-bold text-white mb-0">Dashboard Team</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            {{-- Pilih Team --}}
+                            <div class="mb-4">
+                                <label class="my-1 me-2" for="team_id">Pilih Team</label>
+                                <select class="form-select" id="team_id" aria-label="Default select example" onchange="changeTeam()">
+                                    <option selected disabled>-- Pilih Nama Team --</option>
+                                    @foreach ($teams as $team)
+                                    <option value="{{ $team->id }}">
+                                        {{ $team->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 d-flex justify-content-end">
+                            <form id="team_tujuan" action="{{ route('penpos.dashboard.peserta.data', [1]) }}">
+                                <input class="btn btn-success" style="width: 100px" type="submit" value="Get Data"></input>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="row my-5 d-flex" style="">
         {{-- Card Pemasukan --}}
@@ -291,4 +331,13 @@
         </div>
     </div>
 </main>
+@endsection
+
+@section('script')
+<script>
+    function changeTeam() {
+        let team_id = $('#team_id').val();
+        $('#team_tujuan').attr('action', "/penpos/dashboard/peserta/"+team_id)
+    }
+</script>
 @endsection

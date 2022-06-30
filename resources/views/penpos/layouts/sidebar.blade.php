@@ -27,6 +27,15 @@
                 </a>
             </li>
 
+            <li class="nav-item {{ request()->is('penpos/dashboard/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.dashboard.peserta.data', [1]) }}" class="nav-link">
+                    <i data-feather='user' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Dashboard Team</span>
+                </a>
+            </li>
+
             <li
                 class="nav-item {{ request()->is('penpos/map') ? ' active' : '' }} {{ request()->is('penpos/map/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.map') }}" class="nav-link">

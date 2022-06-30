@@ -1,5 +1,6 @@
 <?php
 
+use App\Answer;
 use Illuminate\Database\Seeder;
 
 class AnswerSeeder extends Seeder
@@ -11,6 +12,8 @@ class AnswerSeeder extends Seeder
      */
     public function run()
     {
-        //
+        $path = "database/data/18-answers.csv";
+        $model = Answer::class;
+        include("csv-reader.php");
     }
 }

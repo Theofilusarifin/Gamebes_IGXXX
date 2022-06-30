@@ -14,7 +14,7 @@ class InvestasiController extends Controller
     {
         $team = Auth::user()->team;
 
-        $investation_team = $team->investations->all();
+        $investation_team = $team->investations()->orderBy('id', 'ASC')->get();
 
         return view('peserta.investasi.index', compact('investation_team'));
     }
@@ -69,13 +69,13 @@ class InvestasiController extends Controller
 
         $answer = $request['answer'];
 
+        $team = Auth::user()->team; 
         if (isset($answer)) {
-            $team = Auth::user()->team;
 
             //Get Jawaban Benar
             $user_answer = $questionNow->answers->where('letter', $answer)->first();
 
-            $correct = $user_answer == $questionNow->correct_answer ? true : false;
+            $correct = $user_answer->letter == $questionNow->correct_answer ? true : false;
 
             //Get Skor
             if ($correct)
@@ -97,6 +97,7 @@ class InvestasiController extends Controller
 
         $total_correct = $team->questions->where('investation_id', '=', $investation->id)->sum("pivot.is_correct");
 
+        // dd($total_correct);
         // Logic Score
         $total_profit = $total_correct * ($investation->profit / 10);
 

@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
+use App\Machine;
+use App\MachineCombination;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -91,11 +93,12 @@ class ProduksiController extends Controller
                 $bahan_garam = $banyak_item * 1;
                 $bahan_gula = $banyak_item * 1;
 
-                // Kalau bahan udang cukup
-                if ($bahan_udang >= $udang_dipakai && $bahan_air_mineral && $jumlah_air_mineral && $bahan_garam >= $jumlah_garam && $bahan_gula >= $jumlah_gula) {
+                // Kalau bahan udang cukup (bahan udang adalah udang yang dipakai)
+                if ($bahan_udang <= $udang_dipakai && $bahan_air_mineral <= $jumlah_air_mineral && $bahan_garam <= $jumlah_garam && $bahan_gula <= $jumlah_gula) {
 
                     // Kalau punya head pealer
-                    $team_head_pealer = $team->machines->where('id', 6)->first();
+                    $team_head_pealer = $team->teamMachines->where('machine_id', 6)->first();
+
                     if ($team_head_pealer != null) {
                         //Menghasilkan kepala udang
                         $amount_have = $team->ingridients->where('id', 11)->first()->amount_have;
@@ -103,12 +106,12 @@ class ProduksiController extends Controller
                         $team->ingridients()->sync([11 => ['amount_have' => $amount_have + (100 * $banyak_item)]], false);
                     }
                     // Kalau punya skin pealer
-                    $team_skin_pealer = $team->machines->where('id', 7)->first();
+                    $team_skin_pealer = $team->teamMachines->where('id', 7)->first();
                     if ($team_skin_pealer != null) {
                         //Menghasilkan kulit udang
                         $amount_have = $team->ingridients->where('id', 12)->first()->amount_have;
                         // Tambahkan 100 kulit udang tiap 1 banyak item
-                        $team->ingridients()->sync([12 => ['amount_have' => $amount_have + (200 * $banyak_item)]], false);
+                        $team->ingridients()->sync([12 => ['amount_have' => $amount_have + (100 * $banyak_item)]], false);
                     }
 
                     // Bahan dikuragi
@@ -123,12 +126,38 @@ class ProduksiController extends Controller
                     $team->ingridients()->sync([6 => ['amount_have' => $jumlah_garam - $bahan_garam, 'amount_use' => $amount_use_garam + $bahan_garam]], false);
                     // Kurangi Gula
                     $amount_use_gula = $team->ingridients->where('id', 7)->first()->pivot->amount_use;
-                    $team->ingridients()->sync([7 => ['amount_have' => $gula - $bahan_gula, 'amount_use' => $amount_use_gula + $bahan_gula]], false);
+                    $team->ingridients()->sync([7 => ['amount_have' => $jumlah_gula - $bahan_gula, 'amount_use' => $amount_use_gula + $bahan_gula]], false);
                     //Produk ditambah
-                    $amount_product = $team->products->where('id', $product->id)->first()->pivot->amount_have;
-                    // Tambahkan 4 * banyak item udang kaleng
-                    $team->products()->sync([$product->id => ['amount_have' => $amount_product + (4 * $banyak_item)]]);
-                    $team->waste = $team->waste + (2 * $banyak_item);
+
+                    $team_product = $team->products->where('id', $product->id)->first();
+                    $amount_product = 0;
+                    if ($team_product != null) {
+                        $amount_product = $team_product->pivot->amount_have;
+                    }
+
+                    //PROSES DEFECT
+
+                    //Ambil semua mesin yang ada dimana team_machine_combinationnya sama dengan $team_machine_combination
+                    $team_mesins = $team->machineCombinations[0]->machines;
+                    $banyakProduksi = 4 * $banyak_item;
+                    $hasil_setelah_defect = $banyakProduksi;
+                    $total_defect = 0;
+                    foreach ($team_mesins as $team_mesin) {
+                        $defect = $team_mesin->defect;
+                        $temporary_defect = $hasil_setelah_defect;
+                        $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
+                        $total_defect = $total_defect + ($temporary_defect - $hasil_setelah_defect);
+                    }
+                    //Hasil final setelah proses defect (dibulatin kebawah)
+                    ($hasil_defect_final = floor($hasil_setelah_defect));
+                    ($hasil_total_defect_final = ceil($total_defect));
+
+                    //PENGURANGAN PEFORMA MESIN
+
+                    //UPDATE DATA
+                    // Tambahkan banyak Produksi pada product team
+                    $team->products()->sync([$product->id => ['amount_have' => $amount_product + ($banyakProduksi)]]);
+                    $team->waste = $team->waste + ($hasil_total_defect_final);
                     $team->save();
 
                     $status = 'success';

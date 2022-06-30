@@ -17,6 +17,7 @@ class CreateIngridientsTable extends Migration
             $table->id();
             $table->string('name');
             $table->integer('capacity')->default(0);
+            $table->timestamp('expired_time')->nullable();
         });
     }
 

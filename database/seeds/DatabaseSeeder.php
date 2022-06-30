@@ -30,5 +30,8 @@ class DatabaseSeeder extends Seeder
         $this->call(SeasonNowSeeder::class, false);
         $this->call(SeasonSeeder::class, false);
         $this->call(TeamMachineSeeder::class, false);
+        $this->call(QuestionSeeder::class, false);
+        $this->call(AnswerSeeder::class, false);
+
     }
 }

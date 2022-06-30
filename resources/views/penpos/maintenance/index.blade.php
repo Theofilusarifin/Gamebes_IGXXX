@@ -61,8 +61,12 @@
                         {{-- Jumlah Barang --}}
                         <div class="col-5">
                             <label class="my-1 me-2" for="nilai_maintenance">Persentase Maintenance (%)</label>
-                            <input class="form-control" type="number" min=0 placeholder="-- Persetase Maintenance --"
-                                id='nilai_maintenance' required="">
+                            <select class="form-select" id="nilai_maintenance">
+                                <option value="25">25%</option>
+                                <option value="50">50%</option>
+                                <option value="75">75%</option>
+                                <option value="100">100%</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">

@@ -17,6 +17,9 @@ Route::group(
         // Dashboard
         Route::get('/', 'Penpos\DashboardController@index')->name('index');
 
+        // Dashboard Peserta
+        Route::get('/dashboard/peserta/{team}', 'Penpos\DashboardController@getDataTeam')->name('dashboard.peserta.data');
+
         // Fitur Map
         Route::get('/map', 'Penpos\MapController@index')->name('map');
         Route::post('/map/move', 'Penpos\MapController@move')->name('map.move');

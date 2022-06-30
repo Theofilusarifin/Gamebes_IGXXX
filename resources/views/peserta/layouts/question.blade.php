@@ -56,6 +56,16 @@
                     </div>
                     <!-- Navbar links -->
                     <ul class="navbar-nav align-items-center">
+                        <li class="nav-item dropdown dropdown-user me-3">
+                            <a href="https://time.is/Surabaya" id="time_is_link" rel="nofollow"
+                                style="font-size:18px; pointer-events: none; cursor: default;">Jam Server :</a>
+                            <span id="Surabaya_z41c"
+                                style="font-size:18px; pointer-events: none; cursor: default; color:#1F2937"></span>
+                            <script src="//widget.time.is/t.js"></script>
+                            <script>
+                                time_is_widget.init({Surabaya_z41c:{}});
+                            </script>
+                        </li>
                         <li class="nav-item dropdown ms-lg-3">
                             <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
