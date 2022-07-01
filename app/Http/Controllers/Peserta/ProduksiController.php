@@ -58,7 +58,7 @@ class ProduksiController extends Controller
                 $jumlah_udang_terbanyak = max($array_udang);
                 $index_terbanyak = array_search($jumlah_udang_terbanyak, $array_udang);
 
-                $udang_dipakai = '';
+                $udang_dipakai = ''; //Udang yang dipakai buat produksi
                 if ($index_terbanyak == 0) {
                     $udang_dipakai = $jumlah_udang_vaname;
                 } elseif ($index_terbanyak == 1) {
@@ -68,6 +68,7 @@ class ProduksiController extends Controller
                 }
 
                 // Ambil air mineral yang dipunya
+
                 $air_mineral = $team->ingridients->where('id', 5)->first();
                 $jumlah_air_mineral = 0;
                 if ($air_mineral != null) {
@@ -96,6 +97,9 @@ class ProduksiController extends Controller
                 // Kalau bahan udang cukup (bahan udang adalah udang yang dipakai)
                 if ($bahan_udang <= $udang_dipakai && $bahan_air_mineral <= $jumlah_air_mineral && $bahan_garam <= $jumlah_garam && $bahan_gula <= $jumlah_gula) {
 
+                    // Variabel penampung limbah air
+                    $wasteHead = 0;
+                    $wasteKulit = 0;
                     // Kalau punya head pealer
                     $team_head_pealer = $team->teamMachines->where('machine_id', 6)->first();
 
@@ -153,6 +157,7 @@ class ProduksiController extends Controller
                     ($hasil_total_defect_final = ceil($total_defect));
 
                     //PENGURANGAN PEFORMA MESIN
+
 
                     //UPDATE DATA
                     // Tambahkan banyak Produksi pada product team
