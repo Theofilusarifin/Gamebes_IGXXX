@@ -45,7 +45,6 @@ Route::group(
         Route::get('/maintenance', 'Penpos\MaintenanceController@index')->name('maintenance');
         Route::post('/maintenance/get-team-machines', 'Penpos\MaintenanceController@getTeamMachine')->name('maintenance.get.machine');
         Route::post('/maintenance/save', 'Penpos\MaintenanceController@save')->name('maintenance.save');
-
     }
 );
 
@@ -55,19 +54,22 @@ Route::group(
     function () {
         // Dashboard --> Inventory (Acara)
         Route::get('/', 'Peserta\DashboardController@index')->name('index'); // -> /peserta/
-        
+
         // List Harga -->
         Route::get('/harga', 'Peserta\ListHargaController@index')->name('harga'); // -> /peserta/harga
-        
+
         // Inventory --> Gudang (Acara)
         Route::get('/inventory', 'Peserta\InventoryController@index')->name('inventory'); // -> /peserta/inventory
-        
+        Route::post('/inventory/ingridient-expired', 'Peserta\InventoryController@ingridientExpired')->name('inventory.expired');
+
+
         // Mesin --> 
         Route::get('/mesin', 'Peserta\MesinController@index')->name('mesin'); // -> /peserta/mesin
         Route::post('/mespin/mesin-available', 'Peserta\MesinController@getAvailableMachine')->name('mesin.get');
         Route::post('/mesin/set-mesin', 'Peserta\MesinController@setMachine')->name('mesin.set');
         Route::post('/mesin/save-mesin', 'Peserta\MesinController@saveMachine')->name('mesin.save');
         Route::post('/mesin/jual-mesin', 'Peserta\MesinController@sellMachine')->name('mesin.jual');
+        Route::post('/mesin/reset-mesin', 'Peserta\MesinController@resetMachine')->name('mesin.reset');
 
         // produksi -->
         Route::get('/produksi', 'Peserta\ProduksiController@index')->name('produksi'); // -> /peserta/produksi
@@ -77,7 +79,5 @@ Route::group(
         Route::get('/investasi', 'Peserta\InvestasiController@index')->name('investasi');
         Route::get('/investasi/{investation}/{question:nomor}', 'Peserta\InvestasiController@show')->name('investasi.show');
         Route::post('/investasi/submit', 'Peserta\InvestasiController@submission')->name('investasi.submit');
-
-
     }
 );

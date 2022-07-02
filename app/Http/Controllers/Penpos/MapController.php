@@ -71,7 +71,7 @@ class MapController extends Controller
                         // Kalau panas hujan harganya 30
                         $cost = 30;
                         // Kalau salju berkurang 60
-                        if ($season_now->number = 3) {
+                        if ($season_now->number == 3) {
                             $cost = 60;
                         }
 
@@ -79,7 +79,7 @@ class MapController extends Controller
                             // Kurangi tc sesuai harga spawn
                             $team->tc = $team->tc - $cost;
                             // Tambah spend sesuai harga spawn
-                            $team->tc = $team->total_spend + $cost;
+                            $team->total_spend = $team->total_spend + $cost;
                         } else {
                             $team->tc = 0;
                         }

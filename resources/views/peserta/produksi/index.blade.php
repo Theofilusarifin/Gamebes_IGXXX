@@ -9,6 +9,18 @@
         background-color: #1F2937 !important;
         color: #fff !important;
     }
+
+
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    td{
+        width: 10px;
+        height: 10px;
+    }
 </style>
 @section('content')
 {{-- Card Produksi --}}
@@ -58,11 +70,12 @@
         </div>
     </div>
 </main>
+
 @endsection
 
 @section('script')
-    <script>
-        function produksi() {
+<script>
+    function produksi() {
             $.ajax({
                 type: 'POST',
                 url: "{{ route('peserta.produksi.produk') }}",
@@ -92,5 +105,5 @@
                 }
             });
         }
-    </script>
+</script>
 @endsection

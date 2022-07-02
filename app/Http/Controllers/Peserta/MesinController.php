@@ -119,6 +119,11 @@ class MesinController extends Controller
         // Ambil team machine untuk diubah selectednya
         $team_machines = TeamMachine::where('team_id', $team->id)->get();
 
+        //Deklarasi untuk nampung efektivitas dari kombinasi yang dipakai
+        $machine_combination_udang = $team->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->first();
+        $machine_combination_saus = $team->machineCombinations->where("id", "101")->first();
+        $machine_combination_kitosan = $team->machineCombinations->where("id", "102")->first();
+
         // reset selected
         foreach ($team_machines as $team_machine) {
             $team_machine->selected = 0;
@@ -227,6 +232,12 @@ class MesinController extends Controller
                 // Update tambahkan machine combination
                 $team->save();
 
+                //Kalau berhasil, diubah is_usednya jadi 1
+                for ($i = 0; $i < $banyak_machine; $i++) {
+                    $timMesin = TeamMachine::find($susunan_mesin[$i]);
+                    $timMesin->is_used = 1;
+                    $timMesin->save();
+                }
                 $status = 'success';
                 $msg = 'Kombinasi yang dimasukkan sudah benar! Kombinasi akan disimpan.';
             } else {
@@ -238,11 +249,6 @@ class MesinController extends Controller
             $status = 'error';
             $msg = 'Kombinasi yang dimasukkan belum tepat! Kombinasi tidak akan disimpan.';
         }
-
-        //Deklarasi untuk nampung efektivitas dari kombinasi yang dipakai
-        $machine_combination_udang = $team->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->first();
-        $machine_combination_saus = $team->machineCombinations->where("id", "101")->first();
-        $machine_combination_kitosan = $team->machineCombinations->where("id", "102")->first();
 
         return response()->json(array(
             'status' => $status,
@@ -260,7 +266,34 @@ class MesinController extends Controller
 
         // Define Variable
         $team = Auth::user()->team;
-        $team_machine = TeamMachine::find($request['team_machine_id']);
+        $team_machine = TeamMachine::find($request['team_machine_id']); //Ngambil mesin yang mau dijual
+        $team_machine_useds = TeamMachine::where('is_used', 1)->get('id'); //Ambil semua mesin yang is_usednya 1
+
+        foreach ($team_machine_useds as $team_machine_used) {
+            if ($team_machine_used->id == $team_machine->id) {
+                //Kalau ada berarti gk bisa dijual
+                $status = 'error';
+                $msg = "Penjualan mesin gagal dilakukan karena mesin dengan id " . $team_machine->id . " sedang digunakan";
+
+                // Ambil team mesin
+                $team_mesins = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
+                $index = 0;
+
+                foreach ($team_mesins as $team_mesin) {
+                    //Ngambil mesin
+                    $machine_name = Machine::where('id', $team_mesin->machine_id)->first()->name;
+                    $team_mesins[$index]->name = $machine_name;
+                    $index++;
+                }
+
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                    'team_mesins' => $team_mesins,
+                ), 200);
+            }
+        }
+        //Kalau tidak ada brarti lanjut proses
         $season_sell = SeasonNow::first()->number; //ambil season sekarang dan simpan di season_sell
         $season_buy = $team_machine->season_buy; //ambil season beli dari mesin
         $price_var = $team_machine->machine->price_var; //ambil harga jual
@@ -297,6 +330,65 @@ class MesinController extends Controller
             'status' => $status,
             'msg' => $msg,
             'team_mesins' => $team_mesins,
+        ), 200);
+    }
+
+    public function resetMachine(Request $request)
+    {
+        // Define Variable
+        // IS_USED masih bermasalah cek lgi!
+        $team = Auth::user()->team;
+        $msg = "";
+        $status = "";
+        //Ambil mesin kombinasi tim saat ini
+        $machine_combination_udang = $team->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->first();
+        $machine_combination_saus = $team->machineCombinations->where("id", "101")->first();
+        $machine_combination_kitosan = $team->machineCombinations->where("id", "102")->first();
+
+        //Ambil data dari request
+        $jenis_kombinasi = $request['jenis_kombinasi']; //Isinya kitosan, udang, saus
+        //101 --> saus tomat, 102 --> kitosan
+        if ($jenis_kombinasi == "udang") {
+            //Ambil mesin team pada kombinasi yang sedang digunakan
+            $team_mesins = $machine_combination_udang->machines;
+            foreach ($team_mesins as $team_mesin) {
+                //Ubah semua is_used jadi 0
+                $team_mesin->is_used = 0;
+            }
+            //Kalau sudah is_used jadi 0, delete kombinasinya
+            DB::table('team_machine_combination')
+                ->where('machine_combination_id', "!=", 101)
+                ->where('machine_combination_id', "!=", 102)
+                ->where('team_id', $team->id)
+                ->delete();
+        } else if ($jenis_kombinasi = "saus") {
+            $team_mesins = $machine_combination_saus->machines;
+            foreach ($team_mesins as $team_mesin) {
+                //Ubah semua is_used jadi 0
+                $team_mesin->is_used = 0;
+            }
+            //Kalau sudah is_used jadi 0, delete kombinasinya
+            DB::table('team_machine_combination')
+                ->where('machine_combination_id', 101)
+                ->where('team_id', $team->id)
+                ->delete();
+        } else if ($jenis_kombinasi = "kitosan") {
+            $team_mesins = $machine_combination_kitosan->machines;
+            foreach ($team_mesins as $team_mesin) {
+                //Ubah semua is_used jadi 0
+                $team_mesin->is_used = 0;
+            }
+            //Kalau sudah is_used jadi 0, delete kombinasinya
+            DB::table('team_machine_combination')
+                ->where('machine_combination_id', 102)
+                ->where('team_id', $team->id)
+                ->delete();
+        }
+        $msg = 'Berhasil melakukan reset kombinasi!';
+
+        return response()->json(array(
+            'status' => $status,
+            'msg' => $msg,
         ), 200);
     }
 }

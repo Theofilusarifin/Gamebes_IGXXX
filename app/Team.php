@@ -38,7 +38,7 @@ class Team extends Model
     public function ingridients()
     {
         return $this->belongsToMany(Ingridient::class, 'ingridient_team', 'team_id', 'ingridient_id')
-            ->withPivot(['amount_have', 'amount_use', 'total'])
+            ->withPivot(['amount_have', 'amount_use', 'total', 'expired_time'])
             ->orderby('ingridient_id', 'asc');
     }
 

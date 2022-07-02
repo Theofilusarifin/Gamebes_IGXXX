@@ -9,6 +9,12 @@
         background-color: #1F2937 !important;
         color: #fff !important;
     }
+
+    img {
+        max-width: 50px;
+        width: 50px;
+        height: auto;
+    }
 </style>
 @endsection
 
@@ -27,19 +33,58 @@
                     </div>
                 </div>
                 <div class="card-body">
+                    @include('peserta.layouts.alerts')
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
+                                    <th class="border-bottom" scope="col">Gambar</th>
                                     <th class="border-bottom" scope="col">Nama</th>
                                     <th class="border-bottom" scope="col">Jumlah</th>
+                                    <th class="border-bottom" scope="col">Waktu Expired</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @foreach ($team_ingridients as $ingridient)
-                                <tr>
+                                <tr id="row_{{$loop->index}}">
+                                    <td class="fw-bolder text-gray-500">
+                                        <img src="{{ asset('/assets/img/icons/ingridients/'.$ingridient->name.".png")}}" alt="">
+                                    </td>
                                     <td class="fw-bolder text-gray-500">{{$ingridient->name}}</td>
                                     <td class="fw-bolder text-gray-500">{{$ingridient->pivot->amount_have}}</td>
+                                    <td>
+                                        <script>
+                                            CountDownTimer('countdown_{{$loop->index}}');
+                                            function CountDownTimer(id)
+                                            {
+                                                var end = new Date('{{$ingridient->pivot->expired_time}}');
+                                                var _second = 1000;
+                                                var _minute = _second * 60;
+                                                var _hour = _minute * 60;
+                                                var timer;
+                                                function showRemaining() {
+                                                    var now = new Date();
+                                                    var distance = end - now;
+                                                    if (distance < 0) {
+                                                        document.getElementById(id).innerHTML = "00:00";
+                                                        deleteTeamIngridient('row_{{$loop->index}}', '{{$ingridient->id}}', '{{$ingridient->pivot->expired_time}}')
+                                                        return;
+                                                    }
+                                                    var minutes = Math.floor((distance % _hour) / _minute);
+                                                    var seconds = Math.floor((distance % _minute) / _second);
+
+                                                    if (seconds < 10){
+                                                        seconds = "0"+seconds;
+                                                    }
+
+                                                    document.getElementById(id).innerHTML = "0"+ minutes + ':';
+                                                    document.getElementById(id).innerHTML += seconds;
+                                                }
+                                                timer = setInterval(showRemaining, 1000);
+                                            }
+                                        </script>
+                                        <div class="fw-bolder" id="countdown_{{$loop->index}}">
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -64,6 +109,7 @@
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
+                                    <th class="border-bottom" scope="col">Gambar</th>
                                     <th class="border-bottom" scope="col">NAMA</th>
                                     <th class="border-bottom" scope="col">JUMLAH DIMILIKI</th>
                                 </tr>
@@ -71,6 +117,10 @@
                             <tbody>
                                 @foreach ($team_products as $product)
                                 <tr>
+                                    <td class="fw-bolder text-gray-500">
+                                        <img src="{{ asset('/assets/img/icons/products/'.$product->name." .png") }}"
+                                            alt="">
+                                    </td>
                                     <td class="fw-bolder text-gray-500">{{$product->name}}</td>
                                     <td class="fw-bolder text-gray-500">{{$product->pivot->amount_have}}</td>
                                 </tr>
@@ -83,4 +133,44 @@
         </div>
     </div>
 </main>
+@endsection
+
+@section('script')
+    <script>
+        function deleteTeamIngridient(row_id, ingridient_id, expired_time) {
+            // Hapus Row
+            $('#'+row_id).remove();
+            
+            // AJAX untuk Hapus Data di Database
+            $.ajax({
+                type: 'POST',
+                url: "{{ route('peserta.inventory.expired') }}",
+                data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'ingridient_id': ingridient_id,
+                    'expired_time': expired_time,
+                },
+                success: function (data) {
+                    if (data.status != ""){
+
+                        $('#alert').hide();
+                        $('#alert').show();
+                        $('#alert-body').html(data.msg);
+                    
+                        $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                            $("#alert").hide(1000);
+                        });
+                        if (data.status == "success") {
+                            $('#alert').removeClass("alert-danger");
+                            $('#alert').addClass("alert-success");
+                        }
+                        else if (data.status == "error") {
+                            $('#alert').removeClass("alert-success");
+                            $('#alert').addClass("alert-danger");
+                        }
+                    }
+                }
+            });
+        }
+    </script>
 @endsection

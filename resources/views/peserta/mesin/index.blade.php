@@ -63,11 +63,14 @@
             <div class="col-6">
               <h1 class="fs-5 fw-bold text-white mb-0">Kombinasi Mesin Udang Kaleng</h1>
             </div>
-            {{-- Buton Save/ Edit --}}
             <div class="col-6 d-flex justify-content-end">
+              {{-- Buton Edit --}}
               <button class="btn btn-danger me-3" id="edit_udang" tipe="button" onclick="edit('udang')">Edit</button>
-              <button disabled class="btn btn-success" id="save_udang" tipe="button"
-                onclick="save('udang')">Save</button>
+
+              {{-- Reset Kombinasi Mesin Udang Kaleng --}}
+              <button type="button" class="btn btn-info" id="reset_udang" onclick="reset('udang')">
+                <i data-feather='rotate-cw' style="width: 18px; height:18px;"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -201,6 +204,13 @@
                 </tr>
               </tbody>
             </table>
+
+            {{-- Buton Save --}}
+            <div class="d-flex flex-row-reverse">
+              <button disabled class="btn btn-success mt-2" id="save_udang" tipe="button"
+                onclick="save('udang')">Save</button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -218,12 +228,15 @@
             <div class="col-6">
               <h1 class="fs-5 fw-bold text-white mb-0">Kombinasi Mesin Kitosan</h1>
             </div>
-            {{-- Buton Save/ Edit --}}
             <div class="col-6 d-flex justify-content-end">
+              {{-- Buton Edit --}}
               <button class="btn btn-danger me-3" id="edit_kitosan" tipe="button"
                 onclick="edit('kitosan')">Edit</button>
-              <button disabled class="btn btn-success" id="save_kitosan" tipe="button"
-                onclick="save('kitosan')">Save</button>
+
+              {{-- Reset Kombinasi Mesin Kitosan --}}
+              <button type="button" class="btn btn-info" id="reset_kitosan" onclick="reset('kitosan')">
+                <i data-feather='rotate-cw' style="width: 18px; height:18px;"></i>
+              </button>
             </div>
           </div>
         </div>
@@ -329,6 +342,13 @@
                 </tr>
               </tbody>
             </table>
+
+            {{-- Buton Save --}}
+            <div class="d-flex flex-row-reverse">
+              <button disabled class="btn btn-success mt-2" id="save_kitosan" tipe="button"
+                onclick="save('kitosan')">Save</button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -342,11 +362,16 @@
             <div class="col-6">
               <h1 class="fs-5 fw-bold text-white mb-0">Kombinasi Mesin Saus Tomat</h1>
             </div>
-            {{-- Buton Save/ Edit --}}
-            <div class="col-6 d-flex justify-content-end">
+            <div class="col-6 d-flex justify-content-end align-items-center">
+              {{-- Buton Edit --}}
               <button class="btn btn-danger me-3" id="edit_saus" tipe="button" onclick="edit('saus')">Edit</button>
-              <button disabled class="btn btn-success" id="save_saus" tipe="button" onclick="save('saus')">Save</button>
+
+              {{-- Reset Kombinasi Mesin Saus Tomat --}}
+              <button type="button" class="btn btn-info" id="reset_saus" onclick="reset('saus')">
+                <i data-feather='rotate-cw' style="width: 18px; height:18px;"></i>
+              </button>
             </div>
+
           </div>
         </div>
         <div class="card-body">
@@ -444,6 +469,13 @@
                 </tr>
               </tbody>
             </table>
+
+            {{-- Buton Save --}}
+            <div class="d-flex flex-row-reverse">
+              <button disabled class="btn btn-success mt-2" id="save_saus" tipe="button"
+                onclick="save('saus')">Save</button>
+            </div>
+
           </div>
         </div>
       </div>
@@ -632,6 +664,44 @@
         }
       }
     });
+  }
+
+  function reset(tipe) {
+    $.ajax({
+      type: 'POST',
+      url: "{{ route('peserta.mesin.reset') }}",
+      data: {
+        '_token': $('meta[name="csrf-token"]').attr('content'),
+        'jenis_kombinasi': tipe,
+      },
+      success: function(data) {
+        // Ubah percentage
+        $("#efektivitas-percentage_"+tipe).html(0 + "%");
+        $("#kehigenisan-percentage_"+tipe).html(0 + "%");
+        // Ubah progress bar
+        $("#progress-kehigenisan-percentage_"+tipe).css("width",0 +"%");
+        $("#progress-efektivitas-percentage_"+tipe).css("width",0 +"%");
+        $("#progress-kehigenisan-percentage_"+tipe).attr("aria-valuenow",0);
+        $("#progress-efektivitas-percentage_"+tipe).attr("aria-valuenow",0);
+
+        //Message
+        $('#alert_' + tipe).hide();
+        $('#alert_' + tipe).show();
+        $('#alert-body_' + tipe).html(data.msg);
+        $("#alert_" + tipe).fadeTo(5000, 500).hide(1000,
+        function() {
+          $("#alert_" + tipe).hide(1000);
+        });
+        if (data.status == "success") {
+          $('#alert_' + tipe).removeClass("alert-danger");
+          $('#alert_' + tipe).addClass("alert-success");
+        } else if (data.status == "error") {
+          $('#alert_' + tipe).removeClass("alert-success");
+          $('#alert_' + tipe).addClass("alert-danger");
+        }
+      }
+    });
+
   }
 
   function save(tipe) {

@@ -19,6 +19,7 @@ class CreateTeamMachinesTable extends Migration
             $table->integer('performance');
             $table->integer('season_buy');
             $table->integer('season_sell')->nullable();
+            $table->tinyInteger('is_used')->default(0);
 
             $table->foreignId('team_id');
             $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');

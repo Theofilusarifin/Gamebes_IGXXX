@@ -8,7 +8,7 @@
                     location.reload(true);
                 }
     </script>
-    
+
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <!-- Primary Meta Tags -->
     <title>Industrial Games XXX</title>

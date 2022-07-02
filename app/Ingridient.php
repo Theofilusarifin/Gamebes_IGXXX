@@ -22,7 +22,7 @@ class Ingridient extends Model
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'ingridient_team', 'ingridient_id', 'team_id')
-            ->withPivot(['amount_have', 'amount_use', 'total'])
+            ->withPivot(['amount_have', 'amount_use', 'total', 'expired_time'])
             ->orderby('ingridient_store_id', 'asc');
     }
 }
