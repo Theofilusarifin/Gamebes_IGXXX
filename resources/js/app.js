@@ -5,7 +5,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
     let tableDataUpper = "";
     let tableData = "";
     let tableDataLower = "";
-    let tableDataRight = ""; 
+    let tableDataRight = "";
 
     $.ajax({
         type: "POST",
@@ -22,17 +22,16 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 if (left_company.is_company) {
                     classLeft = "company";
                 }
-                if (left_company.is_home){
+                if (left_company.is_home) {
                     classLeft = "home";
                 }
 
-                if(left_company.num_occupant > 0){
+                if (left_company.num_occupant > 0) {
                     tableDataLeft += `
                     <td class='${classLeft}' id='${left_company.id}'>
                         <div class="dot">${left_company.teams[0].id}</div>
                     </td>`;
-                }
-                else{
+                } else {
                     tableDataLeft += `
                     <td class='${classLeft}' id='${left_company.id}'></td>
                     `;
@@ -82,14 +81,18 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 let classes = "";
                 let onclick = false;
 
-                if (territory.is_wall) classes = "wall";
-                else if (territory.is_water) classes = "water";
-                else if (territory.is_harbour) {
+                if (territory.is_wall) {
+                    classes = "wall";
+                } else if (territory.is_water) {
+                    classes = "water";
+                } else if (territory.is_harbour) {
                     classes = "harbour";
                     onclick = true;
                     alias = "P" + index_pelabuhan;
                     index_pelabuhan++;
-                } else if (territory.is_company) classes = "company";
+                } else if (territory.is_company) {
+                    classes = "company";
+                }
                 // Store
                 else if (territory.transport_store_id != null) {
                     classes = "transport_store";
@@ -125,8 +128,10 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 }
 
                 // Nutup TR
-                if (territory.close_tr) tableData += `</tr>`;
-            }),
+                if (key == dibuka + column) {
+                    tableData += `</tr>`;
+                }
+            });
             $("#mainTable").html(tableData);
             // END TABLE MAIN
 
@@ -179,7 +184,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
             });
             $("#mainTableRight").html(tableDataRight);
             // END TABLE RIGHT
-            
+
             $(".btn-control-action").attr("disabled", false);
         },
     });

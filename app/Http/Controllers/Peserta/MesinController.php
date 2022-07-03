@@ -118,6 +118,8 @@ class MesinController extends Controller
         $team = Auth::user()->team;
         // Ambil team machine untuk diubah selectednya
         $team_machines = TeamMachine::where('team_id', $team->id)->get();
+        //Ambil season
+        $season_now = SeasonNow::first()->number; // 1 panas, 2 hujan, 3 dingin
 
         // reset selected
         foreach ($team_machines as $team_machine) {
@@ -125,6 +127,15 @@ class MesinController extends Controller
             $team_machine->save();
         }
 
+        //Cek Jasa pembersih
+        if ($season_now == 2 && $team->service_id == null) {
+            $status = "error";
+            $msg = "Mohon untuk membeli jasa pembersih";
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
         //Tidak cukup uang
         if ($team->tc < 5) {
             // kurang sesuai tc 
@@ -196,11 +207,23 @@ class MesinController extends Controller
         $team = Auth::user()->team;
         // Ambil team machine untuk diubah selectednya
         $team_machines = TeamMachine::where('team_id', $team->id)->get();
+        //Ambil season
+        $season_now = SeasonNow::first()->number; // 1 panas, 2 hujan, 3 dingin
 
         // reset selected
         foreach ($team_machines as $team_machine) {
             $team_machine->selected = 0;
             $team_machine->save();
+        }
+
+        //Cek Jasa pembersih
+        if ($season_now == 2 && $team->service_id == null) {
+            $status = "error";
+            $msg = "Mohon untuk membeli jasa pembersih";
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
         }
 
         //Tidak cukup uang
@@ -484,6 +507,7 @@ class MesinController extends Controller
                 ->delete();
         }
 
+        $status = 'success';
         $msg = 'Berhasil melakukan reset kombinasi!';
 
         return response()->json(array(

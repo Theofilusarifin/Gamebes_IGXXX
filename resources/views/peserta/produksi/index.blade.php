@@ -17,7 +17,8 @@
         border: 1px solid black;
         border-collapse: collapse;
     }
-    td{
+
+    td {
         width: 10px;
         height: 10px;
     }
@@ -41,14 +42,29 @@
                     @include('peserta.layouts.alerts')
                     <div class="row mb-2">
                         {{-- Pilih Item yang ingin dijual --}}
-                        <div class="col-7">
+                        <div class="col-12">
                             <div class="mb-4">
                                 <label class="my-1 me-2" for="product_id">Pilih Produk</label>
                                 <select class="form-select" id="product_id" aria-label="Default select example">
                                     <option selected value="">-- Pilih Nama Produk --</option>
-                                    <option selected value="1">Udang Kaleng</option>
-                                    <option selected value="2">Kitosan</option>
-                                    <option selected value="3">Saos Tomat</option>
+                                    <option value="1">Udang Kaleng</option>
+                                    <option value="2">Kitosan</option>
+                                    <option value="3">Saos Tomat</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-2">
+                        {{-- Pilih Item yang ingin dijual --}}
+                        <div class="col-7">
+                            <div class="mb-4">
+                                <label class="my-1 me-2" for="udang_id">Pilih Udang</label>
+                                <select class="form-select" id="udang_id" aria-label="Default select example">
+                                    <option selected value="">-- Pilih Nama Udang --</option>
+                                    <option value="1">Udang Vaname</option>
+                                    <option value="2">Udang Pama</option>
+                                    <option value="3">Udang Jerbung</option>
                                 </select>
                             </div>
                         </div>
@@ -59,6 +75,7 @@
                                 id='banyak_produksi' required="">
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
                             <button class="btn btn-success" id="produksi" style="width: 100px" type="button"

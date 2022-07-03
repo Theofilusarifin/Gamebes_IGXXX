@@ -43749,12 +43749,19 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         var alias = "";
         var classes = "";
         var onclick = false;
-        if (territory.is_wall) classes = "wall";else if (territory.is_water) classes = "water";else if (territory.is_harbour) {
+
+        if (territory.is_wall) {
+          classes = "wall";
+        } else if (territory.is_water) {
+          classes = "water";
+        } else if (territory.is_harbour) {
           classes = "harbour";
           onclick = true;
           alias = "P" + index_pelabuhan;
           index_pelabuhan++;
-        } else if (territory.is_company) classes = "company"; // Store
+        } else if (territory.is_company) {
+          classes = "company";
+        } // Store
         else if (territory.transport_store_id != null) {
           classes = "transport_store";
           alias = territory.transport_store_id;
@@ -43768,6 +43775,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
           classes = "service";
           alias = territory.service_id;
         } // Buat TD
+
 
         if (onclick) {
           tableData += "<td class='".concat(classes, "' id='").concat(territory.id, "' onclick=\"setSpawnPoint(").concat(territory.id, ")\">");
@@ -43792,8 +43800,11 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         } // Nutup TR
 
 
-        if (territory.close_tr) tableData += "</tr>";
-      }), $("#mainTable").html(tableData); // END TABLE MAIN
+        if (key == dibuka + column) {
+          tableData += "</tr>";
+        }
+      });
+      $("#mainTable").html(tableData); // END TABLE MAIN
       // START TABLE LOWER
 
       tableDataLower += "<tr>";

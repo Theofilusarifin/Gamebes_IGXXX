@@ -156,8 +156,8 @@
                 {{-- Buka Tr --}}
                 @if ($loop->index == 0 || $loop->index % $column == 0)@php($dibuka = $loop->index)<tr>@endif
 
-                    @php($alias = "")
                     {{-- Inisialisasi Class --}}
+                    @php($alias = "")
                     @php($class="")
                     @php($onclick=false)
 
