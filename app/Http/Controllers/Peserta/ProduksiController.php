@@ -25,8 +25,7 @@ class ProduksiController extends Controller
         $team = Auth::user()->team;
         $product = Product::find($request['product_id']);
         $banyak_item = $request['banyak_produksi'];
-        // $tipe_udang = $request['tipe_udang']; //Udang yang dipilih team
-        $tipe_udang = 1;
+        $tipe_udang = $request['tipe_udang']; //Id Udang yang dipilih team
         // Status dan message untuk respond
         $status = '';
         $msg = '';
@@ -39,8 +38,10 @@ class ProduksiController extends Controller
             // Lihat team punya kombinasi atau nggak?
             if ($combination_total > 0) {
                 // Ambil bahan
-                // Ambil Udang vaname
+                // Ambil Udang
+                // $udang = $team->ingridients->where('id', $tipe_udang)->orderBy('pivot_expired_time', 'desc')->first();
                 $udang_vaname = $team->ingridients->where('id', 1)->first();
+                //dd($udang);
                 $jumlah_udang_vaname = 0;
                 if ($udang_vaname != null) {
                     $jumlah_udang_vaname = $udang_vaname->pivot->amount_have;

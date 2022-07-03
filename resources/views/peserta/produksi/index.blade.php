@@ -100,6 +100,7 @@
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'product_id': $('#product_id').val(),
                     'banyak_produksi': $('#banyak_produksi').val(),
+                    'tipe_udang' : $('#udang_id').val(),
                 },
                 success: function (data) {
                     if (data.status != ""){
