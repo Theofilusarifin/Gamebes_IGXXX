@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use App\Machine;
 use App\MachineCombination;
 use App\Product;
+use App\Season;
+use App\SeasonNow;
+use App\TeamMachine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -97,8 +100,34 @@ class ProduksiController extends Controller
 
                 // Kalau bahan udang cukup (bahan udang adalah udang yang dipakai)
                 if ($bahan_udang <= $udang_dipakai && $bahan_air_mineral <= $jumlah_air_mineral && $bahan_garam <= $jumlah_garam && $bahan_gula <= $jumlah_gula) {
+                    $banyakProduksi = 4 * $banyak_item; //Banyak hasil jadi yang diharapkan
+                    //Ambil Season sekarang
+                    $season_now = SeasonNow::first()->number; // 1 panas, 2 hujan, 3 dingin
+                    //Ambil AC
+                    $mesin_ac = $team->teamMachines->where('machine_id', 4)->where('is_used', 1)->first();
+                    $kenaikan = 5;
+                    if ($season_now == 1 && $mesin_ac != null) {
+                        $kenaikan = 10;
+                    }
+                    $team_mesins = $team_machine_combination[0]->machines; //Dapat data mesin-mesin (asli) yang digunakan sama tim pada kombinasinya kaleng udang
+                    // dd($team_mesins[2]->id);
+                    foreach ($team_mesins as $team_mesin) {
+                        //Ambil teammachine yang idnya sama dengan $team_mesin dan is_usednya 1
+                        $timMesin = $team->teamMachines->where('machine_id', $team_mesin->id)->where('is_used', 1)->first();
+                        $kelipatan = floor(($banyakProduksi + $timMesin->product_produced) / 12);
+                        $totalKenaikanDefect = $kelipatan * $kenaikan;
+                        //Cek Performance utk setiap mesin
+                        if ($timMesin->performance <= $totalKenaikanDefect) {
+                            $status = 'error';
+                            $msg = 'Terdapat mesin yang tidak mampu untuk memproduksi';
+                            return response()->json(array(
+                                'status' => $status,
+                                'msg' => $msg,
+                            ), 200);
+                        }
+                    }
 
-                    // Variabel penampung limbah air
+                    // Variabel penampung limbah kepala dan kulit yaitu 0.5 dari udang yang dipakai
                     $wasteHead = $bahan_udang / 2;
                     $wasteKulit = $bahan_udang / 2;
                     // Kalau punya head pealer
@@ -156,39 +185,63 @@ class ProduksiController extends Controller
                     // Kurangi Gula
                     $amount_use_gula = $team->ingridients->where('id', 7)->first()->pivot->amount_use;
                     $team->ingridients()->sync([7 => ['amount_have' => $jumlah_gula - $bahan_gula, 'amount_use' => $amount_use_gula + $bahan_gula]], false);
-                    //Produk ditambah
 
+                    //Ambil produk yang mau di tambahin
                     $team_product = $team->products->where('id', $product->id)->first();
                     $amount_product = 0;
                     if ($team_product != null) {
+                        //Kita tampung produk yang dimiliki tim saat ini
                         $amount_product = $team_product->pivot->amount_have;
                     }
 
                     //PROSES DEFECT
-
                     //Ambil semua mesin yang ada dimana team_machine_combinationnya sama dengan $team_machine_combination
-                    $team_mesins = $team->machineCombinations[0]->machines;
-                    $banyakProduksi = 4 * $banyak_item;
                     $hasil_setelah_defect = $banyakProduksi;
                     $total_defect = 0;
 
                     foreach ($team_mesins as $team_mesin) {
+                        //Ambil defect
                         $defect = $team_mesin->defect;
+                        //Proses hitung total wastenya dan hasil produk akhir
                         $temporary_defect = $hasil_setelah_defect;
                         $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
                         $total_defect = $total_defect + ($temporary_defect - $hasil_setelah_defect);
                     }
-                    //Hasil final setelah proses defect (dibulatin kebawah)
+                    //Hasil produk akhir setelah proses defect (dibulatin kebawah)
                     ($hasil_defect_final = floor($hasil_setelah_defect));
+                    //Total defect yang nanti masuk waste (dibulatin keatas)
                     ($hasil_total_defect_final = ceil($total_defect));
 
-                    //PENGURANGAN PEFORMA MESIN
+                    //PENGURANGAN PEFORMA MESIN dan UPDATE PRODUCT PRODUCED
+                    foreach ($team_mesins as $team_mesin) {
+                        //Ambil teammachine yang idnya sama dengan $team_mesin dan is_usednya 1
+                        $timMesin = $team->teamMachines->where('machine_id', $team_mesin->id)->where('is_used', 1)->first();
+                        //Hitung besar kenaikannya
+                        $kelipatan = floor(($banyakProduksi + $timMesin->product_produced) / 12);
+                        $totalKenaikanDefect = $kelipatan * $kenaikan;
+                        //Kurangkan performance tiap mesin
+                        $timMesin->performance = $timMesin->performance - $totalKenaikanDefect;
+                        //Hitung sisa produksi yang nanti akan dimasukan ke product produced yang Baru
+                        $sisaProduksi = ($banyakProduksi + $timMesin->product_produced) % 12;
+                        //Update product produce
+                        $timMesin->product_produced = $sisaProduksi;
+                        //Lakukan save
+                        $timMesin->save();
+                    }
 
+                    //PERHITUNGAN LIMBAH AIR! 
+                    //Ambil Filter
+                    $mesin_filter = $team->teamMachines->where('machine_id', 2)->where('is_used', 1)->first();
+                    $pengaliLimbahAir = 1;
+                    if ($mesin_filter != null) {
+                        $pengaliLimbahAir = 0.5;
+                    }
+                    $limbah_air = $banyakProduksi * $pengaliLimbahAir;
 
                     //UPDATE DATA
                     // Tambahkan banyak Produksi pada product team
                     $team->products()->sync([$product->id => ['amount_have' => $amount_product + ($banyakProduksi)]]);
-                    $team->waste = $team->waste + ($hasil_total_defect_final) + $wasteHead + $wasteKulit;
+                    $team->waste = $team->waste + ($hasil_total_defect_final) + $wasteHead + $wasteKulit + $limbah_air;
                     $team->save();
 
                     $status = 'success';

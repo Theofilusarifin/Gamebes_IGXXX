@@ -43676,10 +43676,11 @@ module.exports = function(module) {
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
 window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
-  console.log(e.message);
-  var tableData = "";
+  var tableDataLeft = "";
   var tableDataUpper = "";
+  var tableData = "";
   var tableDataLower = "";
+  var tableDataRight = "";
   $.ajax({
     type: "POST",
     url: "/map/update-map",
@@ -43687,12 +43688,41 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
       _token: $('meta[name="csrf-token"]').attr("content")
     },
     success: function success(data) {
+      // START TABLE LEFT
+      $.each(data.left_companies, function (key, left_company) {
+        tableDataLeft += "<tr>"; // Tentukan Class
+
+        var classLeft = "empty";
+
+        if (left_company.is_company) {
+          classLeft = "company";
+        }
+
+        if (left_company.is_home) {
+          classLeft = "home";
+        }
+
+        if (left_company.num_occupant > 0) {
+          tableDataLeft += "\n                    <td class='".concat(classLeft, "' id='").concat(left_company.id, "'>\n                        <div class=\"dot\">").concat(left_company.teams[0].id, "</div>\n                    </td>");
+        } else {
+          tableDataLeft += "\n                    <td class='".concat(classLeft, "' id='").concat(left_company.id, "'></td>\n                    ");
+        }
+
+        tableDataLeft += "</tr>";
+      });
+      $("#mainTableLeft").html(tableDataLeft); // END TABLE LEFT
+      // START TABLE UPPER
+
       tableDataUpper += "<tr>";
       $.each(data.upper_companies, function (key, upper_company) {
         var classUpper = "empty";
 
         if (upper_company.is_company) {
           classUpper = "company";
+        }
+
+        if (upper_company.is_home) {
+          classUpper = "home";
         }
 
         if (upper_company.num_occupant > 0) {
@@ -43702,8 +43732,10 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         }
       });
       tableDataUpper += "</tr>";
-      $("#mainTableUpper").html(tableDataUpper);
-      var column = 44;
+      $("#mainTableUpper").html(tableDataUpper); // END TABLE UPPER
+      // START TABLE MAIN
+
+      var column = 42;
       var index_pelabuhan = 1;
       var dibuka = "";
       $.each(data.territories, function (key, territory) {
@@ -43761,13 +43793,19 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
 
 
         if (territory.close_tr) tableData += "</tr>";
-      }), $("#mainTable").html(tableData);
+      }), $("#mainTable").html(tableData); // END TABLE MAIN
+      // START TABLE LOWER
+
       tableDataLower += "<tr>";
       $.each(data.lower_companies, function (key, lower_company) {
         var classLower = "empty";
 
         if (lower_company.is_company) {
           classLower = "company";
+        }
+
+        if (lower_company.is_home) {
+          classLower = "home";
         }
 
         if (lower_company.num_occupant > 0) {
@@ -43777,7 +43815,32 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         }
       });
       tableDataLower += "</tr>";
-      $("#mainTableLower").html(tableDataLower);
+      $("#mainTableLower").html(tableDataLower); // END TABLE LOWER
+      // START TABLE RIGHT
+
+      $.each(data.right_companies, function (key, right_company) {
+        tableDataRight += "<tr>"; // Tentukan Class
+
+        var classRight = "empty";
+
+        if (right_company.is_company) {
+          classRight = "company";
+        }
+
+        if (right_company.is_home) {
+          classRight = "home";
+        }
+
+        if (right_company.num_occupant > 0) {
+          tableDataRight += "\n                    <td class='".concat(classRight, "' id='").concat(right_company.id, "'>\n                        <div class=\"dot\">").concat(right_company.teams[0].id, "</div>\n                    </td>");
+        } else {
+          tableDataRight += "\n                    <td class='".concat(classRight, "' id='").concat(right_company.id, "'></td>\n                    ");
+        }
+
+        tableDataRight += "</tr>";
+      });
+      $("#mainTableRight").html(tableDataRight); // END TABLE RIGHT
+
       $(".btn-control-action").attr("disabled", false);
     }
   });

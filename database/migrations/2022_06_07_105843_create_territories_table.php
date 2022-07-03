@@ -21,6 +21,7 @@ class CreateTerritoriesTable extends Migration
             $table->tinyInteger('is_water');
             $table->tinyInteger('is_harbour');
             $table->tinyInteger('is_company');
+            $table->tinyInteger('is_home');
 
             $table->string('transport_store_id')->nullable()->references('id')->on('transport_stores')->onUpdate('cascade')->onDelete('cascade');
 

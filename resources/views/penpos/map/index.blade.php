@@ -3,19 +3,23 @@
 @section('style')
 <style>
     td {
-        min-width: 5px;
-        min-height: 5px;
+        min-width: 30px;
+        min-height: 30px;
         width: 30px;
         height: 30px;
+        max-width: 30px;
+        max-height: 30px;
         text-align: center;
         font-size: 12px;
         font-weight: bold;
+        text-align: center;
+
         /* border: 1px; */
     }
 
     .water {
         width: 30px;
-        height: 15px;
+        height: 30px;
         background-color: #8DB5F8
     }
 
@@ -35,8 +39,12 @@
     }
 
     .company {
-        background-color: #1f2937;
-        /* border: 1px dashed rgb(84, 84, 84); */
+        background-color: #e3f821;
+        width: 30px;
+    }
+
+    .home {
+        background-color: #5bac66;
         width: 30px;
     }
 
@@ -59,7 +67,7 @@
         color: #FFF;
     }
 
-    td:not(.water, .company, .empty) {
+    td:not(.water, .company, .empty, .home) {
         border: 1px dashed rgb(84, 84, 84);
     }
 
@@ -74,6 +82,18 @@
         align-items: center;
         justify-content: center;
     }
+
+    .col-1 {
+        width: 3%;
+    }
+
+    .col-7 {
+        width: 68%;
+    }
+
+    .col-3 {
+        width: 24%;
+    }
 </style>
 @endsection
 
@@ -86,40 +106,61 @@
         </div>
     </div>
 </div>
-<div class="row my-2 d-flex mx-2">
+<div class="row my-3 d-flex">
+    <div class="col-1 pt-3 mt-5 ms-3">
+        <table id="mainTableLeft" class="my-4">
+            @foreach ($left_companies as $left_company)
+            <tr>
+                {{-- Tentukan Class --}}
+                @php($class="empty")
+                @if ($left_company->is_company) @php($class="company")@endif
+                @if ($left_company->is_home) @php($class="home")@endif
+
+                @if($left_company->num_occupant > 0)
+                <td class="{{ $class }}" id="{{ $left_company->id }}">
+                    <div class="dot">{{ $left_company->teams->first()->id }}</div>
+                </td>
+                @else
+                <td class="{{ $class }}" id="{{ $left_company->id }}"></td>
+                @endif
+            </tr>
+            @endforeach
+        </table>
+    </div>
     {{-- Map --}}
-    <div class="col-9" id="col_map">
+    <div class="col-7" id="col_map">
         <div>
-            <table id="mainTableUpper" class="m-4">
+            <table id="mainTableUpper">
                 <tr>
                     @foreach ($upper_companies as $upper_company)
-                        {{-- Tentukan Class --}}
-                        @php($class="empty")
-                        @if ($upper_company->is_company) @php($class="company")@endif
-    
-                        @if($upper_company->num_occupant > 0)
-                        <td class="{{ $class }}" id="{{ $upper_company->id }}">
-                            <div class="dot">{{ $upper_company->teams->first()->id }}</div>
-                        </td>
-                        @else
-                        <td class="{{ $class }}" id="{{ $upper_company->id }}"></td>
-                        @endif
+                    {{-- Tentukan Class --}}
+                    @php($class="empty")
+                    @if ($upper_company->is_company) @php($class="company")@endif
+                    @if ($upper_company->is_home) @php($class="home")@endif
+
+                    @if($upper_company->num_occupant > 0)
+                    <td class="{{ $class }}" id="{{ $upper_company->id }}">
+                        <div class="dot">{{ $upper_company->teams->first()->id }}</div>
+                    </td>
+                    @else
+                    <td class="{{ $class }}" id="{{ $upper_company->id }}"></td>
+                    @endif
                     @endforeach
                 </tr>
             </table>
-    
-            @php($column = 44)
+
+            @php($column = 42)
             @php($index_pelabuhan = 1)
-            <table id="mainTable" class="m-4">
+            <table id="mainTable" class="my-4">
                 @foreach ($territories as $territory)
                 {{-- Buka Tr --}}
                 @if ($loop->index == 0 || $loop->index % $column == 0)@php($dibuka = $loop->index)<tr>@endif
-    
+
                     @php($alias = "")
                     {{-- Inisialisasi Class --}}
                     @php($class="")
                     @php($onclick=false)
-    
+
                     @if ($territory->is_wall) @php($class="wall")
                     @elseif ($territory->is_water) @php($class="water")
                     @elseif ($territory->is_harbour)
@@ -129,7 +170,7 @@
                     @php($alias = "P".$index_pelabuhan)
                     @php($index_pelabuhan+=1)
                     @elseif ($territory->is_company) @php($class="company")
-    
+
                     {{-- Store --}}
                     @elseif (isset($territory->transport_store_id))
                     @php($class= "transport_store")
@@ -144,7 +185,7 @@
                     @php($class= "service")
                     @php($alias = $territory->service_id)
                     @endif
-    
+
                     {{-- Buat Td --}}
                     @if($onclick)
                     <td class="{{ $class }}" id="{{ $territory->id }}" onclick="setSpawnPoint({{ $territory->id }})">
@@ -163,31 +204,53 @@
                         {{ $alias }}
                     </td>
                     @endif
-    
+
                     {{-- Nutup tr --}}
                     @if($loop->index == $dibuka + $column)
                 </tr>@endif
                 @endforeach
             </table>
-    
-            <table id="mainTableLower" class="m-4">
+
+            <table id="mainTableLower">
                 <tr>
                     @foreach ($lower_companies as $lower_company)
-                        {{-- Tentukan Class --}}
-                        @php($class="empty")
-                        @if ($lower_company->is_company) @php($class="company")@endif
-    
-                        @if($lower_company->num_occupant > 0)
-                        <td class="{{ $class }}" id="{{ $lower_company->id }}">
-                            <div class="dot">{{ $lower_company->teams->first()->id }}</div>
-                        </td>
-                        @else
-                        <td class="{{ $class }}" id="{{ $lower_company->id }}"></td>
-                        @endif
+                    {{-- Tentukan Class --}}
+                    @php($class="empty")
+                    @if ($lower_company->is_company) @php($class="company")@endif
+                    @if ($lower_company->is_home) @php($class="home")@endif
+
+                    @if($lower_company->num_occupant > 0)
+                    <td class="{{ $class }}" id="{{ $lower_company->id }}">
+                        <div class="dot">{{ $lower_company->teams->first()->id }}</div>
+                    </td>
+                    @else
+                    <td class="{{ $class }}" id="{{ $lower_company->id }}"></td>
+                    @endif
                     @endforeach
                 </tr>
             </table>
         </div>
+    </div>
+
+    <div class="col-1 pt-3 mt-5 me-3">
+        <table id="mainTableRight" class="my-4">
+            @foreach ($right_companies as $right_company)
+            <tr>
+                {{-- Tentukan Class --}}
+                @php($class="empty")
+                @if ($right_company->is_company) @php($class="company")@endif
+                @if ($right_company->is_home) @php($class="home")@endif
+
+                @if($right_company->num_occupant > 0)
+                <td class="{{ $class }}" id="{{ $right_company->id }}">
+                    <div class="dot">{{ $right_company->teams->first()->id }}</div>
+                </td>
+                @else
+                <td class="{{ $class }}" id="{{ $right_company->id }}"></td>
+                @endif
+            </tr>
+            @endforeach
+        </table>
     </div>
     {{-- Controller --}}
     <div class="col-3" id="col_controller">
@@ -396,7 +459,6 @@
                     'current_capacity': current_capacity,
                 },
             success: function (data) {
-                // Jika response error, tidak usah di kurangi Actionnya
                 if(data.response == 'error') {
                     $('.btn-control-action').attr('disabled', false);
                 }
@@ -427,7 +489,7 @@
                             <input class="form-control" type="hidden" id='banyak_item' value="1">
                             <div class="col-12 d-flex justify-content-end">
                                 <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item"
-                                    onclick="buy('${data.store.id}')">
+                                    onclick="buy${data.type}('${data.store.id}')">
                                     Buy
                                 </button>
                             </div>`
@@ -451,7 +513,7 @@
                                         </div>
                                     </div>
                                     <div class="col-3">
-                                        <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item" onclick="buy('${data.store.id}')">
+                                        <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item" onclick="buy${data.type}('${data.store.id}')">
                                             Buy
                                         </button>
                                     </div>`
@@ -468,13 +530,127 @@
             }
         });
     }
-    function buy(store_id) {
+
+    function buyTransport(store_id) {
         // Ambil current capacity
         var current_capacity = $("#capacity").text() * 1;
-        
         $.ajax({
             type: 'POST',
-            url: "{{ route('penpos.map.buy') }}",
+            url: "{{ route('penpos.map.buy.transport') }}",
+            data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'team_id': $('#team_id').val(),
+                    'item_id': $('#nama_item').val(),
+                    'store_id': store_id,
+                    'banyak_item': $('#banyak_item').val(),
+                    'current_capacity': current_capacity,
+                },
+            success: function (data) {
+                // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
+                getCapacity();
+                if (data.status != ""){
+                    $('#alert').hide();
+                    $('#alert').show();
+                    $('#alert-body').html(data.msg);
+
+                    $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                        $("#alert").hide(1000);
+                    });
+                    if (data.status == "success") {
+                        $('#alert').removeClass("alert-danger");
+                        $('#alert').addClass("alert-success");
+                    } 
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                    }
+                }
+            }
+        });
+    }
+
+    function buyIngridient(store_id) {
+        // Ambil current capacity
+        var current_capacity = $("#capacity").text() * 1;
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.map.buy.ingridient') }}",
+            data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'team_id': $('#team_id').val(),
+                    'item_id': $('#nama_item').val(),
+                    'store_id': store_id,
+                    'banyak_item': $('#banyak_item').val(),
+                    'current_capacity': current_capacity,
+                },
+            success: function (data) {
+                // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
+                getCapacity();
+                if (data.status != ""){
+                    $('#alert').hide();
+                    $('#alert').show();
+                    $('#alert-body').html(data.msg);
+
+                    $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                        $("#alert").hide(1000);
+                    });
+                    if (data.status == "success") {
+                        $('#alert').removeClass("alert-danger");
+                        $('#alert').addClass("alert-success");
+                    } 
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                    }
+                }
+            }
+        });
+    }
+
+    function buyMachine(store_id) {
+        // Ambil current capacity
+        var current_capacity = $("#capacity").text() * 1;
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.map.buy.machine') }}",
+            data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'team_id': $('#team_id').val(),
+                    'item_id': $('#nama_item').val(),
+                    'store_id': store_id,
+                    'banyak_item': $('#banyak_item').val(),
+                    'current_capacity': current_capacity,
+                },
+            success: function (data) {
+                // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
+                getCapacity();
+                if (data.status != ""){
+                    $('#alert').hide();
+                    $('#alert').show();
+                    $('#alert-body').html(data.msg);
+
+                    $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                        $("#alert").hide(1000);
+                    });
+                    if (data.status == "success") {
+                        $('#alert').removeClass("alert-danger");
+                        $('#alert').addClass("alert-success");
+                    } 
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                    }
+                }
+            }
+        });
+    }
+
+    function buyService(store_id) {
+        // Ambil current capacity
+        var current_capacity = $("#capacity").text() * 1;
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.map.buy.service') }}",
             data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'team_id': $('#team_id').val(),

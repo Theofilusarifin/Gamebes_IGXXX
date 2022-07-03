@@ -19,6 +19,8 @@ class CreateTeamMachinesTable extends Migration
             $table->integer('performance');
             $table->integer('season_buy');
             $table->integer('season_sell')->nullable();
+            $table->integer('product_produced')->default(0);
+
             $table->tinyInteger('is_used')->default(0);
 
             $table->foreignId('team_id');

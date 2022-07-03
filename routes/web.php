@@ -25,7 +25,11 @@ Route::group(
         Route::post('/map/move', 'Penpos\MapController@move')->name('map.move');
         Route::post('/map/spawn', 'Penpos\MapController@spawn')->name('map.spawn');
         Route::post('/map/action', 'Penpos\MapController@action')->name('map.action');
-        Route::post('/map/action/buy-items', 'Penpos\MapController@buy')->name('map.buy');
+        Route::post('/map/action/buy/transport', 'Penpos\MapController@buyTransport')->name('map.buy.transport');
+        Route::post('/map/action/buy/ingridient', 'Penpos\MapController@buyIngridient')->name('map.buy.ingridient');
+        Route::post('/map/action/buy/machine', 'Penpos\MapController@buyMachine')->name('map.buy.machine');
+        Route::post('/map/action/buy/service', 'Penpos\MapController@buyService')->name('map.buy.service');
+
         Route::post('/map/get/capacity', 'Penpos\MapController@getCapacity')->name('map.get.capacity');
         Route::post('/map/back/to/company', 'Penpos\MapController@backToCompany')->name('map.back.to.company');
 
@@ -62,7 +66,6 @@ Route::group(
         Route::get('/inventory', 'Peserta\InventoryController@index')->name('inventory'); // -> /peserta/inventory
         Route::post('/inventory/ingridient-expired', 'Peserta\InventoryController@ingridientExpired')->name('inventory.expired');
 
-
         // Mesin --> 
         Route::get('/mesin', 'Peserta\MesinController@index')->name('mesin'); // -> /peserta/mesin
         Route::post('/mespin/mesin-available', 'Peserta\MesinController@getAvailableMachine')->name('mesin.get');
@@ -70,6 +73,7 @@ Route::group(
         Route::post('/mesin/save-mesin', 'Peserta\MesinController@saveMachine')->name('mesin.save');
         Route::post('/mesin/jual-mesin', 'Peserta\MesinController@sellMachine')->name('mesin.jual');
         Route::post('/mesin/reset-mesin', 'Peserta\MesinController@resetMachine')->name('mesin.reset');
+        Route::post('/mesin/save-tambahan-mesin', 'Peserta\MesinController@saveMachineTambahan')->name('mesin.save.tambahan');
 
         // produksi -->
         Route::get('/produksi', 'Peserta\ProduksiController@index')->name('produksi'); // -> /peserta/produksi

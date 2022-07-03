@@ -14,7 +14,7 @@ class CreateIngridientTeamTable extends Migration
     public function up()
     {
         Schema::create('ingridient_team', function (Blueprint $table) {
-            $table->timestamp('expired_time')->primary();
+            $table->timestamp('expired_time')->nullable();
 
             $table->foreignId('team_id');
             $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');

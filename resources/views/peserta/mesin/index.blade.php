@@ -16,7 +16,8 @@
 
   {{-- Mesin Tambahan --}}
   <div class="row my-5">
-    <div class="col-12 col-sm-4 col-xl-4">
+    {{-- Card AC --}}
+    <div class="col-12 col-sm-6 col-xl-6">
       <div class="card border-0 shadow">
         <div class="card-header">
           <div class="row d-flex justify-content-center align-items-center">
@@ -24,12 +25,27 @@
               <h1 class="fs-5 fw-bold text-white mb-0">Mesin Tambahan</h1>
             </div>
             <div class="col-6 d-flex justify-content-end">
+              {{-- Button Edit --}}
               <button class="btn btn-danger me-3" id="edit_ac" tipe="button" onclick="edit('ac')">Edit</button>
-              <button disabled class="btn btn-success" id="save_ac" tipe="button" onclick="save('ac')">Save</button>
+
+              {{-- Reset Kombinasi Mesin AC --}}
+              <button type="button" class="btn btn-info" id="reset_ac" onclick="reset('ac')">
+                <i data-feather='rotate-cw' style="width: 18px; height:18px;"></i>
+              </button>
+
             </div>
           </div>
         </div>
         <div class="card-body">
+          {{-- Alert --}}
+          <div class="row">
+            <div class="col-12">
+              <div class="alert alert-success alert-dismissible fade show" id="alert_ac" style="display:none"
+                role="alert">
+                <span class="fas fa-bullhorn me-1" id="alert-body_ac"></span>
+              </div>
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table align-items-center table-flush">
               <thead class="thead-light">
@@ -47,6 +63,70 @@
                 </tr>
               </tbody>
             </table>
+
+            {{-- Buton Save --}}
+            <div class="d-flex flex-row-reverse">
+              <button disabled class="btn btn-success" id="save_ac" tipe="button"
+                onclick="saveTambahan('ac')">Save</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    {{-- Card Filter --}}
+    <div class="col-12 col-sm-6 col-xl-6">
+      <div class="card border-0 shadow">
+        <div class="card-header">
+          <div class="row d-flex justify-content-center align-items-center">
+            <div class="col-6">
+              <h1 class="fs-5 fw-bold text-white mb-0">Mesin Tambahan</h1>
+            </div>
+            <div class="col-6 d-flex justify-content-end">
+              {{-- Button Edit --}}
+              <button class="btn btn-danger me-3" id="edit_ac" tipe="button" onclick="edit('filter')">Edit</button>
+
+              {{-- Reset Kombinasi Mesin Filter --}}
+              <button type="button" class="btn btn-info" id="reset_filter" onclick="reset('filter')">
+                <i data-feather='rotate-cw' style="width: 18px; height:18px;"></i>
+              </button>
+
+            </div>
+          </div>
+        </div>
+        <div class="card-body">
+          {{-- Alert --}}
+          <div class="row">
+            <div class="col-12">
+              <div class="alert alert-success alert-dismissible fade show" id="alert_filter" style="display:none"
+                role="alert">
+                <span class="fas fa-bullhorn me-1" id="alert-body_filter"></span>
+              </div>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-items-center table-flush">
+              <thead class="thead-light">
+                <tr>
+                  <th class="border-bottom" scope="col">Filter</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td class="text-gray-900" scope="row">
+                    <select disabled class="select2 form-select" id="filter_1" tabindex="-1" aria-hidden="true">
+                      <option selected disabled value="">-- Lakukan Edit --</option>
+                    </select>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            {{-- Buton Save --}}
+            <div class="d-flex flex-row-reverse">
+              <button disabled class="btn btn-success" id="save_filter" tipe="button"
+                onclick="saveTambahan('filter')">Save</button>
+            </div>
           </div>
         </div>
       </div>
@@ -585,6 +665,13 @@
       $('#save_ac').attr('disabled', false);
       $('#ac_1').attr('disabled', false);
     }
+    // Filter
+    else if (tipe == "filter")
+    {
+      $('#edit_filter').attr('disabled', true);
+      $('#save_filter').attr('disabled', false);
+      $('#filter_1').attr('disabled', false);
+    }
   }
 
   function setMachine(tipe, index) {
@@ -684,7 +771,60 @@
         $("#progress-kehigenisan-percentage_"+tipe).attr("aria-valuenow",0);
         $("#progress-efektivitas-percentage_"+tipe).attr("aria-valuenow",0);
 
+        //Balikin comboboxnya
+        if(tipe == "udang")
+        {
+          $("udang_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+          for (let index = 2; index <= 10; index++) {
+            $("#udang_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
+          }
+        }else if(tipe == "kitosan"){
+          $("#kitosan_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+          for (let index = 2; index <= 3; index++) {
+            $("#kitosan_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
+          }
+        }else if(tipe == "saus"){
+          $("#saus_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+          $("#saus_2").html("<option selected disabled>-- Pilih Mesin 1 --</option>");
+        }else if (tipe == "ac"){
+          $("#ac_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+        }else if (tipe == "filter"){
+          $("#filter_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+        }
+
         //Message
+        $('#alert_' + tipe).hide();
+        $('#alert_' + tipe).show();
+        $('#alert-body_' + tipe).html(data.msg);
+        $("#alert_" + tipe).fadeTo(5000, 500).hide(1000,
+        function() {
+          $("#alert_" + tipe).hide(1000);
+        });
+        if (data.status == "success") {
+          $('#alert_' + tipe).removeClass("alert-danger");
+          $('#alert_' + tipe).addClass("alert-success");
+        } else if (data.status == "error") {
+          $('#alert_' + tipe).removeClass("alert-success");
+          $('#alert_' + tipe).addClass("alert-danger");
+        }
+      }
+    });
+
+  }
+
+  function saveTambahan(tipe) {
+    $.ajax({
+      type: 'POST',
+      url: "{{ route('peserta.mesin.save.tambahan') }}",
+      data: {
+        '_token': $('meta[name="csrf-token"]').attr('content'),
+        'tipe': tipe,
+        'mesin': $('#' + tipe + '_1').val(),
+      },
+      success: function(data) {
+        //Message
+        $('#edit_' + tipe).attr('disabled', false);
+        $('#save_' + tipe).attr('disabled', true);
         $('#alert_' + tipe).hide();
         $('#alert_' + tipe).show();
         $('#alert-body_' + tipe).html(data.msg);
