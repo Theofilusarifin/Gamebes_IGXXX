@@ -43688,7 +43688,8 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
       _token: $('meta[name="csrf-token"]').attr("content")
     },
     success: function success(data) {
-      // START TABLE LEFT
+      console.log(data); // START TABLE LEFT
+
       $.each(data.left_companies, function (key, left_company) {
         tableDataLeft += "<tr>"; // Tentukan Class
 
@@ -43710,6 +43711,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
 
         tableDataLeft += "</tr>";
       });
+      console.log(tableDataLeft);
       $("#mainTableLeft").html(tableDataLeft); // END TABLE LEFT
       // START TABLE UPPER
 
@@ -43732,6 +43734,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         }
       });
       tableDataUpper += "</tr>";
+      console.log(tableDataUpper);
       $("#mainTableUpper").html(tableDataUpper); // END TABLE UPPER
       // START TABLE MAIN
 
@@ -43804,6 +43807,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
           tableData += "</tr>";
         }
       });
+      console.log(tableData);
       $("#mainTable").html(tableData); // END TABLE MAIN
       // START TABLE LOWER
 
@@ -43826,6 +43830,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         }
       });
       tableDataLower += "</tr>";
+      console.log(tableDataLower);
       $("#mainTableLower").html(tableDataLower); // END TABLE LOWER
       // START TABLE RIGHT
 
@@ -43850,6 +43855,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
 
         tableDataRight += "</tr>";
       });
+      console.log(tableDataRight);
       $("#mainTableRight").html(tableDataRight); // END TABLE RIGHT
 
       $(".btn-control-action").attr("disabled", false);

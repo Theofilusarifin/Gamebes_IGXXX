@@ -14,6 +14,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
             _token: $('meta[name="csrf-token"]').attr("content"),
         },
         success: function (data) {
+            console.log(data);
             // START TABLE LEFT
             $.each(data.left_companies, (key, left_company) => {
                 tableDataLeft += `<tr>`;
@@ -38,6 +39,8 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 }
                 tableDataLeft += `</tr>`;
             });
+            console.log(tableDataLeft);
+
             $("#mainTableLeft").html(tableDataLeft);
             // END TABLE LEFT
 
@@ -61,6 +64,8 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 }
             });
             tableDataUpper += `</tr>`;
+            console.log(tableDataUpper);
+
             $("#mainTableUpper").html(tableDataUpper);
             // END TABLE UPPER
 
@@ -132,6 +137,8 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                     tableData += `</tr>`;
                 }
             });
+            console.log(tableData);
+
             $("#mainTable").html(tableData);
             // END TABLE MAIN
 
@@ -155,6 +162,8 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 }
             });
             tableDataLower += `</tr>`;
+            console.log(tableDataLower);
+
             $("#mainTableLower").html(tableDataLower);
             // END TABLE LOWER
 
@@ -182,6 +191,8 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 }
                 tableDataRight += `</tr>`;
             });
+            console.log(tableDataRight);
+
             $("#mainTableRight").html(tableDataRight);
             // END TABLE RIGHT
 
