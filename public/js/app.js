@@ -43695,11 +43695,11 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
 
         var classLeft = "empty";
 
-        if (left_company.is_company) {
+        if (left_company.is_company == 1) {
           classLeft = "company";
         }
 
-        if (left_company.is_home) {
+        if (left_company.is_home == 1) {
           classLeft = "home";
         }
 
@@ -43719,11 +43719,11 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
       $.each(data.upper_companies, function (key, upper_company) {
         var classUpper = "empty";
 
-        if (upper_company.is_company) {
+        if (upper_company.is_company == 1) {
           classUpper = "company";
         }
 
-        if (upper_company.is_home) {
+        if (upper_company.is_home == 1) {
           classUpper = "home";
         }
 
@@ -43753,16 +43753,16 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         var classes = "";
         var onclick = false;
 
-        if (territory.is_wall) {
+        if (territory.is_wall == 1) {
           classes = "wall";
-        } else if (territory.is_water) {
+        } else if (territory.is_water == 1) {
           classes = "water";
-        } else if (territory.is_harbour) {
+        } else if (territory.is_harbour == 1) {
           classes = "harbour";
           onclick = true;
           alias = "P" + index_pelabuhan;
           index_pelabuhan++;
-        } else if (territory.is_company) {
+        } else if (territory.is_company == 1) {
           classes = "company";
         } // Store
         else if (territory.transport_store_id != null) {
@@ -43815,11 +43815,11 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
       $.each(data.lower_companies, function (key, lower_company) {
         var classLower = "empty";
 
-        if (lower_company.is_company) {
+        if (lower_company.is_company == 1) {
           classLower = "company";
         }
 
-        if (lower_company.is_home) {
+        if (lower_company.is_home == 1) {
           classLower = "home";
         }
 
@@ -43839,11 +43839,11 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
 
         var classRight = "empty";
 
-        if (right_company.is_company) {
+        if (right_company.is_company == 1) {
           classRight = "company";
         }
 
-        if (right_company.is_home) {
+        if (right_company.is_home == 1) {
           classRight = "home";
         }
 

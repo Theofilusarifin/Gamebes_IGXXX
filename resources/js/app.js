@@ -20,10 +20,10 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 tableDataLeft += `<tr>`;
                 // Tentukan Class
                 let classLeft = "empty";
-                if (left_company.is_company) {
+                if (left_company.is_company == 1) {
                     classLeft = "company";
                 }
-                if (left_company.is_home) {
+                if (left_company.is_home == 1) {
                     classLeft = "home";
                 }
 
@@ -48,10 +48,10 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
             tableDataUpper += `<tr>`;
             $.each(data.upper_companies, (key, upper_company) => {
                 let classUpper = "empty";
-                if (upper_company.is_company) {
+                if (upper_company.is_company == 1) {
                     classUpper = "company";
                 }
-                if (upper_company.is_home) {
+                if (upper_company.is_home == 1) {
                     classUpper = "home";
                 }
 
@@ -86,16 +86,16 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 let classes = "";
                 let onclick = false;
 
-                if (territory.is_wall) {
+                if (territory.is_wall == 1) {
                     classes = "wall";
-                } else if (territory.is_water) {
+                } else if (territory.is_water == 1) {
                     classes = "water";
-                } else if (territory.is_harbour) {
+                } else if (territory.is_harbour == 1) {
                     classes = "harbour";
                     onclick = true;
                     alias = "P" + index_pelabuhan;
                     index_pelabuhan++;
-                } else if (territory.is_company) {
+                } else if (territory.is_company == 1) {
                     classes = "company";
                 }
                 // Store
@@ -146,10 +146,10 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
             tableDataLower += `<tr>`;
             $.each(data.lower_companies, (key, lower_company) => {
                 let classLower = "empty";
-                if (lower_company.is_company) {
+                if (lower_company.is_company == 1) {
                     classLower = "company";
                 }
-                if (lower_company.is_home) {
+                if (lower_company.is_home == 1) {
                     classLower = "home";
                 }
 
@@ -172,10 +172,10 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                 tableDataRight += `<tr>`;
                 // Tentukan Class
                 let classRight = "empty";
-                if (right_company.is_company) {
+                if (right_company.is_company == 1) {
                     classRight = "company";
                 }
-                if (right_company.is_home) {
+                if (right_company.is_home == 1) {
                     classRight = "home";
                 }
 
