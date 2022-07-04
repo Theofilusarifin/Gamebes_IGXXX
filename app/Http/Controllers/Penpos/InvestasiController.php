@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Investation;
 use App\Team;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InvestasiController extends Controller
 {

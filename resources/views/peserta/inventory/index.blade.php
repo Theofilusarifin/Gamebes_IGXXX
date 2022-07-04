@@ -67,7 +67,7 @@
                                                     var distance = end - now;
                                                     if (distance < 0) {
                                                         document.getElementById(id).innerHTML = "00:00";
-                                                        deleteTeamIngridient('row_{{$loop->index}}', '{{$ingridient->id}}', '{{$ingridient->pivot->expired_time}}')
+                                                        deleteTeamIngridient('row_{{$loop->index}}', '{{$ingridient->pivot->team_id}}','{{$ingridient->id}}', '{{$ingridient->pivot->expired_time}}')
                                                         return;
                                                     }
                                                     var minutes = Math.floor((distance % _hour) / _minute);
@@ -137,7 +137,7 @@
 
 @section('script')
     <script>
-        function deleteTeamIngridient(row_id, ingridient_id, expired_time) {
+        function deleteTeamIngridient(row_id, team_id, ingridient_id, expired_time) {
             // Hapus Row
             $('#'+row_id).remove();
             
@@ -147,6 +147,7 @@
                 url: "{{ route('peserta.inventory.expired') }}",
                 data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'team_id': team_id,
                     'ingridient_id': ingridient_id,
                     'expired_time': expired_time,
                 },

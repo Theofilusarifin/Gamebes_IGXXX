@@ -16,7 +16,10 @@ class PesertaMiddleware
      */
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->role == "peserta") {
+        if (Auth::check() && Auth::user()->role == "ketua") {
+            return $next($request);
+        }
+        else if (Auth::check() && Auth::user()->role == "peserta") {
             return $next($request);
         }
     }

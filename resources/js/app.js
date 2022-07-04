@@ -124,9 +124,24 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                     tableData += `</td>`;
                 } else {
                     tableData += `<td class='${classes}' id='${territory.id}'>`;
-                    if (territory.num_occupant > 0) {
-                        tableData += `<div class='dot'> ${territory.teams[0].id} </div>`;
+                    if (territory.num_occupant == 1) {
                         alias = "";
+                        tableData += `<div class='dot'> ${territory.teams[0].id} </div>`;
+                    }
+                    else if (territory.num_occupant == 2) {
+                        alias = "";
+                        tableData += ` 
+                        <div class="position_dot_1">
+                            <div class="dot_1">
+                                ${territory.teams[0].id}
+                            </div>
+                        </div>
+                        <div class="position_dot_2">
+                            <div class="dot_2">
+                                ${territory.teams[1].id}
+                            </div>
+                        </div>
+                        `;
                     }
                     tableData += ` ${alias} `;
                     tableData += `</td>`;

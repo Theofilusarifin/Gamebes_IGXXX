@@ -43793,9 +43793,12 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         } else {
           tableData += "<td class='".concat(classes, "' id='").concat(territory.id, "'>");
 
-          if (territory.num_occupant > 0) {
-            tableData += "<div class='dot'> ".concat(territory.teams[0].id, " </div>");
+          if (territory.num_occupant == 1) {
             alias = "";
+            tableData += "<div class='dot'> ".concat(territory.teams[0].id, " </div>");
+          } else if (territory.num_occupant == 2) {
+            alias = "";
+            tableData += " \n                        <div class=\"position_dot_1\">\n                            <div class=\"dot_1\">\n                                ".concat(territory.teams[0].id, "\n                            </div>\n                        </div>\n                        <div class=\"position_dot_2\">\n                            <div class=\"dot_2\">\n                                ").concat(territory.teams[1].id, "\n                            </div>\n                        </div>\n                        ");
           }
 
           tableData += " ".concat(alias, " ");

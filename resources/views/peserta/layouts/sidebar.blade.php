@@ -27,6 +27,7 @@
                     <span class="sidebar-text">Dashboard</span>
                 </a>
             </li>
+            @if (Auth::user()->role == "ketua")
             {{-- Investasi --}}
             <li class="nav-item {{ request()->is('peserta/investasi') ? ' active' : '' }}">
                 <a href="{{ route("peserta.investasi") }}" class="nav-link">
@@ -36,6 +37,7 @@
                     <span class="sidebar-text">Investasi</span>
                 </a>
             </li>
+            @endif
             {{-- List Harga --}}
             <li class="nav-item {{ request()->is('peserta/harga') ? ' active' : '' }}">
                 <a href="{{ route("peserta.harga") }}" class="nav-link">

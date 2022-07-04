@@ -26,18 +26,27 @@ class InventoryController extends Controller
 
     public function ingridientExpired(Request $request){
         // Ambil data dari AJAX
-        $team = Auth::user()->team;
+        $team_id =  $request['team_id'];
         $ingridient_id = $request['ingridient_id'];
         $expired_time = $request['expired_time'];
 
         $ingridient = Ingridient::find($ingridient_id);
 
-        // Hapus data di database
-        DB::table('ingridient_team')
-        ->where('team_id', $team->id)
+        $ingridient_team = DB::table('ingridient_team')
+        ->where('team_id', $team_id)
         ->where('ingridient_id', $ingridient_id)
         ->where('expired_time', $expired_time)
-        ->delete();
+        ->get();
+
+        // Pastikan ingridient belum terhapus
+        if ($ingridient_team != null){
+            // Hapus data di database
+            DB::table('ingridient_team')
+            ->where('team_id', $team_id)
+            ->where('ingridient_id', $ingridient_id)
+            ->where('expired_time', $expired_time)
+            ->delete();
+        }
 
         // Message untuk response
         $msg = $ingridient->name. " yang dimiliki telah expired!";

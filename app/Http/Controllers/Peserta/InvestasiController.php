@@ -10,8 +10,20 @@ use Illuminate\Support\Facades\Auth;
 
 class InvestasiController extends Controller
 {
+    public function authorization()
+    {
+        if (Auth::user()->role != "ketua") {
+            return false;
+        }
+        return true;
+    }
+
     public function index()
     {
+        if(!$this->authorization()){
+            return redirect()->back();
+        }
+
         $team = Auth::user()->team;
 
         $investation_team = $team->investations()->orderBy('id', 'ASC')->get();
@@ -21,6 +33,10 @@ class InvestasiController extends Controller
 
     public function show(Investation $investation, $number)
     {
+        if (!$this->authorization()) {
+            return redirect()->back();
+        }
+
         $team = Auth::user()->team;
         $other_investation_on_doing = $team->investations->where('pivot.start', 1)->where('pivot.finish', 0)->where('id', "!=", $investation->id)->first();
         $investation_on_doing = $team->investations->where('id', $investation->id)->first();
@@ -63,6 +79,10 @@ class InvestasiController extends Controller
 
     public function submission(Request $request)
     {
+        if (!$this->authorization()) {
+            return redirect()->back();
+        }
+
         $questionNow = Question::find($request['question_id']);
 
         $investation = Investation::find($questionNow->investation_id);

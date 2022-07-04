@@ -36,6 +36,10 @@ class LoginController extends Controller
                 $this->redirectTo = '/penpos';
                 return $this->redirectTo;
                 break;
+            case 'ketua':
+                $this->redirectTo = '/peserta';
+                return $this->redirectTo;
+                break;
             case 'peserta':
                 $this->redirectTo = '/peserta';
                 return $this->redirectTo;

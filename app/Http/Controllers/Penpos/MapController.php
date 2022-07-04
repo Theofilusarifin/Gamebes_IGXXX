@@ -300,11 +300,12 @@ class MapController extends Controller
             ), 200);
         }
 
+
         // Pengecekan Posisi Apakah Ada 2 orang
-        if ($new_territory->num_occupant >= 2) {
+        else if ($new_territory->num_occupant >= 2) {
             $status = 'error';
             $response = 'error';
-            $msg = 'Territory yang hendak anda tempati sudah ditempati dua orang!';
+            $msg = 'Territory sudah ditempati dua orang!';
         }
         // Pengecekan apakah territory adalah wall?
         else if ($new_territory->is_wall) {
@@ -314,6 +315,27 @@ class MapController extends Controller
         }
         // Territory aman
         else {
+            $status = '';
+            $msg = '';
+
+            // Pengecekan apakah ada 1 orang
+            if ($new_territory->num_occupant == 1) {
+                $status = 'error';
+                $response = 'success';
+                $msg = 'TC berkurang karena menabrak tim lain!';
+
+                // Kurangi TC team yang menabrak 
+                $team->tc = $team->tc - 8;
+                $team->total_spend = $team->total_spend + 8;
+                $team->total_crash = $team->total_crash + 1;
+
+                // Tambahkan TC team yang ditabrak
+                $crashed_team = Team::where('territory_id', $new_territory->id)->first();
+                $crashed_team->tc = $crashed_team->tc + 8;
+                $crashed_team->total_income = $crashed_team->total_income + 8;
+                $crashed_team->save();
+            }
+
             // Update Posisi ke database
             $team->territory_id = $t_id;
             $team->save();
@@ -324,9 +346,6 @@ class MapController extends Controller
             // Update num occupant di territory baru
             $new_territory->num_occupant = $new_territory->num_occupant + 1;
             $new_territory->save();
-
-            $status = '';
-            $msg = '';
         }
 
         if ($response != 'error') event(new UpdateMap("updateMap"));
@@ -354,13 +373,13 @@ class MapController extends Controller
             $response = 'error';
             $status = 'error';
             $msg = 'Capacity ingridient yang dibawa telah mencapai maksimum!';
-        }
 
-        return response()->json(array(
-            'response' => $response,
-            'status' => $status,
-            'msg' => $msg,
-        ), 200);
+            return response()->json(array(
+                'response' => $response,
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
     }
 
     public function action(Request $request)
@@ -370,8 +389,8 @@ class MapController extends Controller
         $territory = Territory::find($team->territory_id);
 
         // Status dan message yang diberikan
-        $response = '';
-        $status = '';
+        $response = 'error';
+        $status = 'error';
         $msg = 'Daerah yang dipilih bukan merupakan sebuah store!';
         $type = '';
 
@@ -570,7 +589,6 @@ class MapController extends Controller
         $item = $store->ingridients->where('id', $item_id)->first();
         // Ambil biaya dari season sekarang
         $biaya = $item->seasons->where('id', SeasonNow::first()->id)->first()->pivot->price;
-        $amount_have = 0;
 
         // Ambil stock dari store
         $stock = $item->pivot->stock;
@@ -608,15 +626,14 @@ class MapController extends Controller
 
         $item->ingridientStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
 
-        $expired_minute = 8;
-        $time = new DateTime();
-        $time->add(new DateInterval('PT' . $expired_minute . 'M'));
-        $expired_time = $time->format('Y-m-d H:i:s');
+        // Waktu di Surabaya sekarang
+        $start = date('Y-m-d H:i:s');
+        // Tambah 8 menit waktu di surabaya sekarang
+        $expired_time = date('Y-m-d H:i:s', strtotime('+8 minutes', strtotime($start)));
 
-        dd($expired_time);
         // Update tambahkan ingridient yang dibeli
         $team->ingridients()->attach($item->id, [
-            'amount_have' => $amount_have, 
+            'amount_have' => $banyak_item, 
             'expired_time' => $expired_time, 
             'total' => $biaya_total
         ]);
@@ -825,145 +842,19 @@ class MapController extends Controller
         ), 200);
     }
 
-    public function buy(Request $request)
-    {
-        // Ambil variabel awal yang dibutuhkan
-        $team = Team::find($request['team_id']);
-        $territory = Territory::find($team->territory_id);
-        $item_id = $request['item_id'];
-        $banyak_item = $request['banyak_item'];
-        $biaya = 0;
-
-        // Status dan message yang diberikan
-        $msg = '';
-        $status = 'error';
-        $response = 'error';
-
-        // Transport Store
-        if ($territory->transport_store_id != null) {
-            // Check apakah store id yang dikirim sama dengan yang sedang di tempati
-            if ($request['store_id'] == $territory->transport_store_id) {
-                // Ambil Store
-                $store = TransportStore::find($territory->transport_store_id);
-                // Ambil Item di store sesuai dengan yang dipilih
-                $item = $store->transports->where('id', $item_id)->first();
-                // Ambil biaya
-                $biaya = $item->price;
-                // Ambil data item dari team
-                $team_item = $team->transports->where('id', $item_id)->first();
-
-                $amount_have = 0;
-                // Kalau punya barang ganti amount have sesuai yang dipunyai
-                if ($team_item != null) {
-                    // Ambil banyaknya yang dimiliki sekarang
-                    $amount_have = $team_item->pivot->amount_have;
-                }
-            }
-            // Ambil stock dari store
-            $stock = $item->pivot->stock;
-            // Check apakah stock tersedia
-            if ($stock >= $banyak_item) {
-                $biaya_total = $biaya * $banyak_item;
-                // Kalau uangnya cukup
-                if ($team->tc >= $biaya_total) {
-                    // Kurang TC dari team untuk pembayaran
-                    $team->tc = $team->tc - $biaya_total;
-                    // Tambahkan team total spend 
-                    $team->total_spend = $team->total_spend + $biaya_total;
-
-                    $item->transportStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
-
-                    // Update tambahkan banyak yang sekarang dengan yang dibeli
-                    $team->transports()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
-                    $team->save();
-
-                    $status = 'success';
-                    $response = 'success';
-                    $msg = 'Pembelian berhasil';
-                }
-                // TC ga cukup untuk beli
-                else {
-                    $status = 'error';
-                    $response = 'error';
-                    $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
-                }
-            } else {
-                // Stock tidak tersedia
-                $status = 'error';
-                $response = 'error';
-                $msg = 'Stock tidak tersedia!';
-            }
-        }
-        // Ingridient Store
-        else if ($territory->ingridient_store_id != null) {
-            // Check apakah store id yang dikirim sama dengan yang sedang di tempati
-            if ($request['store_id'] == $territory->ingridient_store_id) {
-                // Ambil Store
-                $store = IngridientStore::find($territory->ingridient_store_id);
-                // Ambil Item di store sesuai dengan yang dipilih
-                $item = $store->ingridients->where('id', $item_id)->first();
-                // Ambil biaya dari season sekarang
-                $biaya = $item->seasons->where('id', SeasonNow::first()->id)->first()->pivot->price;
-                // Ambil data item dari team
-                $team_item = $team->ingridients->where('id', $item_id)->first();
-
-                $amount_have = 0;
-                // Kalau punya barang ganti amount have sesuai yang dipunyai
-                if ($team_item != null) {
-                    // Ambil banyaknya yang dimiliki sekarang
-                    $amount_have = $team_item->pivot->amount_have;
-                }
-            }
-            // Ambil stock dari store
-            $stock = $item->pivot->stock;
-            // Check apakah stock tersedia
-            if ($stock >= $banyak_item) {
-                $biaya_total = $biaya * $banyak_item;
-                // Kalau uangnya cukup
-                if ($team->tc >= $biaya_total) {
-                    // Kurang TC dari team untuk pembayaran
-                    $team->tc = $team->tc - $biaya_total;
-                    // Tambahkan team total spend 
-                    $team->total_spend = $team->total_spend + $biaya_total;
-
-                    $item->ingridientStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
-
-                    // Update tambahkan banyak yang sekarang dengan yang dibeli
-                    $team->ingridients()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
-
-                    if ($territory->ingridient_store_id != null){
-                        // Tambahkan capacity team
-                        $team->current_capacity = $team->capacity + $item->capacity;
-                    }
-                    $team->save();
-
-
-                    $status = 'success';
-                    $response = 'success';
-                    $msg = 'Pembelian berhasil';
-                }
-                // TC ga cukup untuk beli
-                else {
-                    $status = 'error';
-                    $response = 'error';
-                    $msg = 'Tiggie Coin yang anda miliki tidak cukup!';
-                }
-            } else {
-                // Stock tidak tersedia
-                $status = 'error';
-                $response = 'error';
-                $msg = 'Stock tidak tersedia!';
-            }
+    public function checkCompany($team_id){
+        $territory_id = 0;
+        if ($team_id <= 10) {
+            $territory_id = 1003 + (4 * ($team_id - 1));
+        } else if ($team_id <= 15) {
+            $territory_id = 1042 + (4 * ($team_id - 11));
+        } else if ($team_id <= 25) {
+            $territory_id = 1100 - (4 * (25 - $team_id));
+        } else if ($team_id <= 30) {
+            $territory_id = 1123 + (4 * (30 - $team_id));
         }
 
-        return response()->json(
-            array(
-                'response' => $response,
-                'status' => $status,
-                'msg' => $msg,
-            ),
-            200
-        );
+        return $territory_id;
     }
 
     public function backToCompany(Request $request)
@@ -979,15 +870,7 @@ class MapController extends Controller
         $old_territory = Territory::find($team->territory_id);
 
         // Check Company
-        if ($team->id <= 10) {
-            $territory_id = 1002 + (2 * ($team->id - 1));
-        } else if ($team->id <= 20) {
-            $territory_id = 1023 + (2 * ($team->id - 11));
-        } else if ($team->id <= 30) {
-            $territory_id = 1046 + (2 * ($team->id - 21));
-        } else if ($team->id <= 40) {
-            $territory_id = 1067 + (2 * ($team->id - 31));
-        }
+        $territory_id = $this->checkCompany($team->id);
 
         // Companynya
         $team_company = Territory::find($territory_id);
@@ -996,31 +879,41 @@ class MapController extends Controller
             $status = 'error';
             $response = 'error';
             $msg = 'Team ini sudah berada pada company!';
-        } else {
-            // Territory baru adalah territory valid
-            if (isset($team_company)) {
-                // Territory aman
-                // Update Posisi ke database
-                $team->territory_id = $team_company->id;
-                $team->current_capacity = 0;
-                $team->save();
 
-                // Update num occupant di territory lama
-                $old_territory->num_occupant = $old_territory->num_occupant - 1;
-                $old_territory->save();
-                // Update num occupant di territory baru
-                $team_company->num_occupant = $team_company->num_occupant + 1;
-                $team_company->save();
-
-                $status = 'success';
-                $msg = 'Berhasil kembali ke company';
-            } else {
-                $status = 'error';
-                $response = 'error';
-                $msg = 'Territory tidak valid!';
-            }
+            return response()->json(array(
+                'response' => $response,
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
         }
 
+        // Territory baru adalah territory yang tidak valid
+        if (!isset($team_company)){
+            $status = 'error';
+            $response = 'error';
+            $msg = 'Territory tidak valid!';
+
+            return response()->json(array(
+                'response' => $response,
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
+        // Update Posisi ke database
+        $team->territory_id = $team_company->id;
+        $team->current_capacity = 0;
+        $team->save();
+
+        // Update num occupant di territory lama
+        $old_territory->num_occupant = $old_territory->num_occupant - 1;
+        $old_territory->save();
+        // Update num occupant di territory baru
+        $team_company->num_occupant = $team_company->num_occupant + 1;
+        $team_company->save();
+
+        $status = 'success';
+        $msg = 'Berhasil kembali ke company';
 
         if ($response != 'error') event(new UpdateMap("updateMap"));
         return response()->json(array(

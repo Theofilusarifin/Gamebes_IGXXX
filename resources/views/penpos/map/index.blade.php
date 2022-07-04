@@ -2,6 +2,16 @@
 
 @section('style')
 <style>
+    #mainTable {
+        background-image: url(../../../assets/img/background/map_background.png);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+        width: 100%;
+        font-size: 0.6em;
+    }
+
     td {
         min-width: 30px;
         min-height: 30px;
@@ -13,7 +23,6 @@
         font-size: 12px;
         font-weight: bold;
         text-align: center;
-
         /* border: 1px; */
     }
 
@@ -30,12 +39,13 @@
     .harbour {
         width: 30px;
         /* background-color: #EA4335; */
-        background-color: rgba(223, 169, 70, 0.5);
+        background-color: rgb(245, 197, 108);
         cursor: pointer;
+        font-weight: 800;
     }
 
     .harbour:hover {
-        background-color: rgba(223, 169, 70, 0.2);
+        background-color: rgba(223, 169, 70, 0.6);
     }
 
     .company {
@@ -54,7 +64,8 @@
     }
 
     .ingridient_store {
-        background-color: #f0bc74;
+        background-color: #645aeb;
+        color: #FFF;
     }
 
     .transport_store {
@@ -71,13 +82,53 @@
         border: 1px dashed rgb(84, 84, 84);
     }
 
+    td:not(.water, .company, .empty, .home, .harbour):hover {
+        background-color: rgba(212, 206, 206, 0.6);
+    }
+
     .dot {
         height: 28px;
         width: 28px;
-        background-color: #A47551;
-        color: #fff;
+        background-color: #fff;
+        color: #000000;
         font-weight: bold;
         border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .position_dot_1 {
+        display: flex;
+        align-items: flex-start;
+        justify-content: flex-start;
+    }
+
+    .position_dot_2 {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+    }
+
+    .dot_1 {
+        height: 15px;
+        width: 15px;
+        background-color: #fff;
+        color: #000000;
+        border-radius: 50%;
+        font-size: 9px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .dot_2 {
+        height: 15px;
+        width: 15px;
+        background-color: #fff;
+        color: #000000;
+        border-radius: 50%;
+        font-size: 9px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -87,12 +138,16 @@
         width: 3%;
     }
 
-    .col-7 {
-        width: 68%;
+    .col-10 {
+        width: 86%;
+    }
+
+    .col-9 {
+        width: 78%;
     }
 
     .col-3 {
-        width: 24%;
+        width: 22%;
     }
 </style>
 @endsection
@@ -107,150 +162,168 @@
     </div>
 </div>
 <div class="row my-3 d-flex">
-    <div class="col-1 pt-3 mt-5 ms-3">
-        <table id="mainTableLeft" class="my-4">
-            @foreach ($left_companies as $left_company)
-            <tr>
-                {{-- Tentukan Class --}}
-                @php($class="empty")
-                @if ($left_company->is_company) @php($class="company")@endif
-                @if ($left_company->is_home) @php($class="home")@endif
-
-                @if($left_company->num_occupant > 0)
-                <td class="{{ $class }}" id="{{ $left_company->id }}">
-                    <div class="dot">{{ $left_company->teams->first()->id }}</div>
-                </td>
-                @else
-                <td class="{{ $class }}" id="{{ $left_company->id }}"></td>
-                @endif
-            </tr>
-            @endforeach
-        </table>
-    </div>
     {{-- Map --}}
-    <div class="col-7" id="col_map">
-        <div>
-            <table id="mainTableUpper">
-                <tr>
-                    @foreach ($upper_companies as $upper_company)
-                    {{-- Tentukan Class --}}
-                    @php($class="empty")
-                    @if ($upper_company->is_company) @php($class="company")@endif
-                    @if ($upper_company->is_home) @php($class="home")@endif
+    <div class="col-9" id="col_map">
+        <div class="row">
+            <div class="col-1 pt-3 ms-5 mt-5 me-3">
+                <table id="mainTableLeft" class="my-4">
+                    @foreach ($left_companies as $left_company)
+                    <tr>
+                        {{-- Tentukan Class --}}
+                        @php($class="empty")
+                        @if ($left_company->is_company) @php($class="company")@endif
+                        @if ($left_company->is_home) @php($class="home")@endif
 
-                    @if($upper_company->num_occupant > 0)
-                    <td class="{{ $class }}" id="{{ $upper_company->id }}">
-                        <div class="dot">{{ $upper_company->teams->first()->id }}</div>
-                    </td>
-                    @else
-                    <td class="{{ $class }}" id="{{ $upper_company->id }}"></td>
-                    @endif
-                    @endforeach
-                </tr>
-            </table>
-
-            @php($column = 42)
-            @php($index_pelabuhan = 1)
-            <table id="mainTable" class="my-4">
-                @foreach ($territories as $territory)
-                {{-- Buka Tr --}}
-                @if ($loop->index == 0 || $loop->index % $column == 0)@php($dibuka = $loop->index)<tr>@endif
-
-                    {{-- Inisialisasi Class --}}
-                    @php($alias = "")
-                    @php($class="")
-                    @php($onclick=false)
-
-                    @if ($territory->is_wall) @php($class="wall")
-                    @elseif ($territory->is_water) @php($class="water")
-                    @elseif ($territory->is_harbour)
-                    @php($class="harbour")
-                    @php($onclick=true)
-                    {{-- Kasik nama ke pelabuhan --}}
-                    @php($alias = "P".$index_pelabuhan)
-                    @php($index_pelabuhan+=1)
-                    @elseif ($territory->is_company) @php($class="company")
-
-                    {{-- Store --}}
-                    @elseif (isset($territory->transport_store_id))
-                    @php($class= "transport_store")
-                    @php($alias = $territory->transport_store_id)
-                    @elseif (isset($territory->ingridient_store_id))
-                    @php($class= "ingridient_store")
-                    @php($alias = $territory->ingridient_store_id)
-                    @elseif (isset($territory->machine_store_id))
-                    @php($class= "machine_store")
-                    @php($alias = $territory->machine_store_id)
-                    @elseif (isset($territory->service_id))
-                    @php($class= "service")
-                    @php($alias = $territory->service_id)
-                    @endif
-
-                    {{-- Buat Td --}}
-                    @if($onclick)
-                    <td class="{{ $class }}" id="{{ $territory->id }}" onclick="setSpawnPoint({{ $territory->id }})">
-                        @if($territory->num_occupant > 0)
-                        <div class="dot">{{ $territory->teams->first()->id }}</div>
-                        @php($alias = "")
+                        @if($left_company->num_occupant > 0)
+                        <td class="{{ $class }}" id="{{ $left_company->id }}">
+                            <div class="dot">{{ $left_company->teams->first()->id }}</div>
+                        </td>
+                        @else
+                        <td class="{{ $class }}" id="{{ $left_company->id }}"></td>
                         @endif
-                        {{ $alias }}
-                    </td>
-                    @else
-                    <td class="{{ $class }}" num_occupants="{{ $territory->num_occupant }}" id="{{ $territory->id }}">
-                        @if($territory->num_occupant > 0)
-                        <div class="dot">{{ $territory->teams->first()->id }}</div>
-                        @php($alias = "")
-                        @endif
-                        {{ $alias }}
-                    </td>
-                    @endif
-
-                    {{-- Nutup tr --}}
-                    @if($loop->index == $dibuka + $column)
-                </tr>@endif
-                @endforeach
-            </table>
-
-            <table id="mainTableLower">
-                <tr>
-                    @foreach ($lower_companies as $lower_company)
-                    {{-- Tentukan Class --}}
-                    @php($class="empty")
-                    @if ($lower_company->is_company) @php($class="company")@endif
-                    @if ($lower_company->is_home) @php($class="home")@endif
-
-                    @if($lower_company->num_occupant > 0)
-                    <td class="{{ $class }}" id="{{ $lower_company->id }}">
-                        <div class="dot">{{ $lower_company->teams->first()->id }}</div>
-                    </td>
-                    @else
-                    <td class="{{ $class }}" id="{{ $lower_company->id }}"></td>
-                    @endif
+                    </tr>
                     @endforeach
-                </tr>
-            </table>
+                </table>
+            </div>
+            <div class="col-10">
+                <div>
+                    <table id="mainTableUpper">
+                        <tr>
+                            @foreach ($upper_companies as $upper_company)
+                            {{-- Tentukan Class --}}
+                            @php($class="empty")
+                            @if ($upper_company->is_company) @php($class="company")@endif
+                            @if ($upper_company->is_home) @php($class="home")@endif
+
+                            @if($upper_company->num_occupant > 0)
+                            <td class="{{ $class }}" id="{{ $upper_company->id }}">
+                                <div class="dot">{{ $upper_company->teams->first()->id }}</div>
+                            </td>
+                            @else
+                            <td class="{{ $class }}" id="{{ $upper_company->id }}"></td>
+                            @endif
+                            @endforeach
+                        </tr>
+                    </table>
+
+                    @php($column = 42)
+                    @php($index_pelabuhan = 1)
+                    <table id="mainTable" class="my-4">
+                        @foreach ($territories as $territory)
+                        {{-- Buka Tr --}}
+                        @if ($loop->index == 0 || $loop->index % $column == 0)@php($dibuka = $loop->index)<tr>@endif
+
+                            {{-- Inisialisasi Class --}}
+                            @php($alias = "")
+                            @php($class="")
+                            @php($onclick=false)
+
+                            @if ($territory->is_wall) @php($class="wall")
+                            @elseif ($territory->is_water) @php($class="water")
+                            @elseif ($territory->is_harbour)
+                            @php($class="harbour")
+                            @php($onclick=true)
+                            {{-- Kasik nama ke pelabuhan --}}
+                            @php($alias = "P".$index_pelabuhan)
+                            @php($index_pelabuhan+=1)
+                            @elseif ($territory->is_company) @php($class="company")
+
+                            {{-- Store --}}
+                            @elseif (isset($territory->transport_store_id))
+                            @php($class= "transport_store")
+                            @php($alias = $territory->transport_store_id)
+                            @elseif (isset($territory->ingridient_store_id))
+                            @php($class= "ingridient_store")
+                            @php($alias = $territory->ingridient_store_id)
+                            @elseif (isset($territory->machine_store_id))
+                            @php($class= "machine_store")
+                            @php($alias = $territory->machine_store_id)
+                            @elseif (isset($territory->service_id))
+                            @php($class= "service")
+                            @php($alias = $territory->service_id)
+                            @endif
+
+                            {{-- Buat Td --}}
+                            @if($onclick)
+                            <td class="{{ $class }}" id="{{ $territory->id }}"
+                                onclick="setSpawnPoint({{ $territory->id }})">
+                                @if($territory->num_occupant > 0)
+                                <div class="dot">{{ $territory->teams->first()->id }}</div>
+                                @php($alias = "")
+                                @endif
+                                {{ $alias }}
+                            </td>
+                            @else
+                            <td class="{{ $class }}" num_occupants="{{ $territory->num_occupant }}"
+                                id="{{ $territory->id }}">
+                                @if($territory->num_occupant == 1)
+                                @php($alias = "")
+                                <div class="dot">{{ $territory->teams->first()->id }}</div>
+                                @elseif($territory->num_occupant == 2)
+                                @php($alias = "")
+                                <div class="position_dot_1">
+                                    <div class="dot_1">
+                                        {{ $territory->teams->all()[0]->id }}
+                                    </div>
+                                </div>
+                                <div class="position_dot_2">
+                                    <div class="dot_2">
+                                        {{ $territory->teams->all()[1]->id }}
+                                    </div>
+                                </div>
+                                @endif
+                                {{ $alias }}
+                            </td>
+                            @endif
+
+                            {{-- Nutup tr --}}
+                            @if($loop->index == $dibuka + $column)
+                        </tr>@endif
+                        @endforeach
+                    </table>
+
+                    <table id="mainTableLower">
+                        <tr>
+                            @foreach ($lower_companies as $lower_company)
+                            {{-- Tentukan Class --}}
+                            @php($class="empty")
+                            @if ($lower_company->is_company) @php($class="company")@endif
+                            @if ($lower_company->is_home) @php($class="home")@endif
+
+                            @if($lower_company->num_occupant > 0)
+                            <td class="{{ $class }}" id="{{ $lower_company->id }}">
+                                <div class="dot">{{ $lower_company->teams->first()->id }}</div>
+                            </td>
+                            @else
+                            <td class="{{ $class }}" id="{{ $lower_company->id }}"></td>
+                            @endif
+                            @endforeach
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div class="col-1 pt-3 mt-5 ms-3">
+                <table id="mainTableRight" class="my-4">
+                    @foreach ($right_companies as $right_company)
+                    <tr>
+                        {{-- Tentukan Class --}}
+                        @php($class="empty")
+                        @if ($right_company->is_company) @php($class="company")@endif
+                        @if ($right_company->is_home) @php($class="home")@endif
+
+                        @if($right_company->num_occupant > 0)
+                        <td class="{{ $class }}" id="{{ $right_company->id }}">
+                            <div class="dot">{{ $right_company->teams->first()->id }}</div>
+                        </td>
+                        @else
+                        <td class="{{ $class }}" id="{{ $right_company->id }}"></td>
+                        @endif
+                    </tr>
+                    @endforeach
+                </table>
+            </div>
         </div>
-    </div>
-
-    <div class="col-1 pt-3 mt-5 me-3">
-        <table id="mainTableRight" class="my-4">
-            @foreach ($right_companies as $right_company)
-            <tr>
-                {{-- Tentukan Class --}}
-                @php($class="empty")
-                @if ($right_company->is_company) @php($class="company")@endif
-                @if ($right_company->is_home) @php($class="home")@endif
-
-                @if($right_company->num_occupant > 0)
-                <td class="{{ $class }}" id="{{ $right_company->id }}">
-                    <div class="dot">{{ $right_company->teams->first()->id }}</div>
-                </td>
-                @else
-                <td class="{{ $class }}" id="{{ $right_company->id }}"></td>
-                @endif
-            </tr>
-            @endforeach
-        </table>
     </div>
     {{-- Controller --}}
     <div class="col-3" id="col_controller">
