@@ -77,7 +77,11 @@
                                                         seconds = "0"+seconds;
                                                     }
 
-                                                    document.getElementById(id).innerHTML = "0"+ minutes + ':';
+                                                    if (minutes < 10){
+                                                        minutes = "0"+minutes;
+                                                    }
+
+                                                    document.getElementById(id).innerHTML = minutes + ':';
                                                     document.getElementById(id).innerHTML += seconds;
                                                 }
                                                 timer = setInterval(showRemaining, 1000);
