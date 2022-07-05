@@ -510,7 +510,13 @@ class ProduksiController extends Controller
                 $limbah_air = 0.5;
             }
 
-            //UPDATE TEAM WASTE DI DATABASE
+            //UPDATE TEAM WASTE DI 
+            if ($wasteHead != 0) {
+                $wasteHead = $wasteHead / 1000; //ubah dalam bentuk kg
+            }
+            if ($wasteSkin != 0) {
+                $wasteSkin = $wasteSkin / 1000; // ubah dalam bentuk kg
+            }
             $team->waste = $team->waste + $total_defect + $wasteHead + $wasteSkin + $limbah_air;
             $team->save();
 
@@ -541,7 +547,6 @@ class ProduksiController extends Controller
             }
 
             // Kalkulasi banyak ingridient yang dibutuhkan
-            // 1000 gram kulit udang, 1 bungkus NaoH, dan 1 bungkus Hcl
 
             // Inisiasi kulit udang, naoh, dan hcl
             $team_shrimp_skins = $this->getIngridient($team, 12);
@@ -569,7 +574,8 @@ class ProduksiController extends Controller
             // Buat Variabel utk simpan nama_ingridient
             $nama_ingridient = '';
             // Cek apakah total kulit udang, naoh, hcl cukup untuk produksi?
-            if ($total_shrimp_skin < $banyak_produksi) {
+            // 1000 gram kulit udang, 1 bungkus NaoH, dan 1 bungkus Hcl
+            if ($total_shrimp_skin < ($banyak_produksi * 1000)) { //Karena kulit disimpan dalam gram
                 $ingridient_insufficient = true;
                 $nama_ingridient = 'Kulit Udang';
             }
@@ -593,6 +599,7 @@ class ProduksiController extends Controller
                 ), 200);
             }
 
+            //Buat variabel untuk proses produksi
             $berhasil_diproduksi = 0;
             // selama yang berhasil diproduksi masih kurang dari banyak produksi, lakukan produksi terus
 
