@@ -127,9 +127,8 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                     if (territory.num_occupant == 1) {
                         alias = "";
                         tableData += `<div class='dot'> ${territory.teams[0].id} </div>`;
-                    }
-                    else if (territory.num_occupant == 2) {
-                        alert('masuk num 2');
+                    } else if (territory.num_occupant == 2) {
+                        alert("masuk num 2");
                         alias = "";
                         tableData += ` 
                         <div class="position_dot_1">
