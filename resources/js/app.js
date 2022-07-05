@@ -34,8 +34,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                     </td>`;
                 } else {
                     tableDataLeft += `
-                    <td class='${classLeft}' id='${left_company.id}'></td>
-                    `;
+                    <td class='${classLeft}' id='${left_company.id}'></td>`;
                 }
                 tableDataLeft += `</tr>`;
             });
@@ -123,7 +122,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", (e) => {
                     tableData += ` ${alias} `;
                     tableData += `</td>`;
                 } else {
-                    tableData += `<td class='${classes}' id='${territory.id}'>`;
+                    tableData += `<td class='${classes}' num_occupants='${territory.num_occupant}' id='${territory.id}'>`;
                     if (territory.num_occupant == 1) {
                         alias = "";
                         tableData += `<div class='dot'> ${territory.teams[0].id} </div>`;

@@ -75,6 +75,8 @@ class ProduksiController extends Controller
         $status = '';
         $msg = '';
         $ingridient_insufficient = false;
+        //Ambil Season sekarang
+        $season_now = SeasonNow::first()->number;
 
         // Team salah input angka ketika ingin produksi udang kaleng (1) atau saus udang (3)
         if (($product->id == 1 || $product->id == 3) && $banyak_item % 4 != 0) {
@@ -564,7 +566,7 @@ class ProduksiController extends Controller
                 ), 200);
             }
 
-            // Ambil total shrim skim yang dimiliki 
+            // Ambil total shrimp skin yang dimiliki 
             $total_shrimp_skin = $this->sumIngridient($team, 12);
             // Ambil total naoh yang dimiliki
             $total_naoh = $this->sumIngridient($team, 9);
@@ -733,175 +735,361 @@ class ProduksiController extends Controller
                     $team_hcls[$hcl_index]->pivot->amount_use - $hcl_use_now
                 );
             }
-            //     // Ambil kombinasi machine udang kaleng dari team
-            //     $team_machine_combination = $team->machineCombinations->where('id', '101')->first();
-            //     $combination_total = 0;
-            //     if ($team_machine_combination != null) {
-            //         $combination_total = count($team_machine_combination);
-            //     }
-            //     // Lihat team punya kombinasi atau nggak?
-            //     if ($combination_total > 0) {
-            //         //Ambil bahan
-            //         //Ambil Kulit Udang
-            //         $kulitUdang = $team->ingridients->where('id', 12)->first();
-            //         $jumlah_kulit_udang = 0;
-            //         if ($kulitUdang != null) {
-            //             $jumlah_kulit_udang = $team->ingridients->where('id', 12)->first()->pivot->amount_have;
-            //         }
-            //         //Ambil NaOH
-            //         $naoh = $team->ingridients->where('id', 9)->first();
-            //         $jumlah_naoh = 0;
-            //         if ($naoh != null) {
-            //             $jumlah_naoh = $team->ingridients->where('id', 9)->first()->pivot->amount_have;
-            //         }
-            //         //Ambil HCl
-            //         $hcl = $team->ingridients->where('id', 10)->first();
-            //         $jumlah_hcl = 0;
-            //         if ($hcl != null) {
-            //             $jumlah_hcl = $team->ingridients->where('id', 10)->first()->pivot->amount_have;
-            //         }
 
-            //         //Cek apakah bahan tersedia?
-            //         $bahan_kulit_udang = $banyak_item * 1000; //kulit disimpan dalam satuan gram 
-            //         $bahan_naoh = $banyak_item * 1; //disimpan dalam satuan bungkus
-            //         $bahan_hcl = $banyak_item * 1; //disimpan dalam satuan bungkus
+            // PRODUK DIBUAT DAN DISIMPAN KE DATABASE
+            $hasil_produk_akhir = $banyak_produksi;
+            $kitosan = $team->products->where('id', $product->id)->first();
 
-            //         //Bahan cukup atau tidak?
-            //         if ($jumlah_kulit_udang >= $bahan_kulit_udang && $jumlah_naoh >= $bahan_naoh && $jumlah_hcl >= $bahan_hcl) {
-            //             // Bahan dikuragi
-            //             // Kurangi kulit udang
-            //             $amount_use_kulit = $team->ingridients->where('id', 12)->first()->pivot->amount_use;
-            //             $team->ingridients()->sync([12 => ['amount_have' => $jumlah_kulit_udang - $bahan_kulit_udang, 'amount_use' => $amount_use_kulit + $bahan_kulit_udang]], false);
-            //             // Kurangi NAOH
-            //             $amount_use_naoh = $team->ingridients->where('id', 9)->first()->pivot->amount_use;
-            //             $team->ingridients()->sync([9 => ['amount_have' => $jumlah_naoh - $bahan_naoh, 'amount_use' => $amount_use_naoh + $bahan_naoh]], false);
-            //             // Kurangi HCL
-            //             $amount_use_hcl = $team->ingridients->where('id', 10)->first()->pivot->amount_use;
-            //             $team->ingridients()->sync([10 => ['amount_have' => $jumlah_hcl - $bahan_hcl, 'amount_use' => $amount_use_hcl + $bahan_hcl]], false);
+            // Apabila punya udang kaleng sebelumnya, tambahkan amount havenya dengan yang diproduksi
+            if ($kitosan != null) {
+                $hasil_produk_akhir = $hasil_produk_akhir + $kitosan->amount_have;
+            }
+            $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
-            //             //Produk ditambah
-            //             $team_product = $team->products->where('id', $product->id)->first();
-            //             $amount_product = 0;
-            //             if ($team_product != null) {
-            //                 $amount_product = $team_product->pivot->amount_have;
-            //             }
+            $status = 'error';
+            $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi';
 
-            //             //Update data
-            //             $team->products()->sync([$product->id => ['amount_have' => $amount_product + (1 * $banyak_item)]]);
-            //             $team->save();
+            // HITUNG TOTAL LIMBAH/WASTE DAN SIMPAN KE DATABASE
+            // Limbah air dihitung setiap melakukan klik button
+            // CEK MESIN FILTER
+            $mesin_filter = $team->teamMachines->where('machine_id', 2)->where('is_used', 1)->first();
+            $limbah_air = 1;
+            if ($mesin_filter != null) {
+                $limbah_air = 0.5;
+            }
 
-            //             $status = 'success';
-            //             $msg = 'Produksi berhasil dilakukan!';
-            //         } else {
-            //             $status = 'error';
-            //             $msg = 'Bahan yang dibutuhkan tidak cukup!';
-            //         }
-            //     }
-            //     // Ga punya kombinasi mesin 
-            //     else {
-            //         $status = 'error';
-            //         $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
-            //     }
+            //UPDATE TEAM WASTE DI DATABASE
+            $team->waste = $team->waste + $limbah_air;
+            $team->save();
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
         }
-        // // Produksi Saos Tomat
-        // else if ($product->id == 3) {
-        //     // Ambil kombinasi machine udang kaleng dari team
-        //     $team_machine_combination = $team->machineCombinations->where('id', '102')->first();
-        //     $combination_total = 0;
-        //     if ($team_machine_combination != null) {
-        //         $combination_total = count($team_machine_combination);
-        //     }
-        //     // Lihat team punya kombinasi atau nggak?
-        //     if ($combination_total > 0) {
-        //         //Ambil bahan
-        //         //Ambil Kepala Udang
-        //         $kepala_udang = $team->ingridients->where('id', 11)->first();
-        //         $jumlah_kepala_udang = 0;
-        //         if ($kepala_udang != null) {
-        //             $jumlah_kepala_udang = $team->ingridients->where('id', 11)->first()->pivot->amount_have;
-        //         }
-        //         //Ambil Tomat
-        //         $tomat = $team->ingridients->where('id', 4)->first();
-        //         $jumlah_tomat = 0;
-        //         if ($tomat != null) {
-        //             $jumlah_tomat = $team->ingridients->where('id', 4)->first()->pivot->amount_have;
-        //         }
-        //         //Ambil MSG
-        //         $msg = $team->ingridients->where('id', 8)->first();
-        //         $jumlah_msg = 0;
-        //         if ($msg != null) {
-        //             $jumlah_msg = $team->ingridients->where('id', 8)->first()->pivot->amount_have;
-        //         }
-        //         // Ambil garam
-        //         $garam = $team->ingridients->where('id', 6)->first();
-        //         $jumlah_garam = 0;
-        //         if ($garam != null) {
-        //             $jumlah_garam = $team->ingridients->where('id', 6)->first()->pivot->amount_have;
-        //         }
-        //         // Ambil gula
-        //         $gula = $team->ingridients->where('id', 7)->first();
-        //         $jumlah_gula = 0;
-        //         if ($gula != null) {
-        //             $jumlah_gula = $team->ingridients->where('id', 7)->first()->pivot->amount_have;
-        //         }
+        // Produksi Saos Tomat
+        else if ($product->id == 3) {
+            // Banyak produksi sama dengan banyak item yang diinput oleh team
+            $banyak_produksi = $banyak_item / 4;
+            // Ambil kombinasi machine udang kaleng yang digunakan oleh team saat ini
+            $team_machine_combination = $team->machineCombinations
+                ->where('id', '102')
+                ->all();
 
-        //         //Cek apakah bahan tersedia?
-        //         $bahan_kepala_udang = $banyak_item * 1000; //karena disimpannya dalam satuan gram
-        //         $bahan_msg = $banyak_item * 1; //disimpannya dalam satuan bungkus
-        //         $bahan_garam = $banyak_item * 1; //satuannya dalam bungkus
-        //         $bahan_gula = $banyak_item * 1; //satuannya dalam bungkus
-        //         $bahan_tomat = $banyak_item * 1; //satuannya dalam kg
+            $combination_total = count($team_machine_combination);
+            // Team tidak memiliki kombinasi mesin yang sesuai
+            if ($combination_total == 0) {
+                $status = 'error';
+                $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
 
-        //         //Bahan cukup atau tidak?
-        //         if (
-        //             $jumlah_kepala_udang >= $bahan_kepala_udang && $jumlah_tomat >= $bahan_tomat
-        //             && $jumlah_msg >= $bahan_msg && $jumlah_gula >= $bahan_gula && $jumlah_garam >= $bahan_garam
-        //         ) {
-        //             // Bahan dikuragi
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
 
-        //             // Kurangi kulit udang
-        //             $amount_use_kepala = $team->ingridients->where('id', 11)->first()->pivot->amount_use;
-        //             $team->ingridients()->sync([11 => ['amount_have' => $jumlah_kepala_udang - $bahan_kepala_udang, 'amount_use' => $amount_use_kepala + $bahan_kepala_udang]], false);
-        //             // Kurangi MSG
-        //             $amount_use_msg = $team->ingridients->where('id', 8)->first()->pivot->amount_use;
-        //             $team->ingridients()->sync([8 => ['amount_have' => $jumlah_msg - $bahan_msg, 'amount_use' => $amount_use_msg + $bahan_msg]], false);
-        //             // Kurangi Tomat
-        //             $amount_use_tomat = $team->ingridients->where('id', 4)->first()->pivot->amount_use;
-        //             $team->ingridients()->sync([4 => ['amount_have' => $jumlah_tomat - $bahan_tomat, 'amount_use' => $amount_use_tomat + $bahan_tomat]], false);
-        //             // Kurangi Garam
-        //             $amount_use_garam = $team->ingridients->where('id', 6)->first()->pivot->amount_use;
-        //             $team->ingridients()->sync([6 => ['amount_have' => $jumlah_garam - $bahan_garam, 'amount_use' => $amount_use_garam + $bahan_garam]], false);
-        //             // Kurangi Gula
-        //             $amount_use_gula = $team->ingridients->where('id', 7)->first()->pivot->amount_use;
-        //             $team->ingridients()->sync([7 => ['amount_have' => $jumlah_gula - $bahan_gula, 'amount_use' => $amount_use_gula + $bahan_gula]], false);
+            // Kalkulasi banyak ingridient yang dibutuhkan
 
-        //             //Produk ditambah
-        //             $team_product = $team->products->where('id', $product->id)->first();
-        //             $amount_product = 0;
-        //             if ($team_product != null) {
-        //                 $amount_product = $team_product->pivot->amount_have;
-        //             }
+            // Inisiasi kepala udang, tomat, gula, garam, MSG
+            $team_shrimp_heads = $this->getIngridient($team, 11);
+            $team_tomats = $this->getIngridient($team, 4);
+            $team_msgs = $this->getIngridient($team, 8);
+            $team_salts = $this->getIngridient($team, 6);
+            $team_sugars = $this->getIngridient($team, 7);
 
-        //             //Update data
-        //             $team->products()->sync([$product->id => ['amount_have' => $amount_product + (4 * $banyak_item)]]);
-        //             $team->save();
+            // Team tidak memiliki Ingridient / null
+            if ($team_shrimp_heads == null || $team_tomats == null || $team_msgs == null || $team_salts == null || $team_sugars == null) {
+                $status = 'error';
+                $msg = 'Ingridient yang anda miliki tidak lengkap untuk melakukan produksi ' . $product->name . '!';
 
-        //             $status = 'success';
-        //             $msg = 'Produksi berhasil dilakukan!';
-        //         }
-        //         // Ga punya kombinasi mesin 
-        //         else {
-        //             $status = 'error';
-        //             $msg = 'Bahan yang dibutuhkan tidak cukup!';
-        //         }
-        //     } else {
-        //         $status = 'error';
-        //         $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
-        //     }
-        // } else {
-        //     $status = 'error';
-        //     $msg = 'Product yang akan diproduksi tidak valid!';
-        // }
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
+
+            // Ambil total shrimp head yang dimiliki 
+            $total_shrimp_head = $this->sumIngridient($team, 11);
+            // Ambil total tomat yang dimiliki 
+            $total_tomat = $this->sumIngridient($team, 4);
+            // Ambil total msg yang dimiliki 
+            $total_msg = $this->sumIngridient($team, 8);
+            // Ambil total salt yang dimiliki 
+            $total_salt = $this->sumIngridient($team, 6);
+            // Ambil total sugar yang dimiliki 
+            $total_sugar = $this->sumIngridient($team, 7);
+
+            // Buat Variabel utk simpan nama_ingridient
+            $nama_ingridient = '';
+            // Cek apakah total kepala udang, tomat, gula, garam, msg cukup untuk produksi?
+            // 1000 gram kepala udang, 1 kg tomat, 1 bungkus gula, 1 bungkus garam, dan 1 bungkus msg
+            if ($total_shrimp_head < ($banyak_produksi * 1000)) { //Karena kepala disimpan dalam gram
+                $ingridient_insufficient = true;
+                $nama_ingridient = 'Kepala Udang';
+            }
+            if ($total_tomat < $banyak_produksi) {
+                $ingridient_insufficient = true;
+                $nama_ingridient = 'Tomat';
+            }
+            if ($total_msg < $banyak_produksi) {
+                $ingridient_insufficient = true;
+                $nama_ingridient = 'MSG';
+            }
+            if ($total_sugar < $banyak_produksi) {
+                $ingridient_insufficient = true;
+                $nama_ingridient = 'Gula';
+            }
+            if ($total_salt < $banyak_produksi) {
+                $ingridient_insufficient = true;
+                $nama_ingridient = 'Garam';
+            }
+
+            //Kalau tidak cukup return error
+            if ($ingridient_insufficient) {
+                $status = 'error';
+                $msg = 'Ingridient ' . $nama_ingridient . ' yang dimiliki tidak cukup untuk melakukan produksi!';
+
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
+
+            //Buat variabel untuk proses produksi
+            $berhasil_diproduksi = 0;
+            // selama yang berhasil diproduksi masih kurang dari banyak produksi, lakukan produksi terus
+
+            //Buat variabel index
+            $shrimp_head_index = 0;
+            $salt_index = 0;
+            $sugar_index = 0;
+            $tomat_index = 0;
+            $msg_index = 0;
+
+            //Ambil ingridient yang paling atas/yang expirednya paling deket
+            $shrimp_head_use_now = $team_shrimp_heads[$shrimp_head_index]; // index 0
+            $salt_use_now = $team_salts[$salt_index]; // index 0
+            $sugar_use_now = $team_sugars[$sugar_index]; // index 0
+            $tomat_use_now = $team_tomats[$tomat_index];
+            $msg_use_now = $team_msgs[$msg_index];
+
+            //Buat variabel untuk tampung maksimal index dari tiap ingridient
+            $shrimp_head_count_max = count($team_shrimp_heads);
+            $salt_count_max = count($team_salts);
+            $sugar_count_max = count($team_sugars);
+            $tomat_count_max = count($team_tomats);
+            $msg_count_max = count($team_msgs);
+
+            //Ambil ingridient_now yang paling sedikit
+            $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
+            // PRODUKSI MULAI
+            while ($berhasil_diproduksi < $banyak_produksi) {
+
+                //Cek apakah ingridient paling sedikit lebih dari banyak produksi 
+                if ($min_ingridient_now > ($banyak_produksi - $berhasil_diproduksi)) {
+                    //Kalau lebih ubah minimalnya jadi sama dengan banyak produksi
+                    $min_ingridient_now = ($banyak_produksi - $berhasil_diproduksi);
+                }
+
+                //Kurangi ingridient_now dengan nilai yang paling sedikit
+                $shrimp_head_use_now -= $min_ingridient_now;
+                $salt_use_now -= $min_ingridient_now;
+                $sugar_use_now -= $min_ingridient_now;
+                $tomat_use_now -= $min_ingridient_now;
+                $msg_use_now -= $min_ingridient_now;
+
+                // Set ingridient ada sisanya
+                $shrimp_head_remains = true;
+                $salt_remains = true;
+                $sugar_remains = true;
+                $tomat_remains = true;
+                $msg_remains = true;
+
+                $berhasil_diproduksi += $min_ingridient_now;
+
+                //Kalau ingridient_now habis
+                if ($shrimp_head_use_now == 0) {
+                    //Hapus data yang ada di database
+                    $this->usedAllIngridient(
+                        $team->id,
+                        $team_shrimp_heads[$shrimp_head_index]->pivot->ingridient_id,
+                        $team_shrimp_heads[$shrimp_head_index]->pivot->expired_time,
+                        $team_shrimp_heads[$shrimp_head_index]->pivot->amount_use + $team_shrimp_heads[$shrimp_head_index]->pivot->amount_have
+                    );
+
+                    $shrimp_head_remains = false;
+
+                    //Cek apakah ada index lanjutan? 
+                    if ($shrimp_head_index + 1 <= $shrimp_head_count_max) {
+                        //Kalau iya naikan indexnya
+                        $shrimp_head_index += 1;
+                        //Perbaruhi ingridient_now
+                        $shrimp_use_now = $team_shrimp_heads[$shrimp_head_index];
+                        //Perbaruhi nilai yang paling sedikit
+                        $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
+                    }
+                }
+                if ($tomat_use_now == 0) {
+                    //Hapus data yang ada di database
+                    $this->usedAllIngridient(
+                        $team->id,
+                        $team_tomats[$tomat_index]->pivot->ingridient_id,
+                        $team_tomats[$tomat_index]->pivot->expired_time,
+                        $team_tomats[$tomat_index]->pivot->amount_use + $team_tomats[$tomat_index]->pivot->amount_have
+                    );
+
+                    $naoh_remains = false;
+                    //Cek apakah ada index lanjutan? 
+                    if ($tomat_index + 1 <= $tomat_count_max) {
+                        //Kalau iya naikan indexnya
+                        $tomat_index += 1;
+                        //Perbaruhi ingridient_now
+                        $tomat_use_now = $team_tomats[$tomat_index];
+                        //Perbaruhi nilai yang paling sedikit
+                        $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
+                    }
+                }
+                if ($msg_use_now == 0) {
+                    //Hapus data yang ada di database
+                    $this->usedAllIngridient(
+                        $team->id,
+                        $team_msgs[$msg_index]->pivot->ingridient_id,
+                        $team_msgs[$msg_index]->pivot->expired_time,
+                        $team_msgs[$msg_index]->pivot->amount_use + $team_msgs[$msg_index]->pivot->amount_have
+                    );
+
+                    $hcl_remains = false;
+                    //Cek apakah ada index lanjutan? 
+                    if ($msg_index + 1 <= $msg_count_max) {
+                        //Kalau iya naikan indexnya
+                        $msg_index += 1;
+                        //Perbaruhi ingridient_now
+                        $msg_use_now = $team_msgs[$msg_index];
+                        //Perbaruhi nilai yang paling sedikit
+                        $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
+                    }
+                }
+                if ($salt_use_now == 0) {
+                    //Hapus data yang ada di database
+                    $this->usedAllIngridient(
+                        $team->id,
+                        $team_salts[$salt_index]->pivot->ingridient_id,
+                        $team_salts[$salt_index]->pivot->expired_time,
+                        $team_salts[$salt_index]->pivot->amount_use + $team_salts[$salt_index]->pivot->amount_have
+                    );
+
+                    $salt_remains = false;
+                    //Cek apakah ada index lanjutan? 
+                    if ($salt_index + 1 <= $salt_count_max) {
+                        //Kalau iya naikan indexnya
+                        $salt_index += 1;
+                        //Perbaruhi ingridient_now
+                        $salt_use_now = $team_salts[$salt_index];
+                        //Perbaruhi nilai yang paling sedikit
+                        $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
+                    }
+                }
+                if ($sugar_use_now == 0) {
+                    //Hapus data yang ada di database
+                    $this->usedAllIngridient(
+                        $team->id,
+                        $team_sugars[$sugar_index]->pivot->ingridient_id,
+                        $team_sugars[$sugar_index]->pivot->expired_time,
+                        $team_sugars[$sugar_index]->pivot->amount_use + $team_sugars[$sugar_index]->pivot->amount_have
+                    );
+
+                    $sugar_remains = false;
+                    //Cek apakah ada index lanjutan? 
+                    if ($sugar_index + 1 <= $sugar_count_max) {
+                        //Kalau iya naikan indexnya
+                        $sugar_index += 1;
+                        //Perbaruhi ingridient_now
+                        $sugar_use_now = $team_sugars[$sugar_index];
+                        //Perbaruhi nilai yang paling sedikit
+                        $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
+                    }
+                }
+            }
+            // PRODUKSI SELESAI (END WHILE)
+
+            // Update amount have dan amount use
+            if ($shrimp_head_remains) {
+                $this->updateIngridientUsed(
+                    $team->id,
+                    $team_shrimp_heads[$shrimp_head_index]->pivot->ingridient_id,
+                    $team_shrimp_heads[$shrimp_head_index]->pivot->expired_time,
+                    $shrimp_head_use_now,
+                    $team_shrimp_heads[$shrimp_head_index]->pivot->amount_use - $shrimp_head_use_now
+                );
+            }
+            if ($tomat_remains) {
+                $this->updateIngridientUsed(
+                    $team->id,
+                    $team_tomats[$tomat_index]->pivot->ingridient_id,
+                    $team_tomats[$tomat_index]->pivot->expired_time,
+                    $tomat_use_now,
+                    $team_tomats[$tomat_index]->pivot->amount_use - $tomat_use_now
+                );
+            }
+            if ($msg_remains) {
+                $this->updateIngridientUsed(
+                    $team->id,
+                    $team_msgs[$msg_index]->pivot->ingridient_id,
+                    $team_msgs[$msg_index]->pivot->expired_time,
+                    $msg_use_now,
+                    $team_msgs[$msg_index]->pivot->amount_use - $msg_use_now
+                );
+            }
+            if ($salt_remains) {
+                $this->updateIngridientUsed(
+                    $team->id,
+                    $team_salts[$salt_index]->pivot->ingridient_id,
+                    $team_salts[$salt_index]->pivot->expired_time,
+                    $salt_use_now,
+                    $team_salts[$salt_index]->pivot->amount_use - $salt_use_now
+                );
+            }
+            if ($sugar_remains) {
+                $this->updateIngridientUsed(
+                    $team->id,
+                    $team_sugars[$sugar_index]->pivot->ingridient_id,
+                    $team_sugars[$sugar_index]->pivot->expired_time,
+                    $sugar_use_now,
+                    $team_sugars[$sugar_index]->pivot->amount_use - $sugar_use_now
+                );
+            }
+
+            // PRODUK DIBUAT DAN DISIMPAN KE DATABASE
+            $hasil_produk_akhir = $banyak_produksi;
+            $saus_udang = $team->products->where('id', $product->id)->first();
+
+            // Apabila punya udang kaleng sebelumnya, tambahkan amount havenya dengan yang diproduksi
+            if ($saus_udang != null) {
+                $hasil_produk_akhir = $hasil_produk_akhir + $saus_udang->amount_have;
+            }
+            $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
+
+            $status = 'error';
+            $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi';
+
+            // HITUNG TOTAL LIMBAH/WASTE DAN SIMPAN KE DATABASE
+            // Limbah air dihitung setiap melakukan klik button
+            // CEK MESIN FILTER
+            $mesin_filter = $team->teamMachines->where('machine_id', 2)->where('is_used', 1)->first();
+            $limbah_air = 1;
+            if ($mesin_filter != null) {
+                $limbah_air = 0.5;
+            }
+
+            //UPDATE TEAM WASTE DI DATABASE
+            $team->waste = $team->waste + $limbah_air;
+            $team->save();
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
         return response()->json(array(
             'status' => $status,
             'msg' => $msg,

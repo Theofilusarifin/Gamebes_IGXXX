@@ -43706,7 +43706,7 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
         if (left_company.num_occupant > 0) {
           tableDataLeft += "\n                    <td class='".concat(classLeft, "' id='").concat(left_company.id, "'>\n                        <div class=\"dot\">").concat(left_company.teams[0].id, "</div>\n                    </td>");
         } else {
-          tableDataLeft += "\n                    <td class='".concat(classLeft, "' id='").concat(left_company.id, "'></td>\n                    ");
+          tableDataLeft += "\n                    <td class='".concat(classLeft, "' id='").concat(left_company.id, "'></td>");
         }
 
         tableDataLeft += "</tr>";
@@ -43791,12 +43791,13 @@ window.Echo.channel("update-map").listen(".UpdateMapMessage", function (e) {
           tableData += " ".concat(alias, " ");
           tableData += "</td>";
         } else {
-          tableData += "<td class='".concat(classes, "' id='").concat(territory.id, "'>");
+          tableData += "<td class='".concat(classes, "' num_occupants='").concat(territory.num_occupant, "' id='").concat(territory.id, "'>");
 
           if (territory.num_occupant == 1) {
             alias = "";
             tableData += "<div class='dot'> ".concat(territory.teams[0].id, " </div>");
           } else if (territory.num_occupant == 2) {
+            alert("masuk num 2");
             alias = "";
             tableData += " \n                        <div class=\"position_dot_1\">\n                            <div class=\"dot_1\">\n                                ".concat(territory.teams[0].id, "\n                            </div>\n                        </div>\n                        <div class=\"position_dot_2\">\n                            <div class=\"dot_2\">\n                                ").concat(territory.teams[1].id, "\n                            </div>\n                        </div>\n                        ");
           }
