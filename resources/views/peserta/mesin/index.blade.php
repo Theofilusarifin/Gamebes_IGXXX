@@ -721,20 +721,23 @@
       },
       success: function(data) {
         var table_data = "";
-        $.each(data.team_mesins, (key, team_mesin) => {
-          table_data +=
-          ` <tr>
-              <td class="text-gray-900" scope="row" style="width:20%;  text-align:center">${team_mesin.id}</td>
-              <td class="text-gray-900" scope="row" style="width:20%; text-align:center">${team_mesin.name}</td>
-              <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.performance}</td>
-              <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.season_buy}</td>
-              <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
-                <button class="btn btn-danger me-3" tipe="button" onclick="jual(${team_mesin.id})">Jual</button>
-              </td>
-            </tr>`;
-        });
         
-        $('#inventory_mesin').html(table_data);
+        if (data.status != 'error'){
+          $.each(data.team_mesins, (key, team_mesin) => {
+            table_data +=
+            ` <tr>
+                <td class="text-gray-900" scope="row" style="width:20%;  text-align:center">${team_mesin.id}</td>
+                <td class="text-gray-900" scope="row" style="width:20%; text-align:center">${team_mesin.name}</td>
+                <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.performance}</td>
+                <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">${team_mesin.season_buy}</td>
+                <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
+                  <button class="btn btn-danger me-3" tipe="button" onclick="jual(${team_mesin.id})">Jual</button>
+                </td>
+              </tr>`;
+          });
+          
+          $('#inventory_mesin').html(table_data);
+        }
 
         $('#alert_inventory').hide();
         $('#alert_inventory').show();

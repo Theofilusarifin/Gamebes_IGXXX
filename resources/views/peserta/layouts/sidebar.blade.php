@@ -14,7 +14,7 @@
 
 <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
     <div class="sidebar-inner px-4 pt-3">
-        <img class="mt-3" src="{{ asset('assets/img/logo/Logo IG.png') }}" alt="">
+        <img class="mt-3 logo" src="{{ asset('assets/img/logo/Logo IG.png') }}" alt="">
         <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
         <ul class="nav flex-column pt-3 pt-md-0">
 

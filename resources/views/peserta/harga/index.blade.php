@@ -10,7 +10,7 @@
         color: #fff !important;
     }
 
-    img {
+    img:not(.logo) {
         max-width: 50px;
         width: 50px;
         height: auto;

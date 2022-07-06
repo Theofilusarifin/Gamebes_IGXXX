@@ -13,6 +13,14 @@ use Illuminate\Support\Facades\DB;
 
 class MesinController extends Controller
 {
+    public function resetIsUsed($all_team_machines)
+    {
+        foreach ($all_team_machines as $team_mesin) {
+            $team_mesin->is_used = 0;
+            $team_mesin->save();
+        }
+    }
+
     public function index()
     {
         //Declare
@@ -117,7 +125,7 @@ class MesinController extends Controller
         //Declare
         $team = Auth::user()->team;
         // Ambil team machine untuk diubah selectednya
-        $team_machines = TeamMachine::where('team_id', $team->id)->get();
+        $team_machines = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
         //Ambil season
         $season_now = SeasonNow::first()->number; // 1 panas, 2 hujan, 3 dingin
 
@@ -162,17 +170,11 @@ class MesinController extends Controller
         if ($tipe == "ac") {
             //Ambil mesin ac yaitu id 4
             $all_team_mesins = $team->teamMachines->where('machine_id', 4);
-            foreach ($all_team_mesins as $team_mesinK) {
-                $team_mesinK->is_used = 0;
-                $team_mesinK->save();
-            }
+            $this->resetIsUsed($all_team_mesins);
         } else if ($tipe == "filter") {
             //Ambil mesin filter yaitu id 2
             $all_team_mesins = $team->teamMachines->where('machine_id', 2);
-            foreach ($all_team_mesins as $team_mesinK) {
-                $team_mesinK->is_used = 0;
-                $team_mesinK->save();
-            }
+            $this->resetIsUsed($all_team_mesins);
         }
 
         $team_machine_tambahan = $request['mesin']; //Kemungkinan teamMachine_id
@@ -206,7 +208,7 @@ class MesinController extends Controller
         //Declare
         $team = Auth::user()->team;
         // Ambil team machine untuk diubah selectednya
-        $team_machines = TeamMachine::where('team_id', $team->id)->get();
+        $team_machines = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
         //Ambil season
         $season_now = SeasonNow::first()->number; // 1 panas, 2 hujan, 3 dingin
 
@@ -255,22 +257,18 @@ class MesinController extends Controller
             //101 --> saus tomat, 102 --> kitosan
             //Ambil semua mesin kecuali id 11,12 dan 15,16,17, 2, 4
             $all_team_mesins = $team->teamMachines->where('machine_id', '<', 15)->where('machine_id', '!=', 11)->where('machine_id', '!=', 12)->where('machine_id', '!=', 2)->where('machine_id', '!=', 4);
-            foreach ($all_team_mesins as $team_mesinK) {
-                $team_mesinK->is_used = 0;
-                $team_mesinK->save();
-            }
+            $this->resetIsUsed($all_team_mesins);
+
             DB::table('team_machine_combination')
                 ->where('machine_combination_id', "!=", 101)
                 ->where('machine_combination_id', "!=", 102)
                 ->where('team_id', $team->id)
                 ->delete();
         } else if ($tipe == "saus") {
-            //Ambil semua mesin dengan id 11 dan 12 
-            $all_team_mesins = $team->teamMachines->where('machine_id', 11)->orWhere('machine_id', 12);
-            foreach ($all_team_mesins as $team_mesinK) {
-                $team_mesinK->is_used = 0;
-                $team_mesinK->save();
-            }
+            //Ambil semua mesin dengan id 11 dan 12 Ini di DB RAW
+            $all_team_mesins = $team->teamMachines->where('machine_id', 11)->where('machine_id', 12);
+            $this->resetIsUsed($all_team_mesins);
+
             DB::table('team_machine_combination')
                 ->where('machine_combination_id', 101)
                 ->where('team_id', $team->id)
@@ -278,10 +276,8 @@ class MesinController extends Controller
         } else if ($tipe == "kitosan") {
             //Ambil semua mesin dengan id 15 16 17
             $all_team_mesins = $team->teamMachines->where('machine_id', '>=', 15);
-            foreach ($all_team_mesins as $team_mesinK) {
-                $team_mesinK->is_used = 0;
-                $team_mesinK->save();
-            }
+            $this->resetIsUsed($all_team_mesins);
+
             DB::table('team_machine_combination')
                 ->where('machine_combination_id', 102)
                 ->where('team_id', $team->id)
@@ -383,36 +379,38 @@ class MesinController extends Controller
     {
         $status = '';
         $msg = '';
+        $team_mesins = '';
 
         // Define Variable
         $team = Auth::user()->team;
         $team_machine = TeamMachine::find($request['team_machine_id']); //Ngambil mesin yang mau dijual
-        $team_machine_useds = TeamMachine::where('is_used', 1)->get('id'); //Ambil semua mesin yang is_usednya 1
+        $team_machine_useds = TeamMachine::where('is_used', 1)->where('season_sell', null)->get('id'); //Ambil semua mesin yang is_usednya 1
 
+        //Cek mesin apakah ada yang season_sell / pernah terjual atau tidak
+        if ($team_machine->season_sell != null) {
+            $status = 'error';
+            $msg = 'Mesin ini sudah terjual!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
+        //Cek setiap mesin yang sedang digunakan apakah ada yang sama dengan mesin yang ingin dijual
         foreach ($team_machine_useds as $team_machine_used) {
             if ($team_machine_used->id == $team_machine->id) {
                 //Kalau ada berarti gk bisa dijual
                 $status = 'error';
                 $msg = "Penjualan mesin gagal dilakukan karena mesin dengan id " . $team_machine->id . " sedang digunakan";
 
-                // Ambil team mesin
-                $team_mesins = TeamMachine::where('team_id', $team->id)->where('season_sell', null)->get();
-                $index = 0;
-
-                foreach ($team_mesins as $team_mesin) {
-                    //Ngambil mesin
-                    $machine_name = Machine::where('id', $team_mesin->machine_id)->first()->name;
-                    $team_mesins[$index]->name = $machine_name;
-                    $index++;
-                }
-
                 return response()->json(array(
                     'status' => $status,
                     'msg' => $msg,
-                    'team_mesins' => $team_mesins,
                 ), 200);
             }
         }
+
         //Kalau tidak ada brarti lanjut proses
         $season_sell = SeasonNow::first()->number; //ambil season sekarang dan simpan di season_sell
         $season_buy = $team_machine->season_buy; //ambil season beli dari mesin
@@ -456,7 +454,6 @@ class MesinController extends Controller
     public function resetMachine(Request $request)
     {
         // Define Variable
-        // IS_USED masih bermasalah cek lgi!
         $team = Auth::user()->team;
         $msg = "";
         $status = "";
@@ -468,11 +465,9 @@ class MesinController extends Controller
         if ($jenis_kombinasi == "udang") {
             //Ambil semua mesin kecuali id 11,12 dan 15,16,17
             $all_team_mesins = $team->teamMachines->where('machine_id', '<', 15)->where('machine_id', '!=', 11)->where('machine_id', '!=', 12)->where('machine_id', '!=', 2)->where('machine_id', '!=', 4);
-            // dd($all_team_mesins);
-            foreach ($all_team_mesins as $team_mesin) {
-                $team_mesin->is_used = 0;
-                $team_mesin->save();
-            }
+
+            $this->resetIsUsed($all_team_mesins);
+
             //Kalau sudah is_used jadi 0, delete kombinasinya
             DB::table('team_machine_combination')
                 ->where('machine_combination_id', "!=", 101)
@@ -482,11 +477,9 @@ class MesinController extends Controller
         } else if ($jenis_kombinasi == "saus") {
             //Ambil semua mesin dengan id 11 dan 12 
             $all_team_mesins = $team->teamMachines->where('machine_id', '>', 10)->where('machine_id', '<', 13);
-            // dd($all_team_mesins);
-            foreach ($all_team_mesins as $team_mesin) {
-                $team_mesin->is_used = 0;
-                $team_mesin->save();
-            }
+
+            $this->resetIsUsed($all_team_mesins);
+
             //Kalau sudah is_used jadi 0, delete kombinasinya
             DB::table('team_machine_combination')
                 ->where('machine_combination_id', 101)
@@ -495,16 +488,23 @@ class MesinController extends Controller
         } else if ($jenis_kombinasi == "kitosan") {
             //Ambil semua mesin dengan id 15 16 17
             $all_team_mesins = $team->teamMachines->where('machine_id', '>=', 15);
-            // dd($all_team_mesins);
-            foreach ($all_team_mesins as $team_mesin) {
-                $team_mesin->is_used = 0;
-                $team_mesin->save();
-            }
+
+            $this->resetIsUsed($all_team_mesins);
             //Kalau sudah is_used jadi 0, delete kombinasinya
             DB::table('team_machine_combination')
                 ->where('machine_combination_id', 102)
                 ->where('team_id', $team->id)
                 ->delete();
+        } else if ($jenis_kombinasi == "filter") {
+            //Ambil semua mesin filter dari team
+            $all_team_mesins = $team->teamMachines->where('machine_id', 2);
+            //Reset is_used jadi 0
+            $this->resetIsUsed($all_team_mesins);
+        } else if ($jenis_kombinasi == "ac") {
+            //Ambil semua mesin ac dari team
+            $all_team_mesins = $team->teamMachines->where('machine_id', 4);
+            //Reset is_used jadi 0
+            $this->resetIsUsed($all_team_mesins);
         }
 
         $status = 'success';

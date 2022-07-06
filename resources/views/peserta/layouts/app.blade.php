@@ -70,7 +70,7 @@
                             <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <div class="media d-flex align-items-center">
-                                    <img class="avatar rounded-circle" alt="Image placeholder"
+                                    <img class="avatar rounded-circle logo" alt="Image placeholder"
                                         src="{{ asset('') }}assets/img/logo/Account.png">
                                     <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                                         <span class="mb-0 font-small fw-bold text-gray-900">{{ Auth::user()->username
