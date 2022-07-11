@@ -14,6 +14,7 @@ use App\TeamMachine;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class ProduksiController extends Controller
 {
@@ -91,28 +92,29 @@ class ProduksiController extends Controller
             ), 200);
         }
 
-        // Ambil team shrimp yang dimiliki dan tidak expired
-        $total_shrimp = 0;
-        $team_shrimps = $this->getIngridient($team, $tipe_udang);
-
-        // Team tidak memiliki udang
-        if ($team_shrimps == null) {
-            $status = 'error';
-            $msg = 'Team anda tidak memiliki ' . Ingridient::find($tipe_udang)->name . '!';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
-        // Ambil team shrimp yang dimiliki dan tidak expired lalu dijumlahka semua
-        $total_shrimp = $this->sumIngridient($team, $tipe_udang);
-
         // Produksi Udang Kaleng
         if ($product->id == 1) {
             // Hitung banyaknya produksi dengan cara dibagi 4
             $banyak_produksi = $banyak_item / 4;
+
+            // Ambil team shrimp yang dimiliki dan tidak expired
+            $total_shrimp = 0;
+            $team_shrimps = $this->getIngridient($team, $tipe_udang);
+
+            // Team tidak memiliki udang
+            if ($team_shrimps == null) {
+                $status = 'error';
+                $msg = 'Team anda tidak memiliki ' . Ingridient::find($tipe_udang)->name . '!';
+
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
+
+            // Ambil team shrimp yang dimiliki dan tidak expired lalu dijumlahka semua
+            $total_shrimp = $this->sumIngridient($team, $tipe_udang);
+
             // Ambil kombinasi machine udang kaleng yang digunakan oleh team saat ini
             $team_machine_combination = $team->machineCombinations
                 ->where('id', '!=', '101')
@@ -519,16 +521,17 @@ class ProduksiController extends Controller
                 'msg' => $msg,
             ), 200);
         }
-        // Produksi Kitosan
+        // Produksi Kitosan 102
         else if ($product->id == 2) {
             // Banyak produksi sama dengan banyak item yang diinput oleh team
             $banyak_produksi = $banyak_item;
 
             // Ambil kombinasi machine udang kaleng yang digunakan oleh team saat ini
             $team_machine_combination = $team->machineCombinations
-                ->where('id', '101')
+                ->where('id', '102')
                 ->first();
 
+            // dd($team_machine_combination);
             // Team tidak memiliki kombinasi mesin yang sesuai
             if ($team_machine_combination == null) {
                 $status = 'error';
@@ -614,13 +617,19 @@ class ProduksiController extends Controller
 
             //Ambil ingridient_now yang paling sedikit
             $min_ingridient_now = min($shrimp_skin_use_now, $naoh_use_now, $hcl_use_now);
+
+            Log::info('Min ingridient awal' . $min_ingridient_now);
+
             // PRODUKSI MULAI
             while ($berhasil_diproduksi < $banyak_produksi) {
+
                 //Cek apakah ingridient paling sedikit lebih dari banyak produksi 
                 if ($min_ingridient_now > ($banyak_produksi - $berhasil_diproduksi)) {
                     //Kalau lebih ubah minimalnya jadi sama dengan banyak produksi
                     $min_ingridient_now = ($banyak_produksi - $berhasil_diproduksi);
                 }
+                Log::info('Min ingridient ' . $min_ingridient_now);
+
 
                 //Kurangi ingridient_now dengan nilai yang paling sedikit
                 $shrimp_skin_use_now -= $min_ingridient_now;
@@ -649,7 +658,7 @@ class ProduksiController extends Controller
                         //Kalau iya naikan indexnya
                         $shrimp_skin_index += 1;
                         //Perbaruhi ingridient_now
-                        $shrimp_use_now = $team_shrimp_skins[$shrimp_skin_index]->amount_have;
+                        $shrimp_skin_use_now = $team_shrimp_skins[$shrimp_skin_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_skin_use_now, $naoh_use_now, $hcl_use_now);
                     }
@@ -757,13 +766,13 @@ class ProduksiController extends Controller
                 'msg' => $msg,
             ), 200);
         }
-        // Produksi Saos Tomat
+        // Produksi Saos Tomat 101
         else if ($product->id == 3) {
             // Banyak produksi sama dengan banyak item yang diinput oleh team
             $banyak_produksi = $banyak_item;
             // Ambil kombinasi machine udang kaleng yang digunakan oleh team saat ini
             $team_machine_combination = $team->machineCombinations
-                ->where('id', '102')
+                ->where('id', '101')
                 ->first();
 
             // Team tidak memiliki kombinasi mesin yang sesuai
@@ -913,7 +922,7 @@ class ProduksiController extends Controller
                         //Kalau iya naikan indexnya
                         $shrimp_head_index += 1;
                         //Perbaruhi ingridient_now
-                        $shrimp_use_now = $team_shrimp_heads[$shrimp_head_index]->amount_have;
+                        $shrimp_head_use_now = $team_shrimp_heads[$shrimp_head_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
                     }

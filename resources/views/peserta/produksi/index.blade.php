@@ -96,13 +96,20 @@
     function changeStep() {
         let product_id = $('#product_id').val();
 
-        //1 Udang Kaleng, 3 Saus Udang stepnya 4
-        if (product_id == 1 || product_id == 3){
+        //1 Udang Kaleng stepnya 4
+        if (product_id == 1){
             $('#banyak_produksi').attr('step', '4');
+            $('#udang_id').attr('disabled', false);
         }
         // 2 Kitosan stepnya 1
         else if (product_id == 2){
             $('#banyak_produksi').attr('step', '1');
+            $('#udang_id').attr('disabled', true);
+        }
+        //3 Saus Udang stepnya 4
+        else if (product_id == 3){
+            $('#banyak_produksi').attr('step', '4');
+            $('#udang_id').attr('disabled', true);
         }
     }
 
