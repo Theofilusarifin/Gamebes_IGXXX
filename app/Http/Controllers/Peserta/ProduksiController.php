@@ -48,10 +48,12 @@ class ProduksiController extends Controller
 
     public function getIngridient(Team $team, $ingridient_id)
     {
-        return $team->ingridients
-            ->where('id', $ingridient_id)
-            ->where('pivot.expired_time', '>=', date('Y-m-d H:i:s'))
-            ->sortBy('pivot.expired_time')->all();
+        return DB::table('ingridient_team')
+            ->where('team_id', $team->id)
+            ->where('ingridient_id', $ingridient_id)
+            ->where('expired_time', '>=', date('Y-m-d H:i:s'))
+            ->orderBy('expired_time', 'ASC')
+            ->get();
     }
 
     public function sumIngridient(Team $team, $ingridient_id)
@@ -115,11 +117,10 @@ class ProduksiController extends Controller
             $team_machine_combination = $team->machineCombinations
                 ->where('id', '!=', '101')
                 ->where('id', '!=', '102')
-                ->all();
+                ->first();
 
-            $combination_total = count($team_machine_combination);
             // Team tidak memiliki kombinasi mesin yang sesuai
-            if ($combination_total == 0) {
+            if ($team_machine_combination == null) {
                 $status = 'error';
                 $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
 
@@ -134,13 +135,14 @@ class ProduksiController extends Controller
             $season_now = SeasonNow::first()->number; // 1 panas, 2 hujan, 3 dingin
             //Ambil AC
             $mesin_ac = $team->teamMachines->where('machine_id', 4)->where('is_used', 1)->first();
+
             $kenaikan = 5; //Pengali untuk Penurunan performance
-            if ($season_now == 1 && $mesin_ac != null) {
+            if ($season_now == 1 && $mesin_ac == null) {
                 $kenaikan = 10; //Pengali untuk penurunan performance
             }
             //Dapat data mesin-mesin (asli) yang digunakan sama tim pada kombinasinya kaleng udang
-            $mesin_dalam_kombinasis = $team_machine_combination[0]->machines;
-            // dd($team_mesins[0]);
+
+            $mesin_dalam_kombinasis = $team_machine_combination->machines;
             foreach ($mesin_dalam_kombinasis as $mesin_dalam_kombinasi) {
                 //Ambil Team Machine yang idnya sama dengan $mesin_dalam_kombinasi dan is_usednya 1
                 $timMesin = $team->teamMachines
@@ -228,10 +230,10 @@ class ProduksiController extends Controller
             $sugar_index = 0;
 
             //Ambil ingridient yang paling atas/yang expirednya paling deket
-            $shrimp_use_now = $team_shrimps[$shrimp_index]; // index 0
-            $water_use_now = $team_waters[$water_index]; // index 0
-            $salt_use_now = $team_salts[$salt_index]; // index 0
-            $sugar_use_now = $team_sugars[$sugar_index]; // index 0
+            $shrimp_use_now = $team_shrimps[$shrimp_index]->amount_have; // index 0
+            $water_use_now = $team_waters[$water_index]->amount_have; // index 0
+            $salt_use_now = $team_salts[$salt_index]->amount_have; // index 0
+            $sugar_use_now = $team_sugars[$sugar_index]->amount_have; // index 0
 
             //Buat variabel untuk tampung maksimal index dari tiap ingridient
             $shrimp_count_max = count($team_shrimps);
@@ -269,18 +271,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_shrimps[$shrimp_index]->pivot->ingridient_id,
-                        $team_shrimps[$shrimp_index]->pivot->expired_time,
-                        $team_shrimps[$shrimp_index]->pivot->amount_use + $team_shrimps[$shrimp_index]->pivot->amount_have
+                        $team_shrimps[$shrimp_index]->ingridient_id,
+                        $team_shrimps[$shrimp_index]->expired_time,
+                        $team_shrimps[$shrimp_index]->amount_use + $team_shrimps[$shrimp_index]->amount_have
                     );
 
                     $shrimp_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($shrimp_index + 1 <= $shrimp_count_max) {
+                    if ($shrimp_index + 1 < $shrimp_count_max) {
                         //Kalau iya naikan indexnya
                         $shrimp_index += 1;
                         //Perbaruhi ingridient_now
-                        $shrimp_use_now = $team_shrimps[$shrimp_index];
+                        $shrimp_use_now = $team_shrimps[$shrimp_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_use_now, $water_use_now, $salt_use_now, $sugar_use_now);
                     }
@@ -289,18 +291,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_waters[$water_index]->pivot->ingridient_id,
-                        $team_waters[$water_index]->pivot->expired_time,
-                        $team_waters[$water_index]->pivot->amount_use + $team_waters[$water_index]->pivot->amount_have
+                        $team_waters[$water_index]->ingridient_id,
+                        $team_waters[$water_index]->expired_time,
+                        $team_waters[$water_index]->amount_use + $team_waters[$water_index]->amount_have
                     );
 
                     $water_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($water_index + 1 <= $water_count_max) {
+                    if ($water_index + 1 < $water_count_max) {
                         //Kalau iya naikan indexnya
                         $water_index += 1;
                         //Perbaruhi ingridient_now
-                        $water_use_now = $team_waters[$water_index];
+                        $water_use_now = $team_waters[$water_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_use_now, $water_use_now, $salt_use_now, $sugar_use_now);
                     }
@@ -309,18 +311,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_salts[$salt_index]->pivot->ingridient_id,
-                        $team_salts[$salt_index]->pivot->expired_time,
-                        $team_salts[$salt_index]->pivot->amount_use + $team_salts[$salt_index]->pivot->amount_have
+                        $team_salts[$salt_index]->ingridient_id,
+                        $team_salts[$salt_index]->expired_time,
+                        $team_salts[$salt_index]->amount_use + $team_salts[$salt_index]->amount_have
                     );
 
                     $salt_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($salt_index + 1 <= $salt_count_max) {
+                    if ($salt_index + 1 < $salt_count_max) {
                         //Kalau iya naikan indexnya
                         $salt_index += 1;
                         //Perbaruhi ingridient_now
-                        $salt_use_now = $team_salts[$salt_index];
+                        $salt_use_now = $team_salts[$salt_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_use_now, $water_use_now, $salt_use_now, $sugar_use_now);
                     }
@@ -329,60 +331,59 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_sugars[$sugar_index]->pivot->ingridient_id,
-                        $team_sugars[$sugar_index]->pivot->expired_time,
-                        $team_sugars[$sugar_index]->pivot->amount_use + $team_sugars[$sugar_index]->pivot->amount_have
+                        $team_sugars[$sugar_index]->ingridient_id,
+                        $team_sugars[$sugar_index]->expired_time,
+                        $team_sugars[$sugar_index]->amount_use + $team_sugars[$sugar_index]->amount_have
                     );
 
                     $sugar_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($sugar_index + 1 <= $sugar_count_max) {
+                    if ($sugar_index + 1 < $sugar_count_max) {
                         //Kalau iya naikan indexnya
                         $sugar_index += 1;
                         //Perbaruhi ingridient_now
-                        $sugar_use_now = $team_sugars[$sugar_index];
+                        $sugar_use_now = $team_sugars[$sugar_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_use_now, $water_use_now, $salt_use_now, $sugar_use_now);
                     }
                 }
             }
             // PRODUKSI SELESAI (END WHILE)
-
             // Update amount have dan amount use
             if ($shrimp_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_shrimps[$shrimp_index]->pivot->ingridient_id,
-                    $team_shrimps[$shrimp_index]->pivot->expired_time,
+                    $team_shrimps[$shrimp_index]->ingridient_id,
+                    $team_shrimps[$shrimp_index]->expired_time,
                     $shrimp_use_now,
-                    $team_shrimps[$shrimp_index]->pivot->amount_use - $shrimp_use_now
+                    $team_shrimps[$shrimp_index]->amount_use + ($team_shrimps[$shrimp_index]->amount_have - $shrimp_use_now)
                 );
             }
             if ($water_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_waters[$water_index]->pivot->ingridient_id,
-                    $team_waters[$water_index]->pivot->expired_time,
+                    $team_waters[$water_index]->ingridient_id,
+                    $team_waters[$water_index]->expired_time,
                     $water_use_now,
-                    $team_waters[$water_index]->pivot->amount_use - $water_use_now
+                    $team_waters[$water_index]->amount_use + ($team_waters[$water_index]->amount_have - $water_use_now)
                 );
             }
             if ($salt_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_salts[$salt_index]->pivot->ingridient_id,
-                    $team_salts[$salt_index]->pivot->expired_time,
+                    $team_salts[$salt_index]->ingridient_id,
+                    $team_salts[$salt_index]->expired_time,
                     $salt_use_now,
-                    $team_salts[$salt_index]->pivot->amount_use - $salt_use_now
+                    $team_salts[$salt_index]->amount_use + ($team_salts[$salt_index]->amount_have - $salt_use_now)
                 );
             }
             if ($sugar_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_sugars[$sugar_index]->pivot->ingridient_id,
-                    $team_sugars[$sugar_index]->pivot->expired_time,
+                    $team_sugars[$sugar_index]->ingridient_id,
+                    $team_sugars[$sugar_index]->expired_time,
                     $sugar_use_now,
-                    $team_sugars[$sugar_index]->pivot->amount_use - $sugar_use_now
+                    $team_sugars[$sugar_index]->amount_use + ($team_sugars[$sugar_index]->amount_have - $sugar_use_now)
                 );
             }
 
@@ -392,14 +393,14 @@ class ProduksiController extends Controller
             $wasteSkin = 0;
             //Hitung nilai tetap semisal team punya head/skin pealer
             if ($tipe_udang == 1) {
-                $wasteHead = $banyak_produksi * 250; //nanti kesimpannya dalam gram!
-                $wasteSkin = $banyak_produksi * 150; //nanti kesimpannya dalam gram!
+                $wasteHead = $banyak_produksi * 0.25; //nanti kesimpannya dalam gram!
+                $wasteSkin = $banyak_produksi * 0.15; //nanti kesimpannya dalam gram!
             } else if ($tipe_udang == 2) {
-                $wasteHead = $banyak_produksi * 300; //nanti kesimpannya dalam gram!
-                $wasteSkin = $banyak_produksi * 200; //nanti kesimpannya dalam gram!
+                $wasteHead = $banyak_produksi * 0.3; //nanti kesimpannya dalam gram!
+                $wasteSkin = $banyak_produksi * 0.2; //nanti kesimpannya dalam gram!
             } else if ($tipe_udang == 3) {
-                $wasteHead = $banyak_produksi * 200; //nanti kesimpannya dalam gram!
-                $wasteSkin = $banyak_produksi * 100; //nanti kesimpannya dalam gram!
+                $wasteHead = $banyak_produksi * 0.2; //nanti kesimpannya dalam gram!
+                $wasteSkin = $banyak_produksi * 0.1; //nanti kesimpannya dalam gram!
             }
 
             // Waktu di Surabaya sekarang
@@ -459,7 +460,6 @@ class ProduksiController extends Controller
                 //Proses hitung total wastenya dan hasil produk akhir
                 $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
             }
-
             //Total produk cacat yang nanti masuk waste (dibulatin keatas)
             $total_defect = ceil($banyak_item - $hasil_setelah_defect); //Ini nanti masuk waste
 
@@ -487,16 +487,15 @@ class ProduksiController extends Controller
             // PRODUK DIBUAT DAN DISIMPAN KE DATABASE
             //Hasil produk akhir setelah proses defect (dibulatin kebawah)
             $hasil_produk_akhir = floor($hasil_setelah_defect);
-            if ($hasil_produk_akhir > 0) {
+            if ($hasil_produk_akhir >= 1) {
                 $udang_kaleng_team = $team->products->where('id', $product->id)->first();
-
                 // Apabila punya udang kaleng sebelumnya, tambahkan amount havenya dengan yang diproduksi
                 if ($udang_kaleng_team != null) {
-                    $hasil_produk_akhir = $hasil_produk_akhir + $udang_kaleng_team->amount_have;
+                    $hasil_produk_akhir = $hasil_produk_akhir + $udang_kaleng_team->pivot->amount_have;
                 }
                 $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
-                $status = 'error';
+                $status = 'success';
                 $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi';
             } else {
                 $status = 'error';
@@ -512,13 +511,6 @@ class ProduksiController extends Controller
                 $limbah_air = 0.5;
             }
 
-            //UPDATE TEAM WASTE DI 
-            if ($wasteHead != 0) {
-                $wasteHead = $wasteHead / 1000; //ubah dalam bentuk kg
-            }
-            if ($wasteSkin != 0) {
-                $wasteSkin = $wasteSkin / 1000; // ubah dalam bentuk kg
-            }
             $team->waste = $team->waste + $total_defect + $wasteHead + $wasteSkin + $limbah_air;
             $team->save();
 
@@ -531,14 +523,14 @@ class ProduksiController extends Controller
         else if ($product->id == 2) {
             // Banyak produksi sama dengan banyak item yang diinput oleh team
             $banyak_produksi = $banyak_item;
+
             // Ambil kombinasi machine udang kaleng yang digunakan oleh team saat ini
             $team_machine_combination = $team->machineCombinations
                 ->where('id', '101')
-                ->all();
+                ->first();
 
-            $combination_total = count($team_machine_combination);
             // Team tidak memiliki kombinasi mesin yang sesuai
-            if ($combination_total == 0) {
+            if ($team_machine_combination == null) {
                 $status = 'error';
                 $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
 
@@ -577,7 +569,7 @@ class ProduksiController extends Controller
             $nama_ingridient = '';
             // Cek apakah total kulit udang, naoh, hcl cukup untuk produksi?
             // 1000 gram kulit udang, 1 bungkus NaoH, dan 1 bungkus Hcl
-            if ($total_shrimp_skin < ($banyak_produksi * 1000)) { //Karena kulit disimpan dalam gram
+            if ($total_shrimp_skin < ($banyak_produksi)) { //Karena kulit disimpan dalam gram
                 $ingridient_insufficient = true;
                 $nama_ingridient = 'Kulit Udang';
             }
@@ -611,9 +603,9 @@ class ProduksiController extends Controller
             $hcl_index = 0;
 
             //Ambil ingridient yang paling atas/yang expirednya paling deket
-            $shrimp_skin_use_now = $team_shrimp_skins[$shrimp_skin_index]; // index 0
-            $naoh_use_now = $team_naohs[$naoh_index]; // index 0
-            $hcl_use_now = $team_hcls[$hcl_index]; // index 0
+            $shrimp_skin_use_now = $team_shrimp_skins[$shrimp_skin_index]->amount_have; // index 0
+            $naoh_use_now = $team_naohs[$naoh_index]->amount_have; // index 0
+            $hcl_use_now = $team_hcls[$hcl_index]->amount_have; // index 0
 
             //Buat variabel untuk tampung maksimal index dari tiap ingridient
             $shrimp_skin_count_max = count($team_shrimp_skins);
@@ -624,7 +616,6 @@ class ProduksiController extends Controller
             $min_ingridient_now = min($shrimp_skin_use_now, $naoh_use_now, $hcl_use_now);
             // PRODUKSI MULAI
             while ($berhasil_diproduksi < $banyak_produksi) {
-
                 //Cek apakah ingridient paling sedikit lebih dari banyak produksi 
                 if ($min_ingridient_now > ($banyak_produksi - $berhasil_diproduksi)) {
                     //Kalau lebih ubah minimalnya jadi sama dengan banyak produksi
@@ -642,24 +633,23 @@ class ProduksiController extends Controller
                 $hcl_remains = true;
 
                 $berhasil_diproduksi += $min_ingridient_now;
-
                 //Kalau ingridient_now habis
                 if ($shrimp_skin_use_now == 0) {
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_shrimp_skins[$shrimp_skin_index]->pivot->ingridient_id,
-                        $team_shrimp_skins[$shrimp_skin_index]->pivot->expired_time,
-                        $team_shrimp_skins[$shrimp_skin_index]->pivot->amount_use + $team_shrimp_skins[$shrimp_skin_index]->pivot->amount_have
+                        $team_shrimp_skins[$shrimp_skin_index]->ingridient_id,
+                        $team_shrimp_skins[$shrimp_skin_index]->expired_time,
+                        $team_shrimp_skins[$shrimp_skin_index]->amount_use + $team_shrimp_skins[$shrimp_skin_index]->amount_have
                     );
 
                     $shrimp_skin_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($shrimp_skin_index + 1 <= $shrimp_skin_count_max) {
+                    if ($shrimp_skin_index + 1 < $shrimp_skin_count_max) {
                         //Kalau iya naikan indexnya
                         $shrimp_skin_index += 1;
                         //Perbaruhi ingridient_now
-                        $shrimp_use_now = $team_shrimp_skins[$shrimp_skin_index];
+                        $shrimp_use_now = $team_shrimp_skins[$shrimp_skin_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_skin_use_now, $naoh_use_now, $hcl_use_now);
                     }
@@ -668,18 +658,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_naohs[$naoh_index]->pivot->ingridient_id,
-                        $team_naohs[$naoh_index]->pivot->expired_time,
-                        $team_naohs[$naoh_index]->pivot->amount_use + $team_naohs[$naoh_index]->pivot->amount_have
+                        $team_naohs[$naoh_index]->ingridient_id,
+                        $team_naohs[$naoh_index]->expired_time,
+                        $team_naohs[$naoh_index]->amount_use + $team_naohs[$naoh_index]->amount_have
                     );
 
                     $naoh_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($naoh_index + 1 <= $naoh_count_max) {
+                    if ($naoh_index + 1 < $naoh_count_max) {
                         //Kalau iya naikan indexnya
                         $naoh_index += 1;
                         //Perbaruhi ingridient_now
-                        $naoh_use_now = $team_naohs[$naoh_index];
+                        $naoh_use_now = $team_naohs[$naoh_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_skin_use_now, $naoh_use_now, $hcl_use_now);
                     }
@@ -688,18 +678,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_hcls[$hcl_index]->pivot->ingridient_id,
-                        $team_hcls[$hcl_index]->pivot->expired_time,
-                        $team_hcls[$hcl_index]->pivot->amount_use + $team_hcls[$hcl_index]->pivot->amount_have
+                        $team_hcls[$hcl_index]->ingridient_id,
+                        $team_hcls[$hcl_index]->expired_time,
+                        $team_hcls[$hcl_index]->amount_use + $team_hcls[$hcl_index]->amount_have
                     );
 
                     $hcl_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($hcl_index + 1 <= $hcl_count_max) {
+                    if ($hcl_index + 1 < $hcl_count_max) {
                         //Kalau iya naikan indexnya
                         $hcl_index += 1;
                         //Perbaruhi ingridient_now
-                        $hcl_use_now = $team_hcls[$hcl_index];
+                        $hcl_use_now = $team_hcls[$hcl_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_skin_use_now, $naoh_use_now, $hcl_use_now);
                     }
@@ -711,28 +701,28 @@ class ProduksiController extends Controller
             if ($shrimp_skin_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_shrimp_skins[$shrimp_skin_index]->pivot->ingridient_id,
-                    $team_shrimp_skins[$shrimp_skin_index]->pivot->expired_time,
+                    $team_shrimp_skins[$shrimp_skin_index]->ingridient_id,
+                    $team_shrimp_skins[$shrimp_skin_index]->expired_time,
                     $shrimp_skin_use_now,
-                    $team_shrimp_skins[$shrimp_skin_index]->pivot->amount_use - $shrimp_skin_use_now
+                    $team_shrimp_skins[$shrimp_skin_index]->amount_use + ($team_shrimp_skins[$shrimp_skin_index]->amount_have - $shrimp_skin_use_now)
                 );
             }
             if ($naoh_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_naohs[$naoh_index]->pivot->ingridient_id,
-                    $team_naohs[$naoh_index]->pivot->expired_time,
+                    $team_naohs[$naoh_index]->ingridient_id,
+                    $team_naohs[$naoh_index]->expired_time,
                     $naoh_use_now,
-                    $team_naohs[$naoh_index]->pivot->amount_use - $naoh_use_now
+                    $team_naohs[$naoh_index]->amount_use + ($team_naohs[$naoh_index]->amount_have - $naoh_use_now)
                 );
             }
             if ($hcl_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_hcls[$hcl_index]->pivot->ingridient_id,
-                    $team_hcls[$hcl_index]->pivot->expired_time,
+                    $team_hcls[$hcl_index]->ingridient_id,
+                    $team_hcls[$hcl_index]->expired_time,
                     $hcl_use_now,
-                    $team_hcls[$hcl_index]->pivot->amount_use - $hcl_use_now
+                    $team_hcls[$hcl_index]->amount_use + ($team_hcls[$hcl_index]->amount_have - $hcl_use_now)
                 );
             }
 
@@ -742,12 +732,12 @@ class ProduksiController extends Controller
 
             // Apabila punya udang kaleng sebelumnya, tambahkan amount havenya dengan yang diproduksi
             if ($kitosan != null) {
-                $hasil_produk_akhir = $hasil_produk_akhir + $kitosan->amount_have;
+                $hasil_produk_akhir = $hasil_produk_akhir + $kitosan->pivot->amount_have;
             }
             $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
-            $status = 'error';
-            $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi';
+            $status = 'success';
+            $msg = 'Produksi berhasil dilakukan! ' . $banyak_produksi . ' ' . $product->name . ' berhasil diproduksi';
 
             // HITUNG TOTAL LIMBAH/WASTE DAN SIMPAN KE DATABASE
             // Limbah air dihitung setiap melakukan klik button
@@ -770,15 +760,14 @@ class ProduksiController extends Controller
         // Produksi Saos Tomat
         else if ($product->id == 3) {
             // Banyak produksi sama dengan banyak item yang diinput oleh team
-            $banyak_produksi = $banyak_item / 4;
+            $banyak_produksi = $banyak_item;
             // Ambil kombinasi machine udang kaleng yang digunakan oleh team saat ini
             $team_machine_combination = $team->machineCombinations
                 ->where('id', '102')
-                ->all();
+                ->first();
 
-            $combination_total = count($team_machine_combination);
             // Team tidak memiliki kombinasi mesin yang sesuai
-            if ($combination_total == 0) {
+            if ($team_machine_combination == null) {
                 $status = 'error';
                 $msg = 'Kombinasi yang dimiliki untuk melakukan produksi ' . $product->name . ' belum sesuai!';
 
@@ -823,7 +812,7 @@ class ProduksiController extends Controller
             $nama_ingridient = '';
             // Cek apakah total kepala udang, tomat, gula, garam, msg cukup untuk produksi?
             // 1000 gram kepala udang, 1 kg tomat, 1 bungkus gula, 1 bungkus garam, dan 1 bungkus msg
-            if ($total_shrimp_head < ($banyak_produksi * 1000)) { //Karena kepala disimpan dalam gram
+            if ($total_shrimp_head < ($banyak_produksi)) { //Karena kepala disimpan dalam gram
                 $ingridient_insufficient = true;
                 $nama_ingridient = 'Kepala Udang';
             }
@@ -867,11 +856,11 @@ class ProduksiController extends Controller
             $msg_index = 0;
 
             //Ambil ingridient yang paling atas/yang expirednya paling deket
-            $shrimp_head_use_now = $team_shrimp_heads[$shrimp_head_index]; // index 0
-            $salt_use_now = $team_salts[$salt_index]; // index 0
-            $sugar_use_now = $team_sugars[$sugar_index]; // index 0
-            $tomat_use_now = $team_tomats[$tomat_index];
-            $msg_use_now = $team_msgs[$msg_index];
+            $shrimp_head_use_now = $team_shrimp_heads[$shrimp_head_index]->amount_have; // index 0
+            $salt_use_now = $team_salts[$salt_index]->amount_have; // index 0
+            $sugar_use_now = $team_sugars[$sugar_index]->amount_have; // index 0
+            $tomat_use_now = $team_tomats[$tomat_index]->amount_have;
+            $msg_use_now = $team_msgs[$msg_index]->amount_have;
 
             //Buat variabel untuk tampung maksimal index dari tiap ingridient
             $shrimp_head_count_max = count($team_shrimp_heads);
@@ -912,19 +901,19 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_shrimp_heads[$shrimp_head_index]->pivot->ingridient_id,
-                        $team_shrimp_heads[$shrimp_head_index]->pivot->expired_time,
-                        $team_shrimp_heads[$shrimp_head_index]->pivot->amount_use + $team_shrimp_heads[$shrimp_head_index]->pivot->amount_have
+                        $team_shrimp_heads[$shrimp_head_index]->ingridient_id,
+                        $team_shrimp_heads[$shrimp_head_index]->expired_time,
+                        $team_shrimp_heads[$shrimp_head_index]->amount_use + $team_shrimp_heads[$shrimp_head_index]->pivot->amount_have
                     );
 
                     $shrimp_head_remains = false;
 
                     //Cek apakah ada index lanjutan? 
-                    if ($shrimp_head_index + 1 <= $shrimp_head_count_max) {
+                    if ($shrimp_head_index + 1 < $shrimp_head_count_max) {
                         //Kalau iya naikan indexnya
                         $shrimp_head_index += 1;
                         //Perbaruhi ingridient_now
-                        $shrimp_use_now = $team_shrimp_heads[$shrimp_head_index];
+                        $shrimp_use_now = $team_shrimp_heads[$shrimp_head_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
                     }
@@ -933,18 +922,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_tomats[$tomat_index]->pivot->ingridient_id,
-                        $team_tomats[$tomat_index]->pivot->expired_time,
-                        $team_tomats[$tomat_index]->pivot->amount_use + $team_tomats[$tomat_index]->pivot->amount_have
+                        $team_tomats[$tomat_index]->ingridient_id,
+                        $team_tomats[$tomat_index]->expired_time,
+                        $team_tomats[$tomat_index]->amount_use + $team_tomats[$tomat_index]->amount_have
                     );
 
                     $naoh_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($tomat_index + 1 <= $tomat_count_max) {
+                    if ($tomat_index + 1 < $tomat_count_max) {
                         //Kalau iya naikan indexnya
                         $tomat_index += 1;
                         //Perbaruhi ingridient_now
-                        $tomat_use_now = $team_tomats[$tomat_index];
+                        $tomat_use_now = $team_tomats[$tomat_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
                     }
@@ -953,18 +942,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_msgs[$msg_index]->pivot->ingridient_id,
-                        $team_msgs[$msg_index]->pivot->expired_time,
-                        $team_msgs[$msg_index]->pivot->amount_use + $team_msgs[$msg_index]->pivot->amount_have
+                        $team_msgs[$msg_index]->ingridient_id,
+                        $team_msgs[$msg_index]->expired_time,
+                        $team_msgs[$msg_index]->amount_use + $team_msgs[$msg_index]->amount_have
                     );
 
                     $hcl_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($msg_index + 1 <= $msg_count_max) {
+                    if ($msg_index + 1 < $msg_count_max) {
                         //Kalau iya naikan indexnya
                         $msg_index += 1;
                         //Perbaruhi ingridient_now
-                        $msg_use_now = $team_msgs[$msg_index];
+                        $msg_use_now = $team_msgs[$msg_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
                     }
@@ -973,18 +962,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_salts[$salt_index]->pivot->ingridient_id,
-                        $team_salts[$salt_index]->pivot->expired_time,
-                        $team_salts[$salt_index]->pivot->amount_use + $team_salts[$salt_index]->pivot->amount_have
+                        $team_salts[$salt_index]->ingridient_id,
+                        $team_salts[$salt_index]->expired_time,
+                        $team_salts[$salt_index]->amount_use + $team_salts[$salt_index]->amount_have
                     );
 
                     $salt_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($salt_index + 1 <= $salt_count_max) {
+                    if ($salt_index + 1 < $salt_count_max) {
                         //Kalau iya naikan indexnya
                         $salt_index += 1;
                         //Perbaruhi ingridient_now
-                        $salt_use_now = $team_salts[$salt_index];
+                        $salt_use_now = $team_salts[$salt_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
                     }
@@ -993,18 +982,18 @@ class ProduksiController extends Controller
                     //Hapus data yang ada di database
                     $this->usedAllIngridient(
                         $team->id,
-                        $team_sugars[$sugar_index]->pivot->ingridient_id,
-                        $team_sugars[$sugar_index]->pivot->expired_time,
-                        $team_sugars[$sugar_index]->pivot->amount_use + $team_sugars[$sugar_index]->pivot->amount_have
+                        $team_sugars[$sugar_index]->ingridient_id,
+                        $team_sugars[$sugar_index]->expired_time,
+                        $team_sugars[$sugar_index]->amount_use + $team_sugars[$sugar_index]->amount_have
                     );
 
                     $sugar_remains = false;
                     //Cek apakah ada index lanjutan? 
-                    if ($sugar_index + 1 <= $sugar_count_max) {
+                    if ($sugar_index + 1 < $sugar_count_max) {
                         //Kalau iya naikan indexnya
                         $sugar_index += 1;
                         //Perbaruhi ingridient_now
-                        $sugar_use_now = $team_sugars[$sugar_index];
+                        $sugar_use_now = $team_sugars[$sugar_index]->amount_have;
                         //Perbaruhi nilai yang paling sedikit
                         $min_ingridient_now = min($shrimp_head_use_now, $salt_use_now, $sugar_use_now, $tomat_use_now, $msg_use_now);
                     }
@@ -1016,46 +1005,46 @@ class ProduksiController extends Controller
             if ($shrimp_head_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_shrimp_heads[$shrimp_head_index]->pivot->ingridient_id,
-                    $team_shrimp_heads[$shrimp_head_index]->pivot->expired_time,
+                    $team_shrimp_heads[$shrimp_head_index]->ingridient_id,
+                    $team_shrimp_heads[$shrimp_head_index]->expired_time,
                     $shrimp_head_use_now,
-                    $team_shrimp_heads[$shrimp_head_index]->pivot->amount_use - $shrimp_head_use_now
+                    $team_shrimp_heads[$shrimp_head_index]->amount_use + ($team_shrimp_heads[$shrimp_head_index]->amount_have - $shrimp_head_use_now)
                 );
             }
             if ($tomat_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_tomats[$tomat_index]->pivot->ingridient_id,
-                    $team_tomats[$tomat_index]->pivot->expired_time,
+                    $team_tomats[$tomat_index]->ingridient_id,
+                    $team_tomats[$tomat_index]->expired_time,
                     $tomat_use_now,
-                    $team_tomats[$tomat_index]->pivot->amount_use - $tomat_use_now
+                    $team_tomats[$tomat_index]->amount_use + ($team_tomats[$tomat_index]->amount_have - $tomat_use_now)
                 );
             }
             if ($msg_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_msgs[$msg_index]->pivot->ingridient_id,
-                    $team_msgs[$msg_index]->pivot->expired_time,
+                    $team_msgs[$msg_index]->ingridient_id,
+                    $team_msgs[$msg_index]->expired_time,
                     $msg_use_now,
-                    $team_msgs[$msg_index]->pivot->amount_use - $msg_use_now
+                    $team_msgs[$msg_index]->amount_use + ($team_msgs[$msg_index]->amount_have - $msg_use_now)
                 );
             }
             if ($salt_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_salts[$salt_index]->pivot->ingridient_id,
-                    $team_salts[$salt_index]->pivot->expired_time,
+                    $team_salts[$salt_index]->ingridient_id,
+                    $team_salts[$salt_index]->expired_time,
                     $salt_use_now,
-                    $team_salts[$salt_index]->pivot->amount_use - $salt_use_now
+                    $team_salts[$salt_index]->amount_use + ($team_salts[$salt_index]->amount_have - $salt_use_now)
                 );
             }
             if ($sugar_remains) {
                 $this->updateIngridientUsed(
                     $team->id,
-                    $team_sugars[$sugar_index]->pivot->ingridient_id,
-                    $team_sugars[$sugar_index]->pivot->expired_time,
+                    $team_sugars[$sugar_index]->ingridient_id,
+                    $team_sugars[$sugar_index]->expired_time,
                     $sugar_use_now,
-                    $team_sugars[$sugar_index]->pivot->amount_use - $sugar_use_now
+                    $team_sugars[$sugar_index]->amount_use + ($team_sugars[$sugar_index]->amount_have - $sugar_use_now)
                 );
             }
 
@@ -1065,12 +1054,12 @@ class ProduksiController extends Controller
 
             // Apabila punya udang kaleng sebelumnya, tambahkan amount havenya dengan yang diproduksi
             if ($saus_udang != null) {
-                $hasil_produk_akhir = $hasil_produk_akhir + $saus_udang->amount_have;
+                $hasil_produk_akhir = $hasil_produk_akhir + $saus_udang->pivot->amount_have;
             }
             $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
-            $status = 'error';
-            $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi';
+            $status = 'success';
+            $msg = 'Produksi berhasil dilakukan! ' . $banyak_produksi . ' ' . $product->name . ' berhasil diproduksi';
 
             // HITUNG TOTAL LIMBAH/WASTE DAN SIMPAN KE DATABASE
             // Limbah air dihitung setiap melakukan klik button

@@ -41,6 +41,10 @@ Route::group(
         Route::get('/investasi', 'Penpos\InvestasiController@index')->name('investasi');
         Route::post('/investasi/save', 'Penpos\InvestasiController@save')->name('investasi.save');
 
+        // Inventory
+        Route::get('/inventory/{team}', 'Penpos\InventoryController@index')->name('inventory');
+        Route::post('/inventory/ingridient-expired', 'Penpos\InventoryController@ingridientExpired')->name('inventory.expired');
+
         // Update Season
         Route::get('/update-season', 'Penpos\DashboardController@updateSeason')->name('update.season');
         Route::post('/update-season/now', 'Penpos\DashboardController@updateNow')->name('update.now');

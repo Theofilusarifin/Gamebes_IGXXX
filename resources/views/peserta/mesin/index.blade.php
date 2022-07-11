@@ -55,11 +55,19 @@
               </thead>
               <tbody>
                 <tr>
+                  @if ($machine_ac_used != null)
+                  <td class="text-gray-900" scope="row">
+                    <select disabled class="select2 form-select" id="ac_1" tabindex="-1" aria-hidden="true">
+                      <option selected disabled value="">{{ $machine_ac_used->name }}</option>
+                    </select>
+                  </td>
+                  @else
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="ac_1" tabindex="-1" aria-hidden="true">
                       <option selected disabled value="">-- Lakukan Edit --</option>
                     </select>
                   </td>
+                  @endif
                 </tr>
               </tbody>
             </table>
@@ -84,7 +92,7 @@
             </div>
             <div class="col-6 d-flex justify-content-end">
               {{-- Button Edit --}}
-              <button class="btn btn-danger me-3" id="edit_ac" tipe="button" onclick="edit('filter')">Edit</button>
+              <button class="btn btn-danger me-3" id="edit_filter" tipe="button" onclick="edit('filter')">Edit</button>
 
               {{-- Reset Kombinasi Mesin Filter --}}
               <button type="button" class="btn btn-info" id="reset_filter" onclick="reset('filter')">
@@ -113,11 +121,19 @@
               </thead>
               <tbody>
                 <tr>
+                  @if ($machine_filter_used != null)
+                  <td class="text-gray-900" scope="row">
+                    <select disabled class="select2 form-select" id="filter_1" tabindex="-1" aria-hidden="true">
+                      <option selected disabled value="">{{ $machine_filter_used->name }}</option>
+                    </select>
+                  </td>
+                  @else
                   <td class="text-gray-900" scope="row">
                     <select disabled class="select2 form-select" id="filter_1" tabindex="-1" aria-hidden="true">
                       <option selected disabled value="">-- Lakukan Edit --</option>
                     </select>
                   </td>
+                  @endif
                 </tr>
               </tbody>
             </table>
@@ -645,24 +661,28 @@
     if (tipe == "kitosan") {
       $('#edit_kitosan').attr('disabled', true);
       $('#save_kitosan').attr('disabled', false);
+      $('#reset_kitosan').attr('disabled', true);
       $('#kitosan_1').attr('disabled', false);
     }
     // Udang
     else if (tipe == "udang") {
       $('#edit_udang').attr('disabled', true);
       $('#save_udang').attr('disabled', false);
+      $('#reset_udang').attr('disabled', true);
       $('#udang_1').attr('disabled', false);
     }
     // Saus Tomat
     else if (tipe == "saus") {
       $('#edit_saus').attr('disabled', true);
       $('#save_saus').attr('disabled', false);
+      $('#reset_saus').attr('disabled', true);
       $('#saus_1').attr('disabled', false);
     }
     // AC
     else if (tipe == "ac") {
       $('#edit_ac').attr('disabled', true);
       $('#save_ac').attr('disabled', false);
+      $('#reset_ac').attr('disabled', true);
       $('#ac_1').attr('disabled', false);
     }
     // Filter
@@ -670,6 +690,7 @@
     {
       $('#edit_filter').attr('disabled', true);
       $('#save_filter').attr('disabled', false);
+      $('#reset_filter').attr('disabled', true);
       $('#filter_1').attr('disabled', false);
     }
   }
@@ -742,9 +763,6 @@
         $('#alert_inventory').hide();
         $('#alert_inventory').show();
         $('#alert-body_inventory').html(data.msg);
-        $("#alert_inventory").fadeTo(5000, 500).hide(1000, function() {
-            $("#alert_inventory").hide(1000);
-          });
         if (data.status == "success") {
           $('#alert_inventory').removeClass("alert-danger");
           $('#alert_inventory').addClass("alert-success");
@@ -816,6 +834,11 @@
   }
 
   function saveTambahan(tipe) {
+    if (tipe == "ac") {
+      $('#ac_1').attr('disabled', true);
+    } else if (tipe == "filter") {
+      $('#filter_1').attr('disabled', true);
+    }
     $.ajax({
       type: 'POST',
       url: "{{ route('peserta.mesin.save.tambahan') }}",

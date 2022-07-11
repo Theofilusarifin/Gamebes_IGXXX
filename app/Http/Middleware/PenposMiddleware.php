@@ -20,6 +20,10 @@ class PenposMiddleware
             return $next($request);
         }
 
+        else if (Auth::check() && Auth::user()->role == "si") {
+            return $next($request);
+        }
+
         abort(404);
     }
 }

@@ -1,6 +1,6 @@
 <nav class="navbar navbar-dark navbar-theme-primary px-4 col-12 d-lg-none">
     <a class="navbar-brand me-lg-5" href="{{ asset('') }}index.html">
-        <img class="navbar-brand-dark" src="{{ asset('') }}assets/img/brand/light.svg" alt="Volt logo" /> <img
+        <img class="navbar-brand-dark logo" src="{{ asset('') }}assets/img/brand/light.svg" alt="Volt logo" /> <img
             class="navbar-brand-light" src="{{ asset('') }}assets/img/brand/dark.svg" alt="Volt logo" />
     </a>
     <div class="d-flex align-items-center">
@@ -14,7 +14,7 @@
 
 <nav id="sidebarMenu" class="sidebar d-lg-block bg-gray-800 text-white collapse" data-simplebar>
     <div class="sidebar-inner px-4 pt-3">
-        <img class="mt-3" src="{{ asset('assets/img/logo/Logo IG.png') }}" alt="">
+        <img class="mt-3 logo" src="{{ asset('assets/img/logo/Logo IG.png') }}" alt="">
         <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li>
         <ul class="nav flex-column pt-3 pt-md-0">
 
@@ -76,6 +76,18 @@
                 </a>
             </li>
 
+            @if (Auth::user()->role == "si")
+
+            <li
+                class="nav-item {{ request()->is('penpos/inventory') ? ' active' : '' }} {{ request()->is('penpos/inventory/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.inventory', [1]) }}" class="nav-link">
+                    <i data-feather='shopping-bag' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Inventory</span>
+                </a>
+            </li>
+
             <li
                 class="nav-item {{ request()->is('penpos/update-season') ? ' active' : '' }} {{ request()->is('penpos/update-season/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.update.season') }}" class="nav-link">
@@ -85,6 +97,8 @@
                     <span class="sidebar-text">Update Season</span>
                 </a>
             </li>
+
+            @endif
 
             {{-- <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li> --}}
 

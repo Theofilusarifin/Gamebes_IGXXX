@@ -1,4 +1,4 @@
-@extends('peserta.layouts.app')
+@extends('penpos.layouts.app')
 @section('style')
 <style>
     .btn {
@@ -20,6 +20,28 @@
 
 @section('content')
 <main class="px-5">
+    {{-- Select Team --}}
+    <div class="row">
+        <div class="col-12">
+            {{-- Pilih Team --}}
+            <div class="mt-4">
+                <form action="{{ route('penpos.inventory', [1]) }}" id="form_inventory" method="get">
+                    <label class="my-1 me-2" for="team_id">Pilih Team</label>
+                    <select class="form-select" id="team_id" aria-label="Default select example" 
+                    onchange="changeRoute()">
+                        <option selected disabled>-- Pilih Nama Team --</option>
+                        @foreach ($teams as $team)
+                        <option value="{{ $team->id }}">
+                            {{ $team->name }}
+                        </option>
+                        @endforeach
+                    </select>
+
+                    <input type="submit" class="btn btn-success mt-3" style="float:right" value="Submit">
+                </form>
+            </div>
+        </div>
+    </div>
     {{-- Card Ingredient --}}
     <div class="row my-5 d-flex">
         <div class="col-12 col-sm-12 col-xl-6">
@@ -48,7 +70,8 @@
                                 @foreach ($team_ingridients as $ingridient)
                                 <tr id="row_{{$loop->index}}">
                                     <td class="fw-bolder text-gray-500">
-                                        <img src="{{ asset('/assets/img/icons/ingridients/'.$ingridient->name.".png")}}" alt="">
+                                        <img src="{{ asset('/assets/img/icons/ingridients/'.$ingridient->name."
+                                            .png")}}" alt="">
                                     </td>
                                     <td class="fw-bolder text-gray-500">{{$ingridient->name}}</td>
                                     <td class="fw-bolder text-gray-500">{{$ingridient->pivot->amount_have}}</td>
@@ -67,7 +90,7 @@
                                                     var distance = end - now;
                                                     if (distance < 0) {
                                                         document.getElementById(id).innerHTML = "00:00";
-                                                        deleteTeamIngridient('row_{{$loop->index}}', '{{$ingridient->pivot->team_id}}','{{$ingridient->id}}', '{{$ingridient->pivot->expired_time}}');
+                                                        deleteTeamIngridient('row_{{$loop->index}}', '{{$ingridient->pivot->team_id}}','{{$ingridient->id}}', '{{$ingridient->pivot->expired_time}}')
                                                         return;
                                                     }
                                                     var minutes = Math.floor((distance % _hour) / _minute);
@@ -140,15 +163,19 @@
 @endsection
 
 @section('script')
-    <script>
-        function deleteTeamIngridient(row_id, team_id, ingridient_id, expired_time) {
+<script>
+    function changeRoute() {
+        $('#form_inventory').attr('action', "/penpos/inventory/" + $('#team_id').val());
+    }
+
+    function deleteTeamIngridient(row_id, team_id, ingridient_id, expired_time) {
             // Hapus Row
             $('#'+row_id).remove();
             
             // AJAX untuk Hapus Data di Database
             $.ajax({
                 type: 'POST',
-                url: "{{ route('peserta.inventory.expired') }}",
+                url: "{{ route('penpos.inventory.expired') }}",
                 data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'team_id': team_id,
@@ -177,5 +204,5 @@
                 }
             });
         }
-    </script>
+</script>
 @endsection

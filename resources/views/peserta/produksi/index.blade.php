@@ -45,7 +45,8 @@
                         <div class="col-12">
                             <div class="mb-4">
                                 <label class="my-1 me-2" for="product_id">Pilih Produk</label>
-                                <select class="form-select" id="product_id" aria-label="Default select example">
+                                <select class="form-select" id="product_id" aria-label="Default select example"
+                                onchange="changeStep()">
                                     <option selected value="">-- Pilih Nama Produk --</option>
                                     <option value="1">Udang Kaleng</option>
                                     <option value="2">Kitosan</option>
@@ -71,7 +72,7 @@
                         {{-- Jumlah Barang --}}
                         <div class="col-5">
                             <label class="my-1 me-2" for="banyak_produksi">Banyak Produksi</label>
-                            <input class="form-control" type="number" min=0 placeholder="-- Banyak Produksi --"
+                            <input class="form-control" type="number" min=0 step="1" placeholder="-- Banyak Produksi --"
                                 id='banyak_produksi' required="">
                         </div>
                     </div>
@@ -92,7 +93,21 @@
 
 @section('script')
 <script>
+    function changeStep() {
+        let product_id = $('#product_id').val();
+
+        //1 Udang Kaleng, 3 Saus Udang stepnya 4
+        if (product_id == 1 || product_id == 3){
+            $('#banyak_produksi').attr('step', '4');
+        }
+        // 2 Kitosan stepnya 1
+        else if (product_id == 2){
+            $('#banyak_produksi').attr('step', '1');
+        }
+    }
+
     function produksi() {
+            $('#produksi').attr('disabled', true);
             $.ajax({
                 type: 'POST',
                 url: "{{ route('peserta.produksi.produk') }}",
@@ -120,6 +135,7 @@
                             $('#alert').addClass("alert-danger");
                         }
                     }
+                    $('#produksi').attr('disabled', false);
                 }
             });
         }

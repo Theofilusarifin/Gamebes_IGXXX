@@ -20,7 +20,7 @@ class DashboardController extends Controller
 
     public function updateSeason()
     {
-        return view('penpos.updateSeason.index');
+        return view('si.updateSeason.index');
     }
 
     public function updateNow()

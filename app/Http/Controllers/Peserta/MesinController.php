@@ -35,6 +35,33 @@ class MesinController extends Controller
             $team_machine->save();
         }
 
+        // Ambil team machine ac yang is_usednya 1 untuk ditampilin
+        $team_machines_ac = TeamMachine::where('team_id', $teams->id)
+            ->where('season_sell', null)
+            ->where('is_used', 1)
+            ->where('machine_id', 4)
+            ->first();
+
+        // Ambil team machine filter yang is_usednya 1 untuk ditampilin
+        $team_machines_filter = TeamMachine::where('team_id', $teams->id)
+            ->where('season_sell', null)
+            ->where('is_used', 1)
+            ->where('machine_id', 2)
+            ->first();
+
+        // dd($team_machines_ac);
+        //Deklarasi variabel untuk nampung mesin ac dan filter
+        $machine_ac_used = "";
+        $machine_filter_used = "";
+
+        //Cek apakah ada mesin filter/ac yang used? kalau ada passing variabel
+        if ($team_machines_ac != null) {
+            $machine_ac_used = Machine::find($team_machines_ac->machine_id);
+        }
+        if ($team_machines_filter != null) {
+            $machine_filter_used = Machine::find($team_machines_filter->machine_id);
+        }
+
         // Ambil machine combination sebagai default dari combobox
         //101 --> saus tomat, 102 --> kitosan
         $machine_combination_udang = $teams->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->first();
@@ -64,7 +91,9 @@ class MesinController extends Controller
             'machine_combination_kitosan',
             'machine_udang_tersimpan',
             'machine_saus_tersimpan',
-            'machine_kitosan_tersimpan'
+            'machine_kitosan_tersimpan',
+            'machine_filter_used',
+            'machine_ac_used'
         ));
     }
 
@@ -164,7 +193,6 @@ class MesinController extends Controller
         // total mesin assembly + 1
         $team->machine_assembly = $team->machine_assembly + 1;
         $team->save();
-
         // Ambil tipenya
         $tipe = $request['tipe'];
         if ($tipe == "ac") {
@@ -180,23 +208,23 @@ class MesinController extends Controller
         $team_machine_tambahan = $request['mesin']; //Kemungkinan teamMachine_id
         $tm = TeamMachine::find($team_machine_tambahan); //Cari teamMachine yang punya id itu
         $machine_tambahan = Machine::find($tm->machine_id); //Cari mesin yang machine idnya sama dg teamMachine
-        //Cek kalau yang didapat itu selain 2 dan 4 berarti return error
-        if ($machine_tambahan->id != 2 && $machine_tambahan->id != 4) {
-            $status = "error";
-            $msg = "Kombinasi yang dimasukkan belum tepat! Kombinasi tidak akan disimpan";
+        //Cek kalau yang didapat itu 2 atau 4 berarti return success
+        if (($machine_tambahan->id == 2 && $tipe == "filter") || ($machine_tambahan->id == 4 && $tipe == "ac")) {
+            //Ubah is_used mesin jadi 1
+            $team_machine = $team->teamMachines->where('machine_id', $machine_tambahan->id)->first();
+            $team_machine->is_used = 1;
+            $team_machine->save();
+
+            $status = 'success';
+            $msg = 'Mesin yang dimasukkan sudah benar!';
             return response()->json(array(
                 'status' => $status,
                 'msg' => $msg,
             ), 200);
         }
 
-        //Ubah is_used mesin jadi 1
-        $team_machine = $team->teamMachines->where('machine_id', $team_machine_tambahan)->first();
-        $team_machine->is_used = 1;
-        $team_machine->save();
-
-        $status = 'success';
-        $msg = 'Kombinasi yang dimasukkan sudah benar! Kombinasi akan disimpan.';
+        $status = "error";
+        $msg = "Mesin yang dimasukkan belum tepat!";
         return response()->json(array(
             'status' => $status,
             'msg' => $msg,
@@ -266,8 +294,11 @@ class MesinController extends Controller
                 ->delete();
         } else if ($tipe == "saus") {
             //Ambil semua mesin dengan id 11 dan 12 Ini di DB RAW
-            $all_team_mesins = $team->teamMachines->where('machine_id', 11)->where('machine_id', 12);
-            $this->resetIsUsed($all_team_mesins);
+            $all_team_mesins = DB::select('SELECT * FROM team_machines where machine_id = 11 or machine_id = 12');
+
+            foreach ($all_team_mesins as $team_mesin) {
+                DB::statement('UPDATE team_machines SET is_used = 0 WHERE machine_id = ?', [$team_mesin->id]);
+            }
 
             DB::table('team_machine_combination')
                 ->where('machine_combination_id', 101)
@@ -276,6 +307,7 @@ class MesinController extends Controller
         } else if ($tipe == "kitosan") {
             //Ambil semua mesin dengan id 15 16 17
             $all_team_mesins = $team->teamMachines->where('machine_id', '>=', 15);
+            // dd($all_team_mesins);
             $this->resetIsUsed($all_team_mesins);
 
             DB::table('team_machine_combination')
@@ -292,8 +324,13 @@ class MesinController extends Controller
 
         // Define anyak mesin berapa (buang yang isinya null menggunakan array filter)
         $banyak_machine = count(array_filter($susunan_mesin));
+        $minimal_banyak_machine = 0;
 
-        if ($banyak_machine >= 4) {
+        if ($tipe == "udang") {
+            $minimal_banyak_machine = 4;
+        }
+
+        if ($banyak_machine >= $minimal_banyak_machine) {
             // Masukan order dari tiap mesin
             $orders = [];
 
@@ -348,6 +385,7 @@ class MesinController extends Controller
                     $timMesin->is_used = 1;
                     $timMesin->save();
                 }
+                // dd("Berhasil");
                 $status = 'success';
                 $msg = 'Kombinasi yang dimasukkan sudah benar! Kombinasi akan disimpan.';
             } else {

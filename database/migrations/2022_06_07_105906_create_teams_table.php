@@ -30,7 +30,7 @@ class CreateTeamsTable extends Migration
             $table->integer('total_spawn')->nullable();
             $table->integer('total_crash')->nullable();
             $table->integer('total_maintenance')->nullable();
-            $table->integer('waste')->nullable();
+            $table->double('waste')->nullable();
 
             $table->foreignId('territory_id')->nullable();
             $table->foreign('territory_id')->references('id')->on('territories')->onUpdate('cascade')->onDelete('cascade');
