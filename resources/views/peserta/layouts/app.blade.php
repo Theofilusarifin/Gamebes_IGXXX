@@ -58,13 +58,44 @@
                     <!-- Navbar links -->
                     <ul class="navbar-nav align-items-center">
                         <li class="nav-item dropdown dropdown-user me-3">
-                            <a href="https://time.is/Surabaya" id="time_is_link" rel="nofollow"
-                                style="font-size:18px; pointer-events: none; cursor: default;">Jam Server :</a>
-                            <span id="Surabaya_z41c" style="font-size:18px; pointer-events: none; cursor: default; color:#1F2937"></span>
-                            <script src="//widget.time.is/t.js"></script>
+                            @php
+                                $season_now = Season::where('number', SeasonNow::first()->number)->first();
+                            @endphp
                             <script>
-                                time_is_widget.init({Surabaya_z41c:{}});
+                                CountDownTimer('countdown_season');
+                                function CountDownTimer(id)
+                                {
+                                    var end = new Date('{{$season_now->end_time}}');
+                                    var _second = 1000;
+                                    var _minute = _second * 60;
+                                    var _hour = _minute * 60;
+                                    var timer;
+                                    function showRemaining() {
+                                        var now = new Date();
+                                        var distance = end - now;
+                                        if (distance < 0) {
+                                            document.getElementById(id).innerHTML = "00:00";
+                                            updateSeason();
+                                            return;
+                                        }
+                                        var minutes = Math.floor((distance % _hour) / _minute);
+                                        var seconds = Math.floor((distance % _minute) / _second);
+
+                                        if (seconds < 10){
+                                            seconds = "0"+seconds;
+                                        }
+
+                                        if (minutes < 10){
+                                            minutes = "0"+minutes;
+                                        }
+
+                                        document.getElementById(id).innerHTML = minutes + ':';
+                                        document.getElementById(id).innerHTML += seconds;
+                                    }
+                                    timer = setInterval(showRemaining, 1000);
+                                }
                             </script>
+                            <div class="fw-bolder" id="countdown_season">
                         </li>
                         <li class="nav-item dropdown ms-lg-3">
                             <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
@@ -160,6 +191,12 @@
                     });
                 }
             })
+    </script>
+
+    <script>
+        function updateSeason() {
+            
+        }
     </script>
 
     @yield('script')

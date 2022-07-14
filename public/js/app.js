@@ -18098,6 +18098,10 @@ var Connector = /*#__PURE__*/function () {
         headers: {}
       },
       authEndpoint: '/broadcasting/auth',
+      userAuthentication: {
+        endpoint: '/broadcasting/user-auth',
+        headers: {}
+      },
       broadcaster: 'pusher',
       csrfToken: null,
       host: null,
@@ -18116,9 +18120,11 @@ var Connector = /*#__PURE__*/function () {
     key: "setOptions",
     value: function setOptions(options) {
       this.options = _extends(this._defaultOptions, options);
+      var token = this.csrfToken();
 
-      if (this.csrfToken()) {
-        this.options.auth.headers['X-CSRF-TOKEN'] = this.csrfToken();
+      if (token) {
+        this.options.auth.headers['X-CSRF-TOKEN'] = token;
+        this.options.userAuthentication.headers['X-CSRF-TOKEN'] = token;
       }
 
       return options;
@@ -18182,6 +18188,15 @@ var PusherConnector = /*#__PURE__*/function (_Connector) {
       } else {
         this.pusher = new Pusher(this.options.key, this.options);
       }
+    }
+    /**
+     * Sign in the user via Pusher user authentication (https://pusher.com/docs/channels/using_channels/user-authentication/).
+     */
+
+  }, {
+    key: "signin",
+    value: function signin() {
+      this.pusher.signin();
     }
     /**
      * Listen for an event on a channel instance.
