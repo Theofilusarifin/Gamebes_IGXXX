@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers\Penpos;
 
+use App\Events\UpdateSeason;
 use App\Http\Controllers\Controller;
 use App\Machine;
+use App\Season;
 use App\SeasonNow;
 use App\Service;
 use App\Team;
@@ -27,28 +29,64 @@ class DashboardController extends Controller
     {
         $status = '';
         $msg = '';
+        $response = 'error';
 
         // Update Season
-        $seasonNow = SeasonNow::first();
-        $seasonNow->id = $seasonNow->number + 1;
-        $seasonNow->number = $seasonNow->number + 1;
-        $seasonNow->save();
+        $seasonNow = SeasonNow::first(); //1
 
-        // Refresh Stock
-        DB::statement("UPDATE `services` SET stock = 2");
-        DB::statement("UPDATE `ingridient_ingridient_store` SET stock = 5");
-        DB::statement("UPDATE `machine_machine_store` SET stock = 5");
-        DB::statement("UPDATE `transport_transport_store` SET stock = 3");
+        if ($seasonNow->number < 3) {
+            $past_season = Season::where('number', $seasonNow->number)->first();
+            if ($seasonNow->number == 1 && $past_season->updated == 0) {
+                $next_season = $past_season;
+            } else {
+                $next_season = Season::where('number', $seasonNow->number + 1)->first();
+            }
+            // Waktu di Surabaya sekarang
+            $now = date('Y-m-d H:i:s');
+
+            // Check apakah season belum terupdate dan apakah sudah waktunya melakukan update
+            if (!$next_season->updated && $past_season->end_time <= $now) {
+                // Update Season
+                $seasonNow->number = $next_season->number;
+                $seasonNow->name = $next_season->name;
+                $seasonNow->save();
+
+                // Waktu di Surabaya sekarang
+                $now = date('Y-m-d H:i:s');
+                // Tambah 20 menit waktu di surabaya sekarang
+                $season_end = date(
+                    'Y-m-d H:i:s',
+                    strtotime('+1 minutes', strtotime($now))
+                );
+                // Set waktu untuk season selanjutnya
+                DB::statement("UPDATE `seasons` SET start_time = '$now', end_time = '$season_end' , updated = 1 WHERE number = $next_season->number");
+
+                // Refresh Stock
+                DB::statement("UPDATE `services` SET stock = 2");
+                DB::statement("UPDATE `ingridient_ingridient_store` SET stock = 5");
+                DB::statement("UPDATE `machine_machine_store` SET stock = 5");
+                DB::statement("UPDATE `transport_transport_store` SET stock = 3");
+
+                //Kalau musim hujan semua mesin sealer yang dimiliki semua team akan dihapus
+                if ($seasonNow->number == 2) {
+                    //Ambil semua mesin sealer yang ada dan belum terjual
+                    DB::statement("DELETE FROM `team_machines` WHERE machine_id = 8 AND season_sell IS NULL");
+                }
+
+                $response = 'success';
+            }
+        }
 
         $status = 'success';
-        $msg = 'Season berhasil di update';
+        $msg = 'Season ' . SeasonNow::first()->name . ' telah dimulai!';
 
+        if ($response != 'error') event(new UpdateSeason($msg));
         return response()->json(array(
             'status' => $status,
             'msg' => $msg,
         ), 200);
     }
-    
+
     public function getDataTeam(Team $team)
     {
         $teams = Team::all();

@@ -16,7 +16,7 @@ class ListHargaController extends Controller
 {
     public function index()
     {
-        $season_now = Season::find(SeasonNow::first()->id);
+        $season_now = Season::where('number', SeasonNow::first()->number)->first();
         $products = $season_now->products->all();
 
         $ingridients = $season_now->ingridients->all();
@@ -47,6 +47,7 @@ class ListHargaController extends Controller
         $service_stock = Service::sum('stock');
         $services['total_stock'] = $service_stock;
         //dd($services);
-        return view('peserta.harga.index', compact('season_now', 'products', 'ingridients', 'machines', 'transports', 'services'));
+        return view('peserta.harga.index', 
+        compact('season_now', 'products', 'ingridients', 'machines', 'transports', 'services'));
     }
 }

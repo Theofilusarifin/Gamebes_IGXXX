@@ -449,6 +449,18 @@ class MesinController extends Controller
             }
         }
 
+        //Cek peforma mesin sebelum dijual, kalau dibawah 80 gk bisa dijual
+        if ($team_machine->performance < 80) {
+            //Kalau dibawah
+            $status = 'error';
+            $msg = "Penjualan mesin gagal dilakukan karena performa mesin berada dibawah 80%";
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
         //Kalau tidak ada brarti lanjut proses
         $season_sell = SeasonNow::first()->number; //ambil season sekarang dan simpan di season_sell
         $season_buy = $team_machine->season_buy; //ambil season beli dari mesin

@@ -25,13 +25,7 @@
                 <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
                     Musim Sekarang :
                 </p>
-                @if ($season_now->number == 1)
-                <h5 style="margin-bottom:0">Musim Panas</h5>
-                @elseif ($season_now->number == 2)
-                <h5 style="margin-bottom:0">Musim Hujan</h5>
-                @elseif ($season_now->number == 3)
-                <h5 style="margin-bottom:0">Musim Salju</h5>
-                @endif
+                <h5 style="margin-bottom:0"> Musim {{ $season_now->name }}</h5>
             </div>
         </div>
     </div>

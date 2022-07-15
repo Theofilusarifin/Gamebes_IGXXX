@@ -59,43 +59,48 @@
                     <ul class="navbar-nav align-items-center">
                         <li class="nav-item dropdown dropdown-user me-3">
                             @php
-                                $season_now = Season::where('number', SeasonNow::first()->number)->first();
+                                $season_now = App\Season::where('number', App\SeasonNow::first()->number)->first();
                             @endphp
+                                <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
                             <script>
                                 CountDownTimer('countdown_season');
                                 function CountDownTimer(id)
                                 {
-                                    var end = new Date('{{$season_now->end_time}}');
-                                    var _second = 1000;
-                                    var _minute = _second * 60;
-                                    var _hour = _minute * 60;
-                                    var timer;
-                                    function showRemaining() {
-                                        var now = new Date();
-                                        var distance = end - now;
-                                        if (distance < 0) {
-                                            document.getElementById(id).innerHTML = "00:00";
-                                            updateSeason();
-                                            return;
-                                        }
-                                        var minutes = Math.floor((distance % _hour) / _minute);
-                                        var seconds = Math.floor((distance % _minute) / _second);
+                                    if('{{$season_now->end_time}}' != ''){
+                                        var end = new Date('{{$season_now->end_time}}');
+                                        var _second = 1000;
+                                        var _minute = _second * 60;
+                                        var _hour = _minute * 60;
+                                        var timer;
+                                        function showRemaining() {
+                                            var now = new Date();
+                                            var distance = end - now;
+                                            if (distance < 0) {
+                                                document.getElementById(id).innerHTML = "00:00";
+                                                updateSeason();
+                                                return;
+                                            }
+                                            var minutes = Math.floor((distance % _hour) / _minute);
+                                            var seconds = Math.floor((distance % _minute) / _second);
 
-                                        if (seconds < 10){
-                                            seconds = "0"+seconds;
-                                        }
+                                            if (seconds < 10){
+                                                seconds = "0"+seconds;
+                                            }
 
-                                        if (minutes < 10){
-                                            minutes = "0"+minutes;
-                                        }
+                                            if (minutes < 10){
+                                                minutes = "0"+minutes;
+                                            }
 
-                                        document.getElementById(id).innerHTML = minutes + ':';
-                                        document.getElementById(id).innerHTML += seconds;
+                                            document.getElementById(id).innerHTML = minutes + ':';
+                                            document.getElementById(id).innerHTML += seconds;
+                                        }
+                                        timer = setInterval(showRemaining, 1000);
                                     }
-                                    timer = setInterval(showRemaining, 1000);
+                                    else{
+                                        document.getElementById(id).innerHTML = "Game Besar Belum Dimulai";
+                                    }
                                 }
                             </script>
-                            <div class="fw-bolder" id="countdown_season">
                         </li>
                         <li class="nav-item dropdown ms-lg-3">
                             <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
@@ -135,6 +140,28 @@
         <br>
         <br>
         <br>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal-season" tabindex="-1" role="dialog" aria-labelledby="modalTitleNotify"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="py-3 text-center">
+                            <i data-feather='arrow-up' style="width: 60px; height:60px;"></i>
+                            <h2 class="h4 modal-title my-3">Season Updated!</h2>
+                            <p id="modal-season-body"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onClick="window.location.reload();" class="btn btn-sm btn-success">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
 
@@ -193,10 +220,12 @@
             })
     </script>
 
+    <script src="../js/app.js"></script>
     <script>
-        function updateSeason() {
-            
-        }
+        window.Echo.channel("update-season").listen(".UpdateSeasonMessage", (e) => {
+            $("#modal-season-body").html(e.message);
+            $("#modal-season").modal('show');
+        });
     </script>
 
     @yield('script')

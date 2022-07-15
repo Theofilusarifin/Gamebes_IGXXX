@@ -40,6 +40,19 @@ class MaintenanceController extends Controller
         $team_machine = TeamMachine::find($request['team_machine_id']);
         $nilai_maintenance = $request['nilai_maintenance'];
         
+        if($team_machine->performance <= 30){
+            $status = 'error';
+            $msg = 'Performance mesin terlalu kecil untuk melakukan maintenance!';
+
+            return response()->json(
+                array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ),
+                200
+            );
+        }
+
         $msg = '';
         $status = '';
 

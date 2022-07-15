@@ -10,6 +10,8 @@ Route::get('/', function () {
 Auth::routes();
 Route::post('/map/update-map', 'Penpos\MapController@updateMap')->name('map.update');
 
+Route::post('/update-season/now', 'Penpos\DashboardController@updateNow')->name('update.now');
+
 // ROUTE PENPOS
 Route::group(
     ['prefix' => 'penpos', 'as' => 'penpos.', 'middleware' => 'penpos'],
@@ -45,14 +47,13 @@ Route::group(
         Route::get('/inventory/{team}', 'Penpos\InventoryController@index')->name('inventory');
         Route::post('/inventory/ingridient-expired', 'Penpos\InventoryController@ingridientExpired')->name('inventory.expired');
 
-        // Update Season
-        Route::get('/update-season', 'Penpos\DashboardController@updateSeason')->name('update.season');
-        Route::post('/update-season/now', 'Penpos\DashboardController@updateNow')->name('update.now');
-
         // Maintenance
         Route::get('/maintenance', 'Penpos\MaintenanceController@index')->name('maintenance');
         Route::post('/maintenance/get-team-machines', 'Penpos\MaintenanceController@getTeamMachine')->name('maintenance.get.machine');
         Route::post('/maintenance/save', 'Penpos\MaintenanceController@save')->name('maintenance.save');
+
+        // Update Season
+        Route::get('/update-season', 'Penpos\DashboardController@updateSeason')->name('update.season');
     }
 );
 

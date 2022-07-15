@@ -113,6 +113,29 @@
                 </div>
             </div>
         </footer>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal-season" tabindex="-1" role="dialog" aria-labelledby="modalTitleNotify"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="py-3 text-center">
+                            <i data-feather='arrow-up' style="width: 60px; height:60px;"></i>
+                            <h2 class="h4 modal-title my-3">Season Updated!</h2>
+                            <p id="modal-season-body"></p>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" onClick="window.location.reload();"
+                            class="btn btn-sm btn-success">Accept</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </main>
 
 
@@ -169,6 +192,14 @@
                     });
                 }
             })
+    </script>
+
+    <script src="../js/app.js"></script>
+    <script>
+        window.Echo.channel("update-season").listen(".UpdateSeasonMessage", (e) => {
+                $("#modal-season-body").html(e.message);
+                $("#modal-season").modal('show');
+            });
     </script>
 
     @yield('script')

@@ -48,7 +48,7 @@
     function updateSeason() {
         $.ajax({
             type: 'POST',
-            url: "{{ route('penpos.update.now') }}",
+            url: "{{ route('update.now') }}",
             data:{
                 '_token': $('meta[name="csrf-token"]').attr('content'),
             },

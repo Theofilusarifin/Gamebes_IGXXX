@@ -16,8 +16,10 @@ class CreateSeasonsTable extends Migration
         Schema::create('seasons', function (Blueprint $table) {
             $table->id();
             $table->integer('number');
-            $table->timestamp('start_time')->nullable();;
+            $table->string('name');
+            $table->timestamp('start_time')->nullable();
             $table->timestamp('end_time')->nullable();
+            $table->tinyInteger('updated')->default(0);
         });
     }
 

@@ -66,6 +66,11 @@ class ProduksiController extends Controller
             ->sum("pivot.amount_have");
     }
 
+    public function deleteMachine($machine_id, $team_id)
+    {
+        DB::statement("DELETE FROM `team_machines` WHERE machine_id = ? AND season_sell = NULL AND team_id = ?", [$machine_id, $team_id]);
+    }
+
     public function production(Request $request)
     {
         // Ambil data dari ajax
@@ -80,6 +85,8 @@ class ProduksiController extends Controller
         $ingridient_insufficient = false;
         //Ambil Season sekarang
         $season_now = SeasonNow::first()->number;
+        //Variable message mesin dibuang ke sampah
+        $trashMsg = '';
 
         // Team salah input angka ketika ingin produksi udang kaleng (1) atau saus udang (3)
         if (($product->id == 1 || $product->id == 3) && $banyak_item % 4 != 0) {
@@ -465,7 +472,7 @@ class ProduksiController extends Controller
             //Total produk cacat yang nanti masuk waste (dibulatin keatas)
             $total_defect = ceil($banyak_item - $hasil_setelah_defect); //Ini nanti masuk waste
 
-            //PROSES PENGURANGAN PEFORMA MESIN
+            //PROSES PENGURANGAN PERFORMA MESIN
             foreach ($mesin_dalam_kombinasis as $team_mesin) {
                 //Ambil Team Machine yang idnya sama dengan $mesin_dalam_kombinasi dan is_usednya 1
                 $timMesin = $team->teamMachines
@@ -484,6 +491,12 @@ class ProduksiController extends Controller
                 $timMesin->product_produced = $sisaProduksi;
                 //Lakukan save
                 $timMesin->save();
+
+                //CEK kalau performancenya 0 akan dihapus lgsg di databasenya
+                if ($timMesin->performance == 0) {
+                    $this->deleteMachine($timMesin->machine_id, $team->id);
+                    $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang';
+                }
             }
 
             // PRODUK DIBUAT DAN DISIMPAN KE DATABASE
@@ -498,7 +511,7 @@ class ProduksiController extends Controller
                 $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
                 $status = 'success';
-                $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi';
+                $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi\n'.$trashMsg;
             } else {
                 $status = 'error';
                 $msg = 'Semua produk yang dihasilkan cacat akibat defect mesin yang tinggi!';
@@ -618,8 +631,6 @@ class ProduksiController extends Controller
             //Ambil ingridient_now yang paling sedikit
             $min_ingridient_now = min($shrimp_skin_use_now, $naoh_use_now, $hcl_use_now);
 
-            Log::info('Min ingridient awal' . $min_ingridient_now);
-
             // PRODUKSI MULAI
             while ($berhasil_diproduksi < $banyak_produksi) {
 
@@ -628,8 +639,6 @@ class ProduksiController extends Controller
                     //Kalau lebih ubah minimalnya jadi sama dengan banyak produksi
                     $min_ingridient_now = ($banyak_produksi - $berhasil_diproduksi);
                 }
-                Log::info('Min ingridient ' . $min_ingridient_now);
-
 
                 //Kurangi ingridient_now dengan nilai yang paling sedikit
                 $shrimp_skin_use_now -= $min_ingridient_now;
