@@ -88,5 +88,9 @@ Route::group(
         Route::get('/investasi', 'Peserta\InvestasiController@index')->name('investasi');
         Route::get('/investasi/{investation}/{question:nomor}', 'Peserta\InvestasiController@show')->name('investasi.show');
         Route::post('/investasi/submit', 'Peserta\InvestasiController@submission')->name('investasi.submit');
+
+        // Level
+        Route::get('/level', 'Peserta\LevelController@index')->name('level');
+
     }
 );

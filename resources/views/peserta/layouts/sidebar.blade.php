@@ -74,6 +74,15 @@
                     <span class="sidebar-text">Produksi</span>
                 </a>
             </li>
+            {{-- Level --}}
+            <li class="nav-item {{ request()->is('peserta/level') ? ' active' : '' }}">
+                <a href="{{ route("peserta.level") }}" class="nav-link">
+                    <i data-feather='arrow-up' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Level</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>
