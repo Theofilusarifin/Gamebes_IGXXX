@@ -53,56 +53,64 @@
         <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
             <div class="container-fluid px-0">
                 <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
-                    <div class="d-flex align-items-center">
-                    </div>
                     <!-- Navbar links -->
-                    <ul class="navbar-nav align-items-center">
-                        <li class="nav-item dropdown dropdown-user me-3">
+                    <ul class="navbar-nav align-items-center d-flex justify-content-between w-100">
+                        <li class="nav-item dropdown dropdown-user ms-5">
                             @php
-                                $season_now = App\Season::where('number', App\SeasonNow::first()->number)->first();
+                            $season_now = App\Season::where('number',
+                            App\SeasonNow::first()->number)->first();
                             @endphp
-                                <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
-                            <script>
-                                CountDownTimer('countdown_season');
-                                function CountDownTimer(id)
-                                {
-                                    if('{{$season_now->end_time}}' != ''){
-                                        var end = new Date('{{$season_now->end_time}}');
-                                        var _second = 1000;
-                                        var _minute = _second * 60;
-                                        var _hour = _minute * 60;
-                                        var timer;
-                                        function showRemaining() {
-                                            var now = new Date();
-                                            var distance = end - now;
-                                            if (distance < 0) {
-                                                document.getElementById(id).innerHTML = "00:00";
-                                                updateSeason();
-                                                return;
-                                            }
-                                            var minutes = Math.floor((distance % _hour) / _minute);
-                                            var seconds = Math.floor((distance % _minute) / _second);
 
-                                            if (seconds < 10){
-                                                seconds = "0"+seconds;
-                                            }
+                            {{-- Card Season --}}
+                            <div class="card border-0 shadow px-3 mt-4">
+                                <div class="card-body d-flex align-items-center">
+                                    <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
+                                        Sisa Waktu Musim {{ $season_now->name }} :
+                                    </p>
 
-                                            if (minutes < 10){
-                                                minutes = "0"+minutes;
-                                            }
+                                    <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
+                                    <script>
+                                        CountDownTimer('countdown_season');
+                                        function CountDownTimer(id)
+                                        {
+                                            if('{{$season_now->end_time}}' != ''){
+                                                var end = new Date('{{$season_now->end_time}}');
+                                                var _second = 1000;
+                                                var _minute = _second * 60;
+                                                var _hour = _minute * 60;
+                                                var timer;
+                                                function showRemaining() {
+                                                    var now = new Date();
+                                                    var distance = end - now;
+                                                    if (distance < 0) {
+                                                        document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
+                                                        return;
+                                                    }
+                                                    var minutes = Math.floor((distance % _hour) / _minute);
+                                                    var seconds = Math.floor((distance % _minute) / _second);
 
-                                            document.getElementById(id).innerHTML = minutes + ':';
-                                            document.getElementById(id).innerHTML += seconds;
+                                                    if (seconds < 10){
+                                                        seconds = "0"+seconds;
+                                                    }
+
+                                                    if (minutes < 10){
+                                                        minutes = "0"+minutes;
+                                                    }
+
+                                                    document.getElementById(id).innerHTML = minutes + ':';
+                                                    document.getElementById(id).innerHTML += seconds;
+                                                }
+                                                timer = setInterval(showRemaining, 1000);
+                                            }
+                                            else{
+                                                document.getElementById(id).innerHTML = "Game Besar Belum Dimulai";
+                                            }
                                         }
-                                        timer = setInterval(showRemaining, 1000);
-                                    }
-                                    else{
-                                        document.getElementById(id).innerHTML = "Game Besar Belum Dimulai";
-                                    }
-                                }
-                            </script>
+                                    </script>
+                                </div>
+                            </div>
                         </li>
-                        <li class="nav-item dropdown ms-lg-3">
+                        <li class="nav-item dropdown ms-lg-3 me-5">
                             <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <div class="media d-flex align-items-center">
@@ -146,9 +154,6 @@
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
                     <div class="modal-body">
                         <div class="py-3 text-center">
                             <i data-feather='arrow-up' style="width: 60px; height:60px;"></i>
@@ -157,7 +162,8 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" onClick="window.location.reload();" class="btn btn-sm btn-success">Accept</button>
+                        <button type="button" onClick="window.location.reload();"
+                            class="btn btn-sm btn-success">Accept</button>
                     </div>
                 </div>
             </div>

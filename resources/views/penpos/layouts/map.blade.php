@@ -48,26 +48,14 @@
     <main class="content">
         <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
             <div class="container-fluid px-0">
-                <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
-                    <div class="d-flex align-items-center">
-                    </div>
+                <div class="d-flex justify-content-end w-100" id="navbarSupportedContent">
                     <!-- Navbar links -->
-                    <ul class="navbar-nav align-items-center">
-                        <li class="nav-item dropdown dropdown-user me-3">
-                            <a href="https://time.is/Surabaya" id="time_is_link" rel="nofollow"
-                                style="font-size:18px; pointer-events: none; cursor: default;">Jam Server :</a>
-                            <span id="Surabaya_z41c"
-                                style="font-size:18px; pointer-events: none; cursor: default; color:#1F2937"></span>
-                            <script src="//widget.time.is/t.js"></script>
-                            <script>
-                                time_is_widget.init({Surabaya_z41c:{}});
-                            </script>
-                        </li>
-                        <li class="nav-item dropdown ms-lg-3">
+                    <ul class="navbar-nav align-items-center d-flex justify-content-end w-100">  
+                        <li class="nav-item dropdown ms-lg-3 me-5">
                             <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
                                 data-bs-toggle="dropdown" aria-expanded="false">
                                 <div class="media d-flex align-items-center">
-                                    <img class="avatar rounded-circle" alt="Image placeholder"
+                                    <img class="avatar rounded-circle logo" alt="Image placeholder"
                                         src="{{ asset('') }}assets/img/logo/Account.png">
                                     <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
                                         <span class="mb-0 font-small fw-bold text-gray-900">{{ Auth::user()->username
@@ -76,8 +64,9 @@
                                 </div>
                             </a>
                             <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
-                                <a class="dropdown-item d-flex align-items-center" onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
+                                <a class="dropdown-item d-flex align-items-center"
+                                    onclick="event.preventDefault();
+                                                                                    document.getElementById('logout-form').submit();">
                                     <svg class="dropdown-icon text-danger me-2" fill="none" stroke="currentColor"
                                         viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -113,9 +102,6 @@
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
                     <div class="modal-body">
                         <div class="py-3 text-center">
                             <i data-feather='arrow-up' style="width: 60px; height:60px;"></i>

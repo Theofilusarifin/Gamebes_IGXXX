@@ -21,27 +21,46 @@
 @section('content')
 <main class="px-5">
     {{-- Select Team --}}
-    <div class="row">
-        <div class="col-12">
-            {{-- Pilih Team --}}
-            <div class="mt-4">
-                <form action="{{ route('penpos.inventory', [1]) }}" id="form_inventory" method="get">
-                    <label class="my-1 me-2" for="team_id">Pilih Team</label>
-                    <select class="form-select" id="team_id" aria-label="Default select example" 
-                    onchange="changeRoute()">
-                        <option selected disabled>-- Pilih Nama Team --</option>
-                        @foreach ($teams as $team)
-                        <option value="{{ $team->id }}">
-                            {{ $team->name }}
-                        </option>
-                        @endforeach
-                    </select>
-
-                    <input type="submit" class="btn btn-success mt-3" style="float:right" value="Submit">
-                </form>
+    <div class="row my-5">
+        <div class="col-12 col-sm-6 col-xl-6">
+            <div class="card border-0 shadow">
+                <div class="card-header">
+                    <div class="row d-flex align-items-center">
+                        {{-- Judul --}}
+                        <div class="col-6">
+                            <h1 class="fs-5 fw-bold text-white mb-0">Inventory Team</h1>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-12">
+                            {{-- Pilih Team --}}
+                            <div class="">
+                                <form action="{{ route('penpos.inventory', [1]) }}" id="form_inventory" method="get">
+                                    <label class="my-1 me-2" for="team_id">Pilih Team</label>
+                                    <select class="form-select" id="team_id" aria-label="Default select example"
+                                        onchange="changeRoute()">
+                                        <option selected disabled>-- Pilih Nama Team --</option>
+                                        @foreach ($teams as $team)
+                                        <option value="{{ $team->id }}">
+                                            {{ $team->name }}
+                                        </option>
+                                        @endforeach
+                                    </select>
+                                    <div class="col-12 d-flex justify-content-end">
+                                        <input type="submit" class="btn btn-success mt-3" style="float:right"
+                                            value="Get Data">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+
     {{-- Card Ingredient --}}
     <div class="row my-5 d-flex">
         <div class="col-12 col-sm-12 col-xl-6">

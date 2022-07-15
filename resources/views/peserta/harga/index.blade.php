@@ -18,17 +18,6 @@
 </style>
 @section('content')
 <main class="px-5">
-    {{-- Card Season --}}
-    <div class="col-12 col-sm-12 col-xl-12 mt-5">
-        <div class="card border-0 shadow">
-            <div class="card-body d-flex align-items-center">
-                <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
-                    Musim Sekarang :
-                </p>
-                <h5 style="margin-bottom:0"> Musim {{ $season_now->name }}</h5>
-            </div>
-        </div>
-    </div>
     <div class="">
         {{-- Card Ingredient --}}
         <div class="pe-4 mt-5 mb-4" style="float:left; width:50%">

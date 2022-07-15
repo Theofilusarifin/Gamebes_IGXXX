@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 
 class Team extends Model
 {
@@ -62,6 +63,6 @@ class Team extends Model
     public function questions()
     {
         return $this->belongsToMany(Question::class, 'team_question', 'team_id', 'question_id')
-        ->withPivot(['answer', 'is_correct']);
+            ->withPivot(['answer', 'is_correct']);
     }
 }
