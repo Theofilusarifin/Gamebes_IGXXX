@@ -81,7 +81,7 @@
                         <div class="col-5">
                             <label class="my-1 me-2" for="banyak_item">Banyak Penjualan</label>
                             <input class="form-control" type="number" min=0 placeholder="-- Banyak Penjualan --"
-                                id='banyak_item' required="">
+                                id='banyak_item'>
                         </div>
                     </div>
                     <div class="row">
@@ -99,6 +99,7 @@
 @section('script')
 <script>
     function jual() {
+        $('#jual').attr('disabled',true);
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.marketing.sell') }}",
@@ -127,6 +128,7 @@
                         $('#alert').addClass("alert-danger");
                     }
                 }
+                $('#jual').attr('disabled',false);
             }
         });
     }

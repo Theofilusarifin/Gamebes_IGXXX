@@ -33,9 +33,9 @@
                                 <label class="my-1 me-2" for="team_id">Pilih Team</label>
                                 <select class="form-select" id="team_id" aria-label="Default select example" onchange="changeTeam()">
                                     <option selected disabled>-- Pilih Nama Team --</option>
-                                    @foreach ($teams as $team)
-                                    <option value="{{ $team->id }}">
-                                        {{ $team->name }}
+                                    @foreach ($teams as $t)
+                                    <option value="{{ $t->id }}">
+                                        {{ $t->name }}
                                     </option>
                                     @endforeach
                                 </select>

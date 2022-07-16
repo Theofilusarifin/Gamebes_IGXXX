@@ -36,13 +36,17 @@ class MaintenanceController extends Controller
     }
 
     public function save(Request $request){
+        //Inisiasi Variabel
         $team = Team::find($request['team_id']);
         $team_machine = TeamMachine::find($request['team_machine_id']);
         $nilai_maintenance = $request['nilai_maintenance'];
-        
-        if($team_machine->performance <= 30){
+
+        $msg = '';
+        $status = '';
+
+        if($team->territory_id >= 1000){
             $status = 'error';
-            $msg = 'Performance mesin terlalu kecil untuk melakukan maintenance!';
+            $msg = 'Team harus berada di perusahaan untuk melakukan maintenance!';
 
             return response()->json(
                 array(
@@ -52,10 +56,20 @@ class MaintenanceController extends Controller
                 200
             );
         }
+        
+        //Cek Performa Mesin apakah masih bisa melakukan maintenance
+        if($team_machine->performance <= 30){
+            $status = 'error';
+            $msg = 'Performance mesin terlalu kecil untuk melakukan maintenance!';
 
-        $msg = '';
-        $status = '';
+            return response()->json(
+                array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+        }
 
+        $total_price = 0;
         // Logic harga maintenance
         if($nilai_maintenance == 25){
             $total_price = 10;
@@ -68,6 +82,16 @@ class MaintenanceController extends Controller
         }
         else if ($nilai_maintenance == 100) {
             $total_price = 25;
+        }
+        else{
+            $status = 'error';
+            $msg = 'Persentase maintenance tidak valid!';
+
+            return response()->json(
+                array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
         }
 
         // Uang tidak cukup

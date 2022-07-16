@@ -71,7 +71,7 @@
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-end">
-                            <button class="btn btn-success" id="save_saus" style="width: 100px" type="button"
+                            <button class="btn btn-success" id="submit_maintenance" style="width: 100px" type="button"
                                 onclick="maintenance()">Submit</button>
                         </div>
                     </div>
@@ -105,6 +105,7 @@
     }
 
     function maintenance() {
+        $('#submit_maintenance').attr('disabled', true);
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.maintenance.save') }}",
@@ -132,6 +133,7 @@
                         $('#alert').addClass("alert-danger");
                     }
                 }
+                $('#submit_maintenance').attr('disabled', false);
             }
         });
     }

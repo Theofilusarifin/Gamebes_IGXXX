@@ -90,7 +90,7 @@ class DashboardController extends Controller
     public function getDataTeam(Team $team)
     {
         $teams = Team::all();
-
+        // dd($team->total_income);
         // Pembelian
         $team_ingridients = $team->ingridients->all();
         $team_machines2 = TeamMachine::where('team_id', $team->id)->get();
