@@ -88,13 +88,13 @@
                                             <td class="fw-bolder text-gray-500">Investasi belum selesai dikerjakan</td>
                                             <td class="fw-bolder">
                                                 <form action="{{ route('peserta.investasi.show', [$i+1, 1]) }}">
-                                                    <input type="submit" class="btn btn-secondary" value="Continue">
+                                                    <input type="submit" class="btn btn-success" value="Continue">
                                                 </form>
                                             </td>
                                         @else
                                             <td class="fw-bolder text-success">{{ $investation_team[$index_investation-1]->pivot->total_profit }} TC</td>
                                             <td class="fw-bolder text-gray-500">
-                                                <button disabled class="btn btn-secondary" type="button">Finished</button>
+                                                <button disabled class="btn btn-gray-400" type="button">Finished</button>
                                             </td>
                                         @endif
                                         </tr>

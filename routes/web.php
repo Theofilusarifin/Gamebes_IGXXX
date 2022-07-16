@@ -91,6 +91,8 @@ Route::group(
 
         // Level
         Route::get('/level', 'Peserta\LevelController@index')->name('level');
+        Route::post('/level/update-syarat', 'Peserta\LevelController@updateSyarat')->name('level.update');
+        Route::post('/level/upgrade-level', 'Peserta\LevelController@upgradeLevel')->name('level.upgrade');
 
     }
 );

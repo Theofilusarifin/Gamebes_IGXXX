@@ -763,6 +763,10 @@
         $('#alert_inventory').hide();
         $('#alert_inventory').show();
         $('#alert-body_inventory').html(data.msg);
+        $("#alert_inventory").fadeTo(5000, 500).hide(1000, function(){
+          $("#alert_inventory").hide(1000);
+        });
+
         if (data.status == "success") {
           $('#alert_inventory').removeClass("alert-danger");
           $('#alert_inventory').addClass("alert-success");

@@ -96,7 +96,7 @@
 
 @section('content')
 
-<div class='mc-container my-5 px-5'>
+<div class='mc-container mt-5 px-5'>
 
     {{-- Navigasi number --}}
     <div class="card mc-number">

@@ -65,4 +65,10 @@ class Team extends Model
         return $this->belongsToMany(Question::class, 'team_question', 'team_id', 'question_id')
             ->withPivot(['answer', 'is_correct']);
     }
+
+    public function levels()
+    {
+        return $this->belongsToMany(Level::class, 'team_level', 'team_id', 'level_id')
+            ->withPivot(['syarat_1', 'syarat_2', 'syarat_3', 'syarat_4']);
+    }
 }
