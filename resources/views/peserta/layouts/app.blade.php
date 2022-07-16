@@ -52,94 +52,94 @@
     <main class="content">
         <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
             <div class="container-fluid px-0">
-                <div class="d-flex justify-content-between w-100" id="navbarSupportedContent">
-                    <!-- Navbar links -->
-                    <ul class="navbar-nav align-items-center d-flex justify-content-between w-100">
-                        <li class="nav-item dropdown dropdown-user ms-5">
-                            @php
-                            $season_now = App\Season::where('number',
-                            App\SeasonNow::first()->number)->first();
-                            @endphp
+                <div class="d-flex justify-content-between align-items-center w-100 ps-5" id="navbarSupportedContent">
+                    @php
+                    $season_now = App\Season::where('number',
+                    App\SeasonNow::first()->number)->first();
+                    @endphp
 
-                            {{-- Card Season --}}
-                            <div class="card border-0 shadow px-3 mt-4">
-                                <div class="card-body d-flex align-items-center">
-                                    <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
-                                        Sisa Waktu Musim {{ $season_now->name }} :
-                                    </p>
+                    {{-- Card Season --}}
+                    <div class="d-flex align-items-center card border-0 shadow px-3 mt-4">
+                        <div class="card-body d-flex align-items-center">
+                            <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
+                                Sisa Waktu Musim {{ $season_now->name }} :
+                            </p>
 
-                                    <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
-                                    <script>
-                                        CountDownTimer('countdown_season');
-                                        function CountDownTimer(id)
-                                        {
-                                            if('{{$season_now->end_time}}' != ''){
-                                                var end = new Date('{{$season_now->end_time}}');
-                                                var _second = 1000;
-                                                var _minute = _second * 60;
-                                                var _hour = _minute * 60;
-                                                var timer;
-                                                function showRemaining() {
-                                                    var now = new Date();
-                                                    var distance = end - now;
-                                                    if (distance < 0) {
-                                                        document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
-                                                        return;
-                                                    }
-                                                    var minutes = Math.floor((distance % _hour) / _minute);
-                                                    var seconds = Math.floor((distance % _minute) / _second);
-
-                                                    if (seconds < 10){
-                                                        seconds = "0"+seconds;
-                                                    }
-
-                                                    if (minutes < 10){
-                                                        minutes = "0"+minutes;
-                                                    }
-
-                                                    document.getElementById(id).innerHTML = minutes + ':';
-                                                    document.getElementById(id).innerHTML += seconds;
-                                                }
-                                                timer = setInterval(showRemaining, 1000);
+                            <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
+                            <script>
+                                CountDownTimer('countdown_season');
+                                function CountDownTimer(id)
+                                {
+                                    if('{{$season_now->end_time}}' != ''){
+                                        var end = new Date('{{$season_now->end_time}}');
+                                        var _second = 1000;
+                                        var _minute = _second * 60;
+                                        var _hour = _minute * 60;
+                                        var timer;
+                                        function showRemaining() {
+                                            var now = new Date();
+                                            var distance = end - now;
+                                            if (distance < 0) {
+                                                document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
+                                                return;
                                             }
-                                            else{
-                                                document.getElementById(id).innerHTML = "Game Besar Belum Dimulai";
+                                            var minutes = Math.floor((distance % _hour) / _minute);
+                                            var seconds = Math.floor((distance % _minute) / _second);
+
+                                            if (seconds < 10){
+                                                seconds = "0"+seconds;
                                             }
+
+                                            if (minutes < 10){
+                                                minutes = "0"+minutes;
+                                            }
+
+                                            document.getElementById(id).innerHTML = minutes + ':';
+                                            document.getElementById(id).innerHTML += seconds;
                                         }
-                                    </script>
-                                </div>
-                            </div>
-                        </li>
-                        <li class="nav-item dropdown ms-lg-3 me-5">
-                            <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                <div class="media d-flex align-items-center">
-                                    <img class="avatar rounded-circle logo" alt="Image placeholder"
-                                        src="{{ asset('') }}assets/img/logo/Account.png">
-                                    <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                                        <span class="mb-0 font-small fw-bold text-gray-900">{{ Auth::user()->username
-                                            }}</span>
+                                        timer = setInterval(showRemaining, 1000);
+                                    }
+                                    else{
+                                        document.getElementById(id).innerHTML = "Game Besar Belum Dimulai";
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+                    <!-- Navbar links -->
+                    <div class="align-items-center">
+                        <ul class="align-items-center navbar-nav w-100">
+                            <li class="nav-item dropdown ms-lg-3 me-5">
+                                <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                    <div class="media d-flex align-items-center">
+                                        <img class="avatar rounded-circle logo" alt="Image placeholder"
+                                            src="{{ asset('') }}assets/img/logo/Account.png">
+                                        <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
+                                            <span class="mb-0 font-small fw-bold text-gray-900">{{ Auth::user()->username
+                                                }}</span>
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
-                            <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
-                                <a class="dropdown-item d-flex align-items-center" onclick="event.preventDefault();
-                                                                    document.getElementById('logout-form').submit();">
-                                    <svg class="dropdown-icon text-danger me-2" fill="none" stroke="currentColor"
-                                        viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
-                                        </path>
-                                    </svg>
-                                    Logout
                                 </a>
-
-                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                    @csrf
-                                </form>
-                            </div>
-                        </li>
-                    </ul>
+                                <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
+                                    <a class="dropdown-item d-flex align-items-center" onclick="event.preventDefault();
+                                                                        document.getElementById('logout-form').submit();">
+                                        <svg class="dropdown-icon text-danger me-2" fill="none" stroke="currentColor"
+                                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1">
+                                            </path>
+                                        </svg>
+                                        Logout
+                                    </a>
+    
+                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                        @csrf
+                                    </form>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </nav>
