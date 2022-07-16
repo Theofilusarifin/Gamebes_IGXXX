@@ -9,7 +9,7 @@
         background-color: #1F2937 !important;
     }
 
-    .card-header h2{
+    .card-header h2 {
         color: #fff !important;
     }
 </style>
@@ -26,17 +26,28 @@
                 @include('peserta.layouts.alerts')
                 <div class="row">
                     <div class="col-12 col-sm-12 col-xl-12 mt-1">
-                        <span class="badge bg-success p-1" style="width: 150px;" id="badge_syarat_1">Tingkat Efektifitas</span>
-                        <span class="badge bg-danger p-1" style="width: 150px;" id="badge_syarat_2">TIngkat Higenis</span>
-                        <span class="badge bg-danger p-1" style="width: 150px;" id="badge_syarat_3">Saldo Akhir</span>
-                        <span class="badge bg-danger p-1" style="width: 150px;" id="badge_syarat_4">Limbah</span>
+                        {{-- Logic BADGE --}}
+                        @php($nama_syarat = ['Tingkat Efektifitas', 'Tingkat Higenis', 'Saldo Akhir', 'Limbah'])
+                        @for ($i = 1; $i <= 4; $i++) @php($class_badge='danger' ) @if ($i==1 && $team_level->
+                            syarat_1)@php($class_badge = 'success')
+                            @elseif ($i == 2 && $team_level->syarat_2)@php($class_badge = 'success')
+                            @elseif ($i == 3 && $team_level->syarat_3)@php($class_badge = 'success')
+                            @elseif ($i == 4 && $team_level->syarat_4)@php($class_badge = 'success')
+                            @endif
+                            <span class="badge bg-{{$class_badge}} p-1" style="width: 150px;"
+                                id="badge_syarat_{{$i}}">{{$nama_syarat[$i-1]}}</span>
+                            @endfor
                     </div>
                     <div class="col-12 col-sm-12 col-xl-12 my-4">
-                        <img style="object-fit: fill;" src="{{ asset('/assets/img/background/map_background.png')}}" alt="">
+                        <img style="object-fit: fill;" src="{{ asset('/assets/img/background/map_background.png')}}"
+                            alt="">
                     </div>
                     <div class="col-12 col-sm-12 col-xl-12 d-flex justify-content-between">
-                        <button class="btn btn-info" type="button" onclick="updateSyarat()">Update Syarat</button>
-                        <button disabled class="btn btn-success" type="button" onclick="upgradeLevel()">Upgrade Level</button>
+                        <button class="btn btn-info" type="button" id="update_syarat" onclick="updateSyarat()">Update
+                            Syarat</button>
+                        <button disabled class="btn btn-success" id="upgrade_level" type="button"
+                            onclick="upgradeLevel()">Upgrade
+                            Level</button>
                     </div>
                 </div>
             </div>
@@ -48,6 +59,7 @@
 @section('script')
 <script>
     function updateSyarat() {
+            $('#update_syarat').attr('disabled', true);
             $.ajax({
                 type: 'POST',
                 url: "{{ route('peserta.level.update') }}",
@@ -55,8 +67,37 @@
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (data) {
-                    alert(data.team_level.syarat_1);
+                    // UPDATE BADGE SYARAT 1
+                    var class_1 = 'danger';
+                    if (data.team_level.syarat_1){
+                        class_1 = 'success';   
+                    }
+                    $('#badge_syarat_1').attr("class", 'badge bg-'+class_1+' p-1');
+                    
+                    // UPDATE BADGE SYARAT 2
+                    var class_2 = 'danger';
+                    if (data.team_level.syarat_2){
+                        class_2 = 'success';   
+                    }
+                    $('#badge_syarat_2').attr("class", 'badge bg-'+class_2+' p-1');
 
+                    // UPDATE BADGE SYARAT 3
+                    var class_3 = 'danger';
+                    if (data.team_level.syarat_3){
+                        class_3 = 'success';   
+                    }
+                    $('#badge_syarat_3').attr("class", 'badge bg-'+class_3+' p-1');
+                    
+                    // UPDATE BADGE SYARAT 4
+                    var class_4 = 'danger';
+                    if (data.team_level.syarat_4){
+                        class_4 = 'success';   
+                    }
+                    $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
+
+                    // UBAH GAMBAR
+                    
+                    //Tampilin Alert Message
                     if (data.status != ""){
                         $('#alert').hide();
                         $('#alert').show();
@@ -74,11 +115,19 @@
                             $('#alert').addClass("alert-danger");
                         }
                     }
+
+                    $('#update_syarat').attr('disabled', false);
+                    //Enable Upgrade Level
+                    if(data.team_level.syarat_1 && data.team_level.syarat_2 && data.team_level.syarat_3 && data.team_level.syarat_4)
+                    {
+                        $('#upgrade_level').attr('disabled', false);            
+                    }
                 }
             });
         }
 
         function upgradeLevel() {
+            $('#upgrade_level').attr('disabled', true);
             $.ajax({
                 type: 'POST',
                 url: "{{ route('peserta.level.upgrade') }}",
@@ -103,6 +152,8 @@
                             $('#alert').addClass("alert-danger");
                         }
                     }
+
+                    $('#upgrade_level').attr('disabled', false);
                 }
             });
         }

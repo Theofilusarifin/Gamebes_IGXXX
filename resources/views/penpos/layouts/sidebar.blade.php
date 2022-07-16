@@ -66,7 +66,7 @@
                 </a>
             </li>
 
-            <li
+            {{-- <li
                 class="nav-item {{ request()->is('penpos/investasi') ? ' active' : '' }} {{ request()->is('penpos/investasi/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.investasi') }}" class="nav-link">
                     <i data-feather='dollar-sign' style="width: 24px; height:24px;"></i>
@@ -74,7 +74,7 @@
                     </span>
                     <span class="sidebar-text">Investasi</span>
                 </a>
-            </li>
+            </li> --}}
 
             @if (Auth::user()->role == "si")
 
@@ -99,6 +99,16 @@
             </li>
 
             @endif
+
+            <li
+                class="nav-item {{ request()->is('penpos/leader-board') ? ' active' : '' }} {{ request()->is('penpos/leader-board/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.leaderboard') }}" class="nav-link">
+                    <i data-feather='bar-chart-2' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Leaderboard</span>
+                </a>
+            </li>
 
             {{-- <li role="separator" class="dropdown-divider mt-4 mb-3 border-gray-700"></li> --}}
 

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class LevelController extends Controller
 {
@@ -13,14 +14,19 @@ class LevelController extends Controller
     {
         //Deklarasi
         $team = Auth::user()->team;
-        $team_udang_kaleng = $team->products->where("id", 1)->first();
 
-        return view('peserta.level.index', compact(
-            'team',
-        ));
+        if ($team->level < 3) {
+            $level_id = $team->level + 1;
+        } else {
+            $level_id = $team->level;
+        }
+
+        $team_level = DB::table('team_level')->where('team_id', $team->id)->where('level_id', $level_id)->first();
+        return view('peserta.level.index', compact('team', 'team_level'));
     }
 
-    public function updateSyarat(){
+    public function updateSyarat()
+    {
         // Inisiasi Variabel
         $status = '';
         $msg = '';
@@ -29,25 +35,28 @@ class LevelController extends Controller
         $team_machine_higenity = null;
         $persentase_limbah = null;
 
-        
         //Deklarasi teamnya
         $team = Auth::user()->team;
-        if ($team->level < 3){
-            $team_level = $team->levels->where('id', $team->level+1)->first();
-        }
-        else{
-            $team_level = $team->levels->where('id', $team->level)->first();
+        dd($team);
+
+        if ($team->level >= 3) {
+            $level_id = $team->level;
+            $team_level = $team->levels->where('id', $level_id)->first();
             return response()->json(array(
                 'team_level' => $team_level,
                 'status' => $status,
                 'msg' => $msg,
             ), 200);
         }
-        
+
+        $level_id = $team->level + 1;
+        //Kalau team level tidak null ambil detail team level
+        $team_level = $team->levels->where('id', $level_id)->first();
+
         //Ambil Kombinasi Team yang sedang dipakai
         $team_machine_combination = $team->machineCombinations->where("id", "!=", "101")->where("id", "!=", "102")->first();
 
-        if($team_machine_combination != null){
+        if ($team_machine_combination != null) {
             $team_machine_effectivity = $team_machine_combination->effectivity;
             $team_machine_higenity = $team_machine_combination->higenity;
         }
@@ -75,11 +84,10 @@ class LevelController extends Controller
         if ($team->level == 0) {
 
             // CHECK SYARAT 1 -> EFECTIVITY
-            if ($team_machine_effectivity != null){
+            if ($team_machine_effectivity != null) {
                 if ($team_machine_effectivity >= 40) {
                     $team->levels()->sync([$team_level->id => ['syarat_1' => 1]], false);
-                }
-                else{
+                } else {
                     $team->levels()->sync([$team_level->id => ['syarat_1' => 0]], false);
                 }
             } else {
@@ -99,8 +107,11 @@ class LevelController extends Controller
 
             // CHECK SYARAT 3 -> TIGGIE COIN
             if ($team->tc >= 1000) {
+                // dd("dar");
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 1]], false);
+                // dd($team_level);
             } else {
+                // dd("dor");
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 0]], false);
             }
 
@@ -116,8 +127,8 @@ class LevelController extends Controller
             }
         }
 
-        //Pengecekan Level 2
-        if ($team->level == 0) {
+        // Pengecekan Level 2
+        if ($team->level == 1) {
 
             // CHECK SYARAT 1 -> EFECTIVITY
             if ($team_machine_effectivity != null) {
@@ -149,7 +160,8 @@ class LevelController extends Controller
             }
 
             // CHECK SYARAT 4 -> LIMBAH
-            if ($persentase_limbah != null
+            if (
+                $persentase_limbah != null
             ) {
                 if ($persentase_limbah <= 0.15) {
                     $team->levels()->sync([$team_level->id => ['syarat_4' => 1]], false);
@@ -162,7 +174,7 @@ class LevelController extends Controller
         }
 
         //Pengecekan Level 3
-        if ($team->level == 0) {
+        if ($team->level == 2) {
 
             // CHECK SYARAT 1 -> EFECTIVITY
             if ($team_machine_effectivity != null) {
@@ -207,6 +219,8 @@ class LevelController extends Controller
             }
         }
 
+        //Perbaruhi Variabel Team Level
+        $team_level = DB::table('team_level')->where('team_id', $team->id)->where('level_id', $level_id)->first();
         $status = 'success';
         $msg = 'Syarat Berhasil Diperbaharui';
 
@@ -217,7 +231,8 @@ class LevelController extends Controller
         ), 200);
     }
 
-    public function upgradeLevel(){
+    public function upgradeLevel()
+    {
         // Inisiasi Variabel
         $status = '';
         $msg = '';
@@ -235,9 +250,9 @@ class LevelController extends Controller
             ), 200);
         }
 
-        $total_syarat_terpenuhi = $team_level->pivot->syarat_1 + $team_level->pivot->syarat_2 + $team_level->pivot->syarat_3  + $team_level->pivot->syarat_4; 
+        $total_syarat_terpenuhi = $team_level->pivot->syarat_1 + $team_level->pivot->syarat_2 + $team_level->pivot->syarat_3  + $team_level->pivot->syarat_4;
 
-        if ($total_syarat_terpenuhi == 4){
+        if ($total_syarat_terpenuhi == 4) {
             $team->level = $team->level + 1;
             $team->save();
 
@@ -249,12 +264,10 @@ class LevelController extends Controller
             ]);
 
             $status = 'success';
-            $msg = 'Selamat! Team anda telah berhasil mencapai level '.$team->level.'!';
-        }
-
-        else{
+            $msg = 'Selamat! Team anda telah berhasil mencapai level ' . $team->level . '!';
+        } else {
             $status = 'error';
-            $msg = 'Syarat belum terpenuhi untuk mencapai level '.($team->level+1).'!';
+            $msg = 'Syarat belum terpenuhi untuk mencapai level ' . ($team->level + 1) . '!';
         }
     }
 }

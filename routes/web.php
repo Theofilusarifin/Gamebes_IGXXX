@@ -54,6 +54,9 @@ Route::group(
 
         // Update Season
         Route::get('/update-season', 'Penpos\DashboardController@updateSeason')->name('update.season');
+
+        // LeaderBoard
+        Route::get('/leader-board', 'Penpos\LeaderboardController@index')->name('leaderboard');
     }
 );
 

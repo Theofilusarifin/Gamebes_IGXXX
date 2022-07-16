@@ -32,6 +32,7 @@ class DatabaseSeeder extends Seeder
         $this->call(TeamMachineSeeder::class, false);
         $this->call(QuestionSeeder::class, false);
         $this->call(AnswerSeeder::class, false);
+        $this->call(LevelSeeder::class, false);
 
     }
 }
