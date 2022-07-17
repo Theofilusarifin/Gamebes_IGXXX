@@ -49,59 +49,6 @@
         <nav class="navbar navbar-top navbar-expand navbar-dashboard navbar-dark ps-0 pe-2 pb-0">
             <div class="container-fluid px-0">
                 <div class="d-flex justify-content-between align-items-center w-100 ps-5" id="navbarSupportedContent">
-                    @php
-                    $season_now = App\Season::where('number',
-                    App\SeasonNow::first()->number)->first();
-                    @endphp
-
-                    {{-- Card Season --}}
-                    <div class="d-flex align-items-center card border-0 shadow px-3 mt-4">
-                        <div class="card-body d-flex align-items-center">
-                            <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
-                                Sisa Waktu Musim {{ $season_now->name }} :
-                            </p>
-
-                            <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
-                            <script>
-                                CountDownTimer('countdown_season');
-                                        function CountDownTimer(id)
-                                        {
-                                            if('{{$season_now->end_time}}' != ''){
-                                                var end = new Date('{{$season_now->end_time}}');
-                                                var _second = 1000;
-                                                var _minute = _second * 60;
-                                                var _hour = _minute * 60;
-                                                var timer;
-                                                function showRemaining() {
-                                                    var now = new Date();
-                                                    var distance = end - now;
-                                                    if (distance < 0) {
-                                                        document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
-                                                        return;
-                                                    }
-                                                    var minutes = Math.floor((distance % _hour) / _minute);
-                                                    var seconds = Math.floor((distance % _minute) / _second);
-        
-                                                    if (seconds < 10){
-                                                        seconds = "0"+seconds;
-                                                    }
-        
-                                                    if (minutes < 10){
-                                                        minutes = "0"+minutes;
-                                                    }
-        
-                                                    document.getElementById(id).innerHTML = minutes + ':';
-                                                    document.getElementById(id).innerHTML += seconds;
-                                                }
-                                                timer = setInterval(showRemaining, 1000);
-                                            }
-                                            else{
-                                                document.getElementById(id).innerHTML = "Game Besar Belum Dimulai";
-                                            }
-                                        }
-                            </script>
-                        </div>
-                    </div>
                     <!-- Navbar links -->
                     <div class="align-items-center">
                         <ul class="align-items-center navbar-nav w-100">
