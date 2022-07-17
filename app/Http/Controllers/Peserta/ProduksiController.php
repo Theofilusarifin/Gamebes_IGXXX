@@ -68,7 +68,7 @@ class ProduksiController extends Controller
 
     public function deleteMachine($machine_id, $team_id)
     {
-        DB::statement("DELETE FROM `team_machines` WHERE machine_id = ? AND season_sell = NULL AND team_id = ?", [$machine_id, $team_id]);
+        DB::statement("DELETE FROM `team_machines` WHERE machine_id = " . $machine_id . " AND season_sell IS NULL AND team_id = " . $team_id);
     }
 
     public function production(Request $request)
