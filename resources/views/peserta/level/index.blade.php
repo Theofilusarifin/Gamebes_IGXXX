@@ -20,7 +20,7 @@
     <div class="row my-5 ps-4">
         <div class="card border-light shadow-sm p-0 m-0">
             <div class="card-header border-bottom d-flex align-items-center">
-                <h2 class="fs-4 fw-bold mb-0">Level {{ Auth::user()->team->level }}</h2>
+                <h2 class="fs-4 fw-bold mb-0" id="team_level">Level {{ Auth::user()->team->level }}</h2>
             </div>
             <div class="card-body">
                 @include('peserta.layouts.alerts')
@@ -28,11 +28,20 @@
                     <div class="col-12 col-sm-12 col-xl-12 mt-1">
                         {{-- Logic BADGE --}}
                         @php($nama_syarat = ['Tingkat Efektifitas', 'Tingkat Higenis', 'Saldo Akhir', 'Limbah'])
-                        @for ($i = 1; $i <= 4; $i++) @php($class_badge='danger' ) @if ($i==1 && $team_level->
-                            syarat_1)@php($class_badge = 'success')
-                            @elseif ($i == 2 && $team_level->syarat_2)@php($class_badge = 'success')
-                            @elseif ($i == 3 && $team_level->syarat_3)@php($class_badge = 'success')
-                            @elseif ($i == 4 && $team_level->syarat_4)@php($class_badge = 'success')
+                        @php($success_count=0)
+                        @for ($i = 1; $i <= 4; $i++) @php($class_badge='danger' ) 
+                            @if ($i==1 && $team_level->syarat_1)
+                                @php($class_badge = 'success')
+                                @php($success_count+=1)
+                            @elseif ($i == 2 && $team_level->syarat_2)
+                                @php($class_badge = 'success')
+                                @php($success_count+=1)
+                            @elseif ($i == 3 && $team_level->syarat_3)
+                                @php($class_badge = 'success')
+                                @php($success_count+=1)
+                            @elseif ($i == 4 && $team_level->syarat_4)
+                                @php($class_badge = 'success')
+                                @php($success_count+=1)
                             @endif
                             <span class="badge bg-{{$class_badge}} p-1" style="width: 150px;"
                                 id="badge_syarat_{{$i}}">{{$nama_syarat[$i-1]}}</span>
@@ -45,9 +54,14 @@
                     <div class="col-12 col-sm-12 col-xl-12 d-flex justify-content-between">
                         <button class="btn btn-info" type="button" id="update_syarat" onclick="updateSyarat()">Update
                             Syarat</button>
+                        @if ($success_count == 4)
+                        <button class="btn btn-success" id="upgrade_level" type="button" onclick="upgradeLevel()">Upgrade
+                            Level</button>
+                        @else
                         <button disabled class="btn btn-success" id="upgrade_level" type="button"
                             onclick="upgradeLevel()">Upgrade
                             Level</button>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -60,6 +74,7 @@
 <script>
     function updateSyarat() {
             $('#update_syarat').attr('disabled', true);
+
             $.ajax({
                 type: 'POST',
                 url: "{{ route('peserta.level.update') }}",
@@ -135,6 +150,39 @@
                 '_token': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (data) {
+                    $('#team_level').html('Level '+data.team_level.pivot.level_id);
+
+                    // UPDATE BADGE SYARAT 1
+                    var class_1 = 'danger';
+                    if (data.team_level.syarat_1){
+                        class_1 = 'success';   
+                    }
+                    $('#badge_syarat_1').attr("class", 'badge bg-'+class_1+' p-1');
+                    
+                    // UPDATE BADGE SYARAT 2
+                    var class_2 = 'danger';
+                    if (data.team_level.syarat_2){
+                        class_2 = 'success';   
+                    }
+                    $('#badge_syarat_2').attr("class", 'badge bg-'+class_2+' p-1');
+
+                    // UPDATE BADGE SYARAT 3
+                    var class_3 = 'danger';
+                    if (data.team_level.syarat_3){
+                        class_3 = 'success';   
+                    }
+                    $('#badge_syarat_3').attr("class", 'badge bg-'+class_3+' p-1');
+                    
+                    // UPDATE BADGE SYARAT 4
+                    var class_4 = 'danger';
+                    if (data.team_level.syarat_4){
+                        class_4 = 'success';   
+                    }
+                    $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
+
+                    // UBAH GAMBAR
+
+                    //Tampilin Alert Message
                     if (data.status != ""){
                         $('#alert').hide();
                         $('#alert').show();
@@ -146,14 +194,14 @@
                         if (data.status == "success") {
                             $('#alert').removeClass("alert-danger");
                             $('#alert').addClass("alert-success");
+                            $('#upgrade_level').attr('disabled', true);
                         }
                         else if (data.status == "error") {
                             $('#alert').removeClass("alert-success");
                             $('#alert').addClass("alert-danger");
+                            $('#upgrade_level').attr('disabled', false);
                         }
                     }
-
-                    $('#upgrade_level').attr('disabled', false);
                 }
             });
         }

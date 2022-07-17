@@ -69,6 +69,7 @@ class DashboardController extends Controller
         }
         $arraySeason = array(1 => "Musim Panas", 2 => "Musim Hujan", 3 => "Musim Salju");
 
+        // dd($team_products);
         return view('peserta.dashboard.index', compact(
             'team',
             'team_ingridients',

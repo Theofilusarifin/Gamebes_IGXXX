@@ -99,6 +99,20 @@ class ProduksiController extends Controller
             ), 200);
         }
 
+        // Check apakah team sudah di perusahaan
+        if ($team->territory_id < 1000) {
+            $status = 'error';
+            $msg = 'Anda harus berada di perusahaan untuk melakukan produksi!';
+
+            return response()->json(
+                array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ),
+                200
+            );
+        }
+
         // Produksi Udang Kaleng
         if ($product->id == 1) {
             // Hitung banyaknya produksi dengan cara dibagi 4
@@ -511,7 +525,7 @@ class ProduksiController extends Controller
                 $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
                 $status = 'success';
-                $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi\n'.$trashMsg;
+                $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi\n' . $trashMsg;
             } else {
                 $status = 'error';
                 $msg = 'Semua produk yang dihasilkan cacat akibat defect mesin yang tinggi!';

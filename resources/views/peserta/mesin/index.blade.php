@@ -787,34 +787,36 @@
         'jenis_kombinasi': tipe,
       },
       success: function(data) {
-        // Ubah percentage
-        $("#efektivitas-percentage_"+tipe).html(0 + "%");
-        $("#kehigenisan-percentage_"+tipe).html(0 + "%");
-        // Ubah progress bar
-        $("#progress-kehigenisan-percentage_"+tipe).css("width",0 +"%");
-        $("#progress-efektivitas-percentage_"+tipe).css("width",0 +"%");
-        $("#progress-kehigenisan-percentage_"+tipe).attr("aria-valuenow",0);
-        $("#progress-efektivitas-percentage_"+tipe).attr("aria-valuenow",0);
+        if (data.status != "error"){
+          // Ubah percentage
+          $("#efektivitas-percentage_"+tipe).html(0 + "%");
+          $("#kehigenisan-percentage_"+tipe).html(0 + "%");
+          // Ubah progress bar
+          $("#progress-kehigenisan-percentage_"+tipe).css("width",0 +"%");
+          $("#progress-efektivitas-percentage_"+tipe).css("width",0 +"%");
+          $("#progress-kehigenisan-percentage_"+tipe).attr("aria-valuenow",0);
+          $("#progress-efektivitas-percentage_"+tipe).attr("aria-valuenow",0);
 
-        //Balikin comboboxnya
-        if(tipe == "udang")
-        {
-          $("udang_1").html("<option selected disabled>-- Lakukan Edit --</option>");
-          for (let index = 2; index <= 10; index++) {
-            $("#udang_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
+          //Balikin comboboxnya
+          if(tipe == "udang")
+          {
+            $("udang_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+            for (let index = 2; index <= 10; index++) {
+              $("#udang_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
+            }
+          }else if(tipe == "kitosan"){
+            $("#kitosan_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+            for (let index = 2; index <= 3; index++) {
+              $("#kitosan_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
+            }
+          }else if(tipe == "saus"){
+            $("#saus_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+            $("#saus_2").html("<option selected disabled>-- Pilih Mesin 1 --</option>");
+          }else if (tipe == "ac"){
+            $("#ac_1").html("<option selected disabled>-- Lakukan Edit --</option>");
+          }else if (tipe == "filter"){
+            $("#filter_1").html("<option selected disabled>-- Lakukan Edit --</option>");
           }
-        }else if(tipe == "kitosan"){
-          $("#kitosan_1").html("<option selected disabled>-- Lakukan Edit --</option>");
-          for (let index = 2; index <= 3; index++) {
-            $("#kitosan_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
-          }
-        }else if(tipe == "saus"){
-          $("#saus_1").html("<option selected disabled>-- Lakukan Edit --</option>");
-          $("#saus_2").html("<option selected disabled>-- Pilih Mesin 1 --</option>");
-        }else if (tipe == "ac"){
-          $("#ac_1").html("<option selected disabled>-- Lakukan Edit --</option>");
-        }else if (tipe == "filter"){
-          $("#filter_1").html("<option selected disabled>-- Lakukan Edit --</option>");
         }
 
         //Message
@@ -902,30 +904,32 @@
         'tipe': tipe,
       },
       success: function(data) {
-        var efektivitas = 0;
-        var kehigenisan = 0;
-        // Logic disini
-        // Untuk Udang
-        if (tipe == "udang"){
-          if (data.machine_combination_udang != null){
-            efektivitas = data.machine_combination_udang.effectivity;
-            kehigenisan = data.machine_combination_udang.higenity;
+        if (data.status != "error"){
+          var efektivitas = 0;
+          var kehigenisan = 0;
+          // Logic disini
+          // Untuk Udang
+          if (tipe == "udang"){
+            if (data.machine_combination_udang != null){
+              efektivitas = data.machine_combination_udang.effectivity;
+              kehigenisan = data.machine_combination_udang.higenity;
+            }
           }
-        }
 
-        // Untuk Kitosan
-        if (tipe == "kitosan"){
-          if (data.machine_combination_kitosan != null){
-            efektivitas = data.machine_combination_kitosan.effectivity;
-            kehigenisan = data.machine_combination_kitosan.higenity;
+          // Untuk Kitosan
+          if (tipe == "kitosan"){
+            if (data.machine_combination_kitosan != null){
+              efektivitas = data.machine_combination_kitosan.effectivity;
+              kehigenisan = data.machine_combination_kitosan.higenity;
+            }
           }
-        }
 
-        // Untuk Saus
-        if (tipe == "saus"){
-          if (data.machine_combination_saus != null){
-            efektivitas = data.machine_combination_saus.effectivity;
-            kehigenisan = data.machine_combination_saus.higenity;
+          // Untuk Saus
+          if (tipe == "saus"){
+            if (data.machine_combination_saus != null){
+              efektivitas = data.machine_combination_saus.effectivity;
+              kehigenisan = data.machine_combination_saus.higenity;
+            }
           }
         }
         // Ubah percentage

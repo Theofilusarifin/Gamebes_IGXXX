@@ -644,8 +644,6 @@
                     }
                     tableDataRight += `</tr>`;
                 });
-                console.log(tableDataRight);
-
                 $("#mainTableRight").html(tableDataRight);
                 // END TABLE RIGHT
 
@@ -729,6 +727,8 @@
 
     function action() {
         $('.btn-control-action').attr('disabled', true);
+        $('#buy_section').html('');
+        $('#nama_item').html('');
         
         // Ambil current capacity
         var current_capacity = $("#capacity").text() * 1;

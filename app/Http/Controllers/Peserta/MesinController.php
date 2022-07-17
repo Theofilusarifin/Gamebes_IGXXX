@@ -21,6 +21,15 @@ class MesinController extends Controller
         }
     }
 
+    public function teamInCompany($team)
+    {
+        // Check apakah team sudah di perusahaan
+        if ($team->territory_id < 1000) {
+            return false;
+        }
+        return true;
+    }
+
     public function index()
     {
         //Declare
@@ -164,6 +173,16 @@ class MesinController extends Controller
             $team_machine->save();
         }
 
+        // Check apakah team sudah di perusahaan
+        if (!$this->teamInCompany($team)) {
+            $status = "error";
+            $msg = 'Anda harus berada di perusahaan untuk melakukan susun mesin!';
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
         //Cek Jasa pembersih
         if ($season_now == 2 && $team->service_id == null) {
             $status = "error";
@@ -244,6 +263,16 @@ class MesinController extends Controller
         foreach ($team_machines as $team_machine) {
             $team_machine->selected = 0;
             $team_machine->save();
+        }
+
+        // Check apakah team sudah di perusahaan
+        if (!$this->teamInCompany($team)) {
+            $status = "error";
+            $msg = 'Anda harus berada di perusahaan untuk melakukan susun mesin!';
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
         }
 
         //Cek Jasa pembersih
@@ -424,6 +453,16 @@ class MesinController extends Controller
         $team_machine = TeamMachine::find($request['team_machine_id']); //Ngambil mesin yang mau dijual
         $team_machine_useds = TeamMachine::where('is_used', 1)->where('season_sell', null)->get('id'); //Ambil semua mesin yang is_usednya 1
 
+        // Check apakah team sudah di perusahaan
+        if (!$this->teamInCompany($team)) {
+            $status = "error";
+            $msg = 'Anda harus berada di perusahaan untuk melakukan jual mesin!';
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
         //Cek mesin apakah ada yang season_sell / pernah terjual atau tidak
         if ($team_machine->season_sell != null) {
             $status = 'error';
@@ -508,6 +547,16 @@ class MesinController extends Controller
         $msg = "";
         $status = "";
         //Ambil mesin kombinasi tim saat ini
+
+        // Check apakah team sudah di perusahaan
+        if (!$this->teamInCompany($team)) {
+            $status = "error";
+            $msg = 'Anda harus berada di perusahaan untuk melakukan reset susunan mesin!';
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
 
         //Ambil data dari request
         $jenis_kombinasi = $request['jenis_kombinasi']; //Isinya kitosan, udang, saus, ac, filter

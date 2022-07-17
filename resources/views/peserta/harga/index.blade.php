@@ -86,7 +86,7 @@
                                 @foreach ($machines as $machine)
                                 <tr>
                                     <td class="fw-bolder text-gray-500">
-                                        <img src="{{ asset('/assets/img/icons/ingridients/Garam.png') }}" alt="">
+                                        <img src="{{ asset('/assets/img/icons/machines/'.$machine->name.'.png') }}" alt="">
                                     </td>
                                     <td class="fw-bolder text-gray-500">{{ $machine->name }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $machine->price }} TC</td>
@@ -165,7 +165,7 @@
                                 @foreach ($transports as $transport)
                                 <tr>
                                     <td class="fw-bolder text-gray-500">
-                                        <img src="{{ asset('/assets/img/icons/ingridients/Garam.png') }}" alt="">
+                                        <img src="{{ asset('/assets/img/icons/transports/'.$transport->name.'.png') }}" alt="">
                                     </td>
                                     <td class="fw-bolder text-gray-500">{{ $transport->name }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $transport->price }} TC</td>
@@ -204,7 +204,7 @@
                             @if ($services != null)
                             <tr>
                                 <td class="fw-bolder text-gray-500">
-                                    <img src="{{ asset('/assets/img/icons/ingridients/Garam.png') }}" alt="">
+                                    <img src="{{ asset('/assets/img/icons/services/Jasa Pembersih.png') }}" alt="">
                                 </td>
                                 <td class="fw-bolder text-gray-500">Jasa Pembersih</td>
                                 <td class="fw-bolder text-gray-500">{{ $services->price }} TC</td>

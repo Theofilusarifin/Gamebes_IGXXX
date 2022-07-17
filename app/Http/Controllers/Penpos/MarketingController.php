@@ -100,9 +100,9 @@ class MarketingController extends Controller
         }
 
         // Check apakah team sudah di perusahaan
-        if ($team->territory_id >= 1000) {
+        if ($team->territory_id < 1000) {
             $status = 'error';
-            $msg = 'Team harus berada di perusahaan untuk melakukan marketing!';
+            $msg = 'Anda harus berada di perusahaan untuk melakukan marketing!';
 
             return response()->json(
                 array(

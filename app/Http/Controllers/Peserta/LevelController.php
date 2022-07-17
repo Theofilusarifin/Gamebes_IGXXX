@@ -269,5 +269,12 @@ class LevelController extends Controller
             $status = 'error';
             $msg = 'Syarat belum terpenuhi untuk mencapai level ' . ($team->level + 1) . '!';
         }
+
+
+        return response()->json(array(
+            'team_level' => $team_level,
+            'status' => $status,
+            'msg' => $msg,
+        ), 200);
     }
 }
