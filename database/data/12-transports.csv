@@ -1,4 +1,4 @@
-id;name;price;capacity
-1;OASIS;100;50
-2;COASTA;250;80
-3;THALA;500;120
+id;name;price;capacity;max_weight
+1;OASIS;100;20;50
+2;COASTA;250;50;80
+3;THALA;500;100;120

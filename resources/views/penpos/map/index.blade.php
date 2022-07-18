@@ -690,16 +690,12 @@
         $('#nama_store').html("Nama Toko");
         $('#buy_section').html('');
 
-        // Ambil current capacity
-        var current_capacity = $("#capacity").text() * 1;
-
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.map.move') }}",
             data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'arah': arah,
-                    'current_capacity': current_capacity,
                     'team_id': $('#team_id').val(),
                 },
             success: function (data) {
@@ -729,9 +725,6 @@
         $('.btn-control-action').attr('disabled', true);
         $('#buy_section').html('');
         $('#nama_item').html('');
-        
-        // Ambil current capacity
-        var current_capacity = $("#capacity").text() * 1;
 
         $.ajax({
             type: 'POST',
@@ -739,7 +732,6 @@
             data:{
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                     'team_id': $('#team_id').val(),
-                    'current_capacity': current_capacity,
                 },
             success: function (data) {
                 if(data.response == 'error') {
@@ -814,9 +806,81 @@
         });
     }
 
+    function refreshAction() {
+        $('.btn-control-action').attr('disabled', true);
+        $('#buy_section').html('');
+        $('#nama_item').html('');
+
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.map.action') }}",
+            data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'team_id': $('#team_id').val(),
+                },
+            success: function (data) {
+                if(data.response == 'error') {
+                    $('.btn-control-action').attr('disabled', false);
+                }
+
+                if (data.status != ""){
+                    if (data.status == "success") {
+
+                        $('#nama_store').html("Toko " + data.store.name);
+
+                        if (data.store.name == 'Jasa Pembersih'){
+                            $('#nama_item').attr('disabled', false);
+                            $option_item = "";
+                            $option_item +=
+                            `<option value=" ${data.store.id} ">
+                                ${data.store.name} - (${data.store.stock})
+                            </option>`
+                            $('#nama_item').append($option_item);
+                            $('#buy_section').html(`
+                            <input class="form-control" type="hidden" id='banyak_item' value="1">
+                            <div class="col-12 d-flex justify-content-end">
+                                <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item"
+                                    onclick="buy${data.type}('${data.store.id}')">
+                                    Buy
+                                </button>
+                            </div>`
+                            );
+                        }
+                        else{
+                            $option_item = "";
+                            if (data.store_items != null){
+                                $('#nama_item').attr('disabled', false);
+                                $.each(data.store_items, (key, store_item) => {
+                                    $option_item += 
+                                    `<option value=" ${store_item.id} ">
+                                        ${store_item.name} - (${store_item.pivot.stock})
+                                    </option>`
+                                });
+                                $('#nama_item').append($option_item);
+                                $('#buy_section').html(`
+                                    <div class="col-9">
+                                        <div class="form-group">
+                                            <input class="form-control" type="number" min=0 placeholder="-- Banyak Barang --" id='banyak_item' required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <button type="button" class="btn btn-icon btn-success" style="color:white" id="btn_buy_item" onclick="buy${data.type}('${data.store.id}')">
+                                            Buy
+                                        </button>
+                                    </div>`
+                                );
+                            }
+                        }
+                    }
+                    else if (data.status == "error") {
+                        $('.btn-control-action').attr('disabled', false);
+                    }
+                }
+            }
+        });
+    }
+
     function buyTransport(store_id) {
-        // Ambil current capacity
-        var current_capacity = $("#capacity").text() * 1;
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.map.buy.transport') }}",
@@ -826,11 +890,8 @@
                     'item_id': $('#nama_item').val(),
                     'store_id': store_id,
                     'banyak_item': $('#banyak_item').val(),
-                    'current_capacity': current_capacity,
                 },
             success: function (data) {
-                // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
-                getCapacity();
                 if (data.status != ""){
                     $('#alert').hide();
                     $('#alert').show();
@@ -842,6 +903,7 @@
                     if (data.status == "success") {
                         $('#alert').removeClass("alert-danger");
                         $('#alert').addClass("alert-success");
+                        refreshAction();
                     } 
                     else if (data.status == "error") {
                         $('#alert').removeClass("alert-success");
@@ -853,8 +915,6 @@
     }
 
     function buyIngridient(store_id) {
-        // Ambil current capacity
-        var current_capacity = $("#capacity").text() * 1;
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.map.buy.ingridient') }}",
@@ -864,7 +924,6 @@
                     'item_id': $('#nama_item').val(),
                     'store_id': store_id,
                     'banyak_item': $('#banyak_item').val(),
-                    'current_capacity': current_capacity,
                 },
             success: function (data) {
                 // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
@@ -880,6 +939,7 @@
                     if (data.status == "success") {
                         $('#alert').removeClass("alert-danger");
                         $('#alert').addClass("alert-success");
+                        refreshAction();
                     } 
                     else if (data.status == "error") {
                         $('#alert').removeClass("alert-success");
@@ -891,8 +951,6 @@
     }
 
     function buyMachine(store_id) {
-        // Ambil current capacity
-        var current_capacity = $("#capacity").text() * 1;
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.map.buy.machine') }}",
@@ -902,7 +960,6 @@
                     'item_id': $('#nama_item').val(),
                     'store_id': store_id,
                     'banyak_item': $('#banyak_item').val(),
-                    'current_capacity': current_capacity,
                 },
             success: function (data) {
                 // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
@@ -918,6 +975,7 @@
                     if (data.status == "success") {
                         $('#alert').removeClass("alert-danger");
                         $('#alert').addClass("alert-success");
+                        refreshAction();
                     } 
                     else if (data.status == "error") {
                         $('#alert').removeClass("alert-success");
@@ -929,8 +987,6 @@
     }
 
     function buyService(store_id) {
-        // Ambil current capacity
-        var current_capacity = $("#capacity").text() * 1;
         $.ajax({
             type: 'POST',
             url: "{{ route('penpos.map.buy.service') }}",
@@ -940,11 +996,8 @@
                     'item_id': $('#nama_item').val(),
                     'store_id': store_id,
                     'banyak_item': $('#banyak_item').val(),
-                    'current_capacity': current_capacity,
                 },
             success: function (data) {
-                // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
-                getCapacity();
                 if (data.status != ""){
                     $('#alert').hide();
                     $('#alert').show();
@@ -956,6 +1009,7 @@
                     if (data.status == "success") {
                         $('#alert').removeClass("alert-danger");
                         $('#alert').addClass("alert-success");
+                        refreshAction();
                     } 
                     else if (data.status == "error") {
                         $('#alert').removeClass("alert-success");

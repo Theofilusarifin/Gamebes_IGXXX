@@ -1,18 +1,18 @@
-id;name;price_var;price;defect
-1;Vacuum;20;75;0
-2;Filter Air;42;155;0
-3;Steamer;35;125;0
-4;Air Conditioner;15;75;0
-5;Washer;35;100;0
-6;Head Pealer;40;150;0
-7;Skin Pealer;40;150;0
-8;Sealer;38;100;0
-9;Packaging;64;200;0
-10;Shrimp Input;26;75;0
-11;Mixer;25;100;0
-12;Blender;22;100;0
-13;UV Machine;35;200;0
-14;Logam Detector;32;200;0
-15;Reactor;42;200;0
-16;Dryer;22;100;0
-17;Crusher;26;100;0
+id;name;price_var;price;defect;weight
+1;Vacuum;20;75;0;8
+2;Filter Air;42;155;0;15
+3;Steamer;35;125;0;7
+4;Air Conditioner;15;75;0;3
+5;Washer;35;100;0;10
+6;Head Pealer;40;150;0;12
+7;Skin Pealer;40;150;0;9
+8;Sealer;38;100;0;15
+9;Packaging;64;200;0;13
+10;Shrimp Input;26;75;0;16
+11;Mixer;25;100;0;14
+12;Blender;22;100;0;5
+13;UV Machine;35;200;0;10
+14;Logam Detector;32;200;0;6
+15;Reactor;42;200;0;14
+16;Dryer;22;100;0;18
+17;Crusher;26;100;0;7

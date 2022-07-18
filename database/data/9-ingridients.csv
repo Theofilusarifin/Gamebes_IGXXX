@@ -1,13 +1,13 @@
-id;name
-1;Udang Vaname
-2;Udang Pama
-3;Udang Jerbung
-4;Tomat
-5;Air Mineral
-6;Garam
-7;Gula
-8;MSG
-9;NaOH
-10;HCl
-11;Kepala Udang
-12;Kulit Udang
+id;name;weight
+1;Udang Vaname;1.2
+2;Udang Pama;1.2
+3;Udang Jerbung;1.2
+4;Tomat;1.2
+5;Air Mineral;1.1
+6;Garam;0.4
+7;Gula;0.2
+8;MSG;0.4
+9;NaOH;0.2
+10;HCl;0.2
+11;Kepala Udang;0
+12;Kulit Udang;0

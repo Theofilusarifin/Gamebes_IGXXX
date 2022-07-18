@@ -18,6 +18,7 @@ class CreateTransportsTable extends Migration
             $table->string('name');
             $table->double('price');
             $table->integer('capacity');
+            $table->double('max_weight');
         });
     }
 
