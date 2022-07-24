@@ -391,15 +391,15 @@ class MesinController extends Controller
             // dd($combination_found);
             // Apabila terdapat persis satu kombinasi yang cocok maka foundnya true
             $found = (count($combination_found) >= 1) ? true : false;
-            
+
             // Kombinasi ada
             if ($found) {
                 // Hapus kombinasi kecuali kombinasi kitosan  dan saus tomat
-
+                
                 // Ambil Kombinasi
                 if (count($combination_found) > 1) {
                     //Ini set di team_machine_combination
-                    $combination = MachineCombination::find($combination_found[0]);
+                    $combination = MachineCombination::find(reset($combination_found));
                     $team->machineCombinations()->attach($combination->id);
                 } else {
                     //Ini set di team_machine_combination
