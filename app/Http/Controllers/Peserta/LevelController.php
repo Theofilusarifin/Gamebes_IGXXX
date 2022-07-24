@@ -37,7 +37,6 @@ class LevelController extends Controller
 
         //Deklarasi teamnya
         $team = Auth::user()->team;
-        dd($team);
 
         if ($team->level >= 3) {
             $level_id = $team->level;
@@ -107,11 +106,11 @@ class LevelController extends Controller
 
             // CHECK SYARAT 3 -> TIGGIE COIN
             if ($team->tc >= 1000) {
-                // dd("dar");
+                
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 1]], false);
-                // dd($team_level);
+                
             } else {
-                // dd("dor");
+                
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 0]], false);
             }
 
