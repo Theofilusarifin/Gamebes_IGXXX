@@ -62,10 +62,10 @@
                         <div class="col-5">
                             <label class="my-1 me-2" for="nilai_maintenance">Persentase Maintenance (%)</label>
                             <select class="form-select" id="nilai_maintenance">
-                                <option value="25">25%</option>
-                                <option value="50">50%</option>
-                                <option value="75">75%</option>
-                                <option value="100">100%</option>
+                                <option value="25">+25%</option>
+                                <option value="50">+50%</option>
+                                <option value="75">+75%</option>
+                                <option value="100">+100%</option>
                             </select>
                         </div>
                     </div>
