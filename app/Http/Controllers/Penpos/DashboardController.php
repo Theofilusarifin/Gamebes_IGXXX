@@ -79,6 +79,11 @@ class DashboardController extends Controller
 
         $status = 'success';
         $msg = 'Season ' . SeasonNow::first()->name . ' telah dimulai!';
+        
+        // Tambahi keterangan mesin sealer rusak
+        if ($seasonNow->number == 2) {
+            $msg += " Seluruh mesin sealer telah rusak!";
+        }
 
         if ($response != 'error') event(new UpdateSeason($msg));
         return response()->json(array(
