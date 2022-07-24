@@ -904,9 +904,9 @@
         'tipe': tipe,
       },
       success: function(data) {
+        var efektivitas = 0;
+        var kehigenisan = 0;
         if (data.status != "error"){
-          var efektivitas = 0;
-          var kehigenisan = 0;
           // Logic disini
           // Untuk Udang
           if (tipe == "udang"){
@@ -932,6 +932,7 @@
             }
           }
         }
+        
         // Ubah percentage
         $("#efektivitas-percentage_"+tipe).html(efektivitas + "%");
         $("#kehigenisan-percentage_"+tipe).html(kehigenisan + "%");
