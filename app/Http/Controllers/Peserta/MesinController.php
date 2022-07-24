@@ -391,6 +391,7 @@ class MesinController extends Controller
             // dd($combination_found);
             // Apabila terdapat persis satu kombinasi yang cocok maka foundnya true
             $found = (count($combination_found) >= 1) ? true : false;
+            
             // Kombinasi ada
             if ($found) {
                 // Hapus kombinasi kecuali kombinasi kitosan  dan saus tomat
