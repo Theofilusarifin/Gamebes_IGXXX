@@ -20,6 +20,7 @@ class CreateMachinesTable extends Migration
             $table->double('price');
             $table->double('defect');
             $table->double('weight');
+            $table->string('description');
         });
     }
 
