@@ -44,7 +44,7 @@ class MaintenanceController extends Controller
         $msg = '';
         $status = '';
 
-        if($team->territory_id >= 1000){
+        if($team->territory_id < 1000){
             $status = 'error';
             $msg = 'Team harus berada di perusahaan untuk melakukan maintenance!';
 
