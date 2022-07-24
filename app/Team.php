@@ -57,7 +57,7 @@ class Team extends Model
 
     public function machineCombinations()
     {
-        return $this->belongsToMany(machineCombination::class, 'team_machine_combination', 'team_id', 'machine_combination_id');
+        return $this->belongsToMany(MachineCombination::class, 'team_machine_combination', 'team_id', 'machine_combination_id');
     }
 
     public function questions()
