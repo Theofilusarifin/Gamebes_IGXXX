@@ -106,7 +106,7 @@
                     // UPDATE BADGE SYARAT 4
                     var class_4 = 'danger';
                     if (data.team_level.syarat_4){
-                        class_4 = 'success';   
+                        class_4 = 'success';
                     }
                     $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
 
@@ -176,12 +176,15 @@
                     // UPDATE BADGE SYARAT 4
                     var class_4 = 'danger';
                     if (data.team_level.syarat_4){
-                        class_4 = 'success';   
+                        class_4 = 'success';
                     }
                     $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
 
                     // UBAH GAMBAR
 
+                    // Matikan button upgrade level
+
+                    
                     //Tampilin Alert Message
                     if (data.status != ""){
                         $('#alert').hide();
