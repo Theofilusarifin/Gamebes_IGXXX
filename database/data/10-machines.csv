@@ -1,6 +1,6 @@
-id;name;price_var;price;defect;weight
+id;name;price_var;price;defect;weight;description
 1;Vacuum;20;75;0;8
-2;Filter Air;42;155;0;15
+2;Filter Air;42;155;0;15;
 3;Steamer;35;125;0;7
 4;Air Conditioner;15;75;0;3
 5;Washer;35;100;0;10
