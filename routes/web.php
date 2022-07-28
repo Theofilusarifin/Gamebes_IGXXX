@@ -74,6 +74,9 @@ Route::group(
         Route::get('/inventory', 'Peserta\InventoryController@index')->name('inventory'); // -> /peserta/inventory
         Route::post('/inventory/ingridient-expired', 'Peserta\InventoryController@ingridientExpired')->name('inventory.expired');
 
+        // Deskripsi Mesin --> 
+        Route::get('/deskripsi', 'Peserta\DescriptionController@index')->name('deskripsi'); // -> /peserta/deskripsi
+
         // Mesin --> 
         Route::get('/mesin', 'Peserta\MesinController@index')->name('mesin'); // -> /peserta/mesin
         Route::post('/mespin/mesin-available', 'Peserta\MesinController@getAvailableMachine')->name('mesin.get');

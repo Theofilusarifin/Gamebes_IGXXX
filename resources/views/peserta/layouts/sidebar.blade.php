@@ -55,6 +55,15 @@
                     <span class="sidebar-text">Inventory</span>
                 </a>
             </li>
+            {{-- Deskripsi Mesin --}}
+            <li class="nav-item {{ request()->is('peserta/deskripsi') ? ' active' : '' }}">
+                <a href="{{ route("peserta.deskripsi") }}" class="nav-link">
+                    <i data-feather='book-open' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Deskripsi Mesin</span>
+                </a>
+            </li>
             {{-- Mesin --}}
             <li class="nav-item {{ request()->is('peserta/mesin') ? ' active' : '' }}">
                 <a href="{{ route("peserta.mesin") }}" class="nav-link">

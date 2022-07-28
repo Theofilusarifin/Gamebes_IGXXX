@@ -29,33 +29,34 @@
                         {{-- Logic BADGE --}}
                         @php($nama_syarat = ['Tingkat Efektifitas', 'Tingkat Higenis', 'Saldo Akhir', 'Limbah'])
                         @php($success_count=0)
-                        @for ($i = 1; $i <= 4; $i++) @php($class_badge='danger' ) 
-                            @if ($i==1 && $team_level->syarat_1)
-                                @php($class_badge = 'success')
-                                @php($success_count+=1)
+                        @for ($i = 1; $i <= 4; $i++) @php($class_badge='danger' ) @if ($i==1 && $team_level->syarat_1)
+                            @php($class_badge = 'success')
+                            @php($success_count+=1)
                             @elseif ($i == 2 && $team_level->syarat_2)
-                                @php($class_badge = 'success')
-                                @php($success_count+=1)
+                            @php($class_badge = 'success')
+                            @php($success_count+=1)
                             @elseif ($i == 3 && $team_level->syarat_3)
-                                @php($class_badge = 'success')
-                                @php($success_count+=1)
+                            @php($class_badge = 'success')
+                            @php($success_count+=1)
                             @elseif ($i == 4 && $team_level->syarat_4)
-                                @php($class_badge = 'success')
-                                @php($success_count+=1)
+                            @php($class_badge = 'success')
+                            @php($success_count+=1)
                             @endif
                             <span class="badge bg-{{$class_badge}} p-1" style="width: 150px;"
                                 id="badge_syarat_{{$i}}">{{$nama_syarat[$i-1]}}</span>
                             @endfor
                     </div>
                     <div class="col-12 col-sm-12 col-xl-12 my-4">
-                        <img style="object-fit: fill;" src="{{ asset('/assets/img/background/map_background.png')}}"
-                            alt="">
+                        <img style="object-fit: fill;"
+                            src="{{ asset('/assets/img/level/'.Auth::user()->team->level.'/'.$success_count.'.png')}}"
+                            alt="" id="gambar_level">
                     </div>
                     <div class="col-12 col-sm-12 col-xl-12 d-flex justify-content-between">
                         <button class="btn btn-info" type="button" id="update_syarat" onclick="updateSyarat()">Update
                             Syarat</button>
                         @if ($success_count == 4)
-                        <button class="btn btn-success" id="upgrade_level" type="button" onclick="upgradeLevel()">Upgrade
+                        <button class="btn btn-success" id="upgrade_level" type="button"
+                            onclick="upgradeLevel()">Upgrade
                             Level</button>
                         @else
                         <button disabled class="btn btn-success" id="upgrade_level" type="button"
@@ -82,6 +83,10 @@
                     '_token': $('meta[name="csrf-token"]').attr('content'),
                 },
                 success: function (data) {
+                    // UBAH GAMBAR
+                    var success_count = data.team_level.syarat_1 + data.team_level.syarat_2 + data.team_level.syarat_3 + data.team_level.syarat_4
+                    $('#gambar_level').attr("src",'/assets/img/level/'+ data.team.level +'/'+success_count+'.png');
+                    
                     // UPDATE BADGE SYARAT 1
                     var class_1 = 'danger';
                     if (data.team_level.syarat_1){
@@ -110,8 +115,7 @@
                     }
                     $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
 
-                    // UBAH GAMBAR
-                    
+
                     //Tampilin Alert Message
                     if (data.status != ""){
                         $('#alert').hide();
@@ -148,9 +152,12 @@
                 url: "{{ route('peserta.level.upgrade') }}",
                 data:{
                 '_token': $('meta[name="csrf-token"]').attr('content'),
-                },
-                success: function (data) {
-                    $('#team_level').html('Level '+data.team_level.pivot.level_id);
+            },
+            success: function (data) {
+                $('#team_level').html('Level '+data.team_level.pivot.level_id);
+                
+                // UBAH GAMBAR
+                $('#gambar_level').attr("src",'/assets/img/level/'+ data.team.level +'/0.png');
 
                     // UPDATE BADGE SYARAT 1
                     var class_1 = 'danger';
@@ -180,10 +187,9 @@
                     }
                     $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
 
-                    // UBAH GAMBAR
 
                     // Matikan button upgrade level
-
+                    $('#upgrade_level').attr('disabled', true);   
                     
                     //Tampilin Alert Message
                     if (data.status != ""){

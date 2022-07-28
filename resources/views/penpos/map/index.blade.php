@@ -329,8 +329,7 @@
     <div class="col-3" id="col_controller">
         <div class="card card-body border-0 shadow mt-4 me-5" style="background-color:#1f2937;">
             <div class="card-body">
-                {{-- Alert --}}
-                @include('penpos.layouts.alerts')
+
                 {{-- Team --}}
                 <p class="text-white">Nama Team</p>
 
@@ -418,12 +417,15 @@
                 </div>
 
                 {{-- Button Back To Company --}}
-                <div class="d-flex flex-row-reverse mt-4">
+                <div class="d-flex flex-row-reverse mt-4 mb-4">
                     <button type="button" class="btn btn-icon btn-info" id="reset_capacity"
                         style="width: 48px; height:48px;" onclick="backToCompany()">
                         <i data-feather='home' style="width: 18px; height:18px;"></i>
                     </button>
                 </div>
+
+                {{-- Alert --}}
+                @include('penpos.layouts.alerts')
 
                 {{-- Team --}}
                 <p class="text-white mt-4" id="nama_store">Nama Store</p>

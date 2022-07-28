@@ -106,11 +106,10 @@ class LevelController extends Controller
 
             // CHECK SYARAT 3 -> TIGGIE COIN
             if ($team->tc >= 1000) {
-                
+
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 1]], false);
-                
             } else {
-                
+
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 0]], false);
             }
 
@@ -225,6 +224,7 @@ class LevelController extends Controller
 
         return response()->json(array(
             'team_level' => $team_level,
+            'team' => $team,
             'status' => $status,
             'msg' => $msg,
         ), 200);
@@ -272,6 +272,7 @@ class LevelController extends Controller
 
         return response()->json(array(
             'team_level' => $team_level,
+            'team' => $team,
             'status' => $status,
             'msg' => $msg,
         ), 200);

@@ -1,18 +1,18 @@
-id;name;price_var;price;defect;weight;description
-1;Vacuum;20;75;0;8
-2;Filter Air;42;155;0;15;
-3;Steamer;35;125;0;7
-4;Air Conditioner;15;75;0;3
-5;Washer;35;100;0;10
-6;Head Pealer;40;150;0;12
-7;Skin Pealer;40;150;0;9
-8;Sealer;38;100;0;15
-9;Packaging;64;200;0;13
-10;Shrimp Input;26;75;0;16
-11;Mixer;25;100;0;14
-12;Blender;22;100;0;5
-13;UV Machine;35;200;0;10
-14;Logam Detector;32;200;0;6
-15;Reactor;42;200;0;14
-16;Dryer;22;100;0;18
-17;Crusher;26;100;0;7
+"id";"name";"price_var";"price";"defect";"weight";"description"
+1;"Vacuum";20;75;0;8;"Mesin ini digunakan untuk mengurangi kadar udara dari dalam kaleng udang"
+2;"Filter Air";42;155;0;15;"Mesin ini digunakan untuk memfiltrasi air yang kotor agar dapat di gunakan kembali"
+3;"Steamer";35;125;0;7;"Mesin ini digunakan untuk mematangkan udang dan membunuh bakteri penyebab kerusakan produk"
+4;"Air Conditioner";15;75;0;3;"Mesin ini digunakan untuk menjaga suhu mesin produksi lainnya agar tidak overheat"
+5;"Washer";35;100;0;10;"Mesin ini digunakan untuk mencuci udang agar terhindar dari kotoran"
+6;"Head Pealer";40;150;0;12;"Mesin ini digunakan untuk memisahkan kepala udang dari udang utuh, agar kepala tidak dibuang dan dapat dimanfaatkan"
+7;"Skin Pealer";40;150;0;9;"Mesin ini digunakan untuk memisahkan kulit udang dari udang utuh, agar kulit tidak dibuang dan dapat dimanfaatkan"
+8;"Sealer";38;100;0;15;"Mesin ini digunakan untuk menseal atau mengunci kaleng udang agar udang tidak tumpah"
+9;"Packaging";64;200;0;13;"Mesin ini digunakan untuk mengemas udang agar siap dikirimkan ke seluruh negara"
+10;"Shrimp Input";26;75;0;16;"Mesin ini digunakan untuk memasukan udang mentah kedalam kaleng"
+11;"Mixer";25;100;0;14;"Mesin ini digunakam untuk mencampur bahan bahan"
+12;"Blender";22;100;0;5;"Mesin ini digunakan untuk menghaluskan bahan bahan"
+13;"UV Machine";35;200;0;10;"Mesin ini digunakan untuk mensterilkan udang kaleng"
+14;"Logam Detector";32;200;0;6;"Mesin ini digunakan untuk mendeteksi logam dalam produk udang kaleng"
+15;"Reactor";42;200;0;14;"Mesin ini digunakan untuk mereaksikan bahan-bahan"
+16;"Dryer";22;100;0;18;"Mesin ini digunakan untuk mengeringkan bahan basah"
+17;"Crusher";26;100;0;7;"Mesin ini digunakan untuk mengecilkan ukuran menjadi serbuk"

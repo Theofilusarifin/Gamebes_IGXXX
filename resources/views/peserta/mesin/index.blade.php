@@ -618,8 +618,9 @@
                   <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
                     {{$team_machine->performance}}
                   </td>
+                  @php($nama_season = ['Panas', 'Hujan', 'Salju'])
                   <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
-                    {{$team_machine->season_buy}}
+                    {{$nama_season[$team_machine->season_buy-1]}}
                   </td>
                   <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
                     <button class="btn btn-danger me-3" tipe="button" onclick="jual('{{$team_machine->id}}')">
