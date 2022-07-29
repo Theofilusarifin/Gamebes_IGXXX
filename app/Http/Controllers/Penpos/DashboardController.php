@@ -38,6 +38,11 @@ class DashboardController extends Controller
             $past_season = Season::where('number', $seasonNow->number)->first();
             if ($seasonNow->number == 1 && $past_season->updated == 0) {
                 $next_season = $past_season;
+                
+                // Tambahkan Ingridient
+                for ($i=1; $i <= 30 ; $i++) { 
+                    DB::statement("INSERT INTO `ingridient_team` (`expired_time`, `team_id`, `ingridient_id`, `amount_have`, `amount_use`, `total`) VALUES (DATE_ADD(STR_TO_DATE(now(), '%Y-%m-%d %H:%i:%s'), INTERVAL 10 MINUTE), ".$i.", '5', '5', NULL, NULL);");
+                }
             } else {
                 $next_season = Season::where('number', $seasonNow->number + 1)->first();
             }

@@ -1,13 +1,13 @@
-id;name;weight
-1;Udang Vaname;1.2
-2;Udang Pama;1.2
-3;Udang Jerbung;1.2
-4;Tomat;1.2
-5;Air Mineral;1.1
-6;Garam;0.4
-7;Gula;0.2
-8;MSG;0.4
-9;NaOH;0.2
-10;HCl;0.2
-11;Kepala Udang;0
-12;Kulit Udang;0
+id;name;packet;weight
+1;Udang Vaname;1 Kg;1.2
+2;Udang Pama;1 Kg;1.2
+3;Udang Jerbung;1 Kg;1.2
+4;Tomat;1 Kg;1.2
+5;Air Mineral;1 Liter;1.1
+6;Garam;3 Bungkus;0.4
+7;Gula;1 Bungkus;0.2
+8;MSG;3 Bungkus;0.4
+9;NaOH;1 Bungkus;0.2
+10;HCl;1 Bungkus;0.2
+11;Kepala Udang;"";0
+12;Kulit Udang;"";0

@@ -16,7 +16,7 @@ class CreateIngridientsTable extends Migration
         Schema::create('ingridients', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->integer('capacity')->default(0);
+            $table->string('packet');
             $table->double('weight');
         });
     }

@@ -450,8 +450,8 @@ class ProduksiController extends Controller
 
             // Waktu di Surabaya sekarang
             $start = date('Y-m-d H:i:s');
-            // Tambah 8 menit waktu di surabaya sekarang
-            $expired_time = date('Y-m-d H:i:s', strtotime('+8 minutes', strtotime($start)));
+            // Tambah 10 menit waktu di surabaya sekarang
+            $expired_time = date('Y-m-d H:i:s', strtotime('+10 minutes', strtotime($start)));
 
             //CEK MESIN HEAD/SKIN PEALER
 
