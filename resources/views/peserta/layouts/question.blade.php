@@ -70,7 +70,7 @@
                                                     var distance = end - now;
                                                     if (distance < 0) {
                                                         document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
-                                                        if('{{$season->number}}' == 3){
+                                                        if('{{$season_now->number}}' == 3){
                                                             document.getElementById('logout-form').submit();
                                                         }
                                                         return;
@@ -228,6 +228,25 @@
                     });
                 }
             })
+    </script>
+
+    <script>
+        $('body').bind('copy paste',function(e) {
+                    alert('This Feature is Disabled');
+                    e.preventDefault();
+                    return false; 
+                });
+                document.addEventListener('contextmenu', event => {
+                    event.preventDefault()
+                    alert('This Feature is Disabled');
+                    return false;
+                }); // Klik Kanan
+                document.onkeydown = function (e) {
+                    if(e.keyCode == 123) { alert('This Feature is Disabled'); return false; } // Key F12 -> Menu Application
+                    if(e.ctrlKey && e.shiftKey && e.keyCode == 73){ alert('This Feature is Disabled'); return false; } // Ctrl Shift i -> Menu Application
+                    if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { alert('This Feature is Disabled'); return false; } // Ctrl shift j -> Menu Console
+                    if(e.ctrlKey && e.keyCode == 85) { alert('This Feature is Disabled'); return false; } // Ctrl U -> View Page Source
+                }
     </script>
 
     <script src="../js/app.js"></script>

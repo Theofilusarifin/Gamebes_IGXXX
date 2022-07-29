@@ -67,10 +67,10 @@ class DashboardController extends Controller
                 DB::statement("UPDATE `seasons` SET start_time = '$now', end_time = '$season_end' , updated = 1 WHERE number = $next_season->number");
 
                 // Refresh Stock
-                DB::statement("UPDATE `services` SET stock = 2");
-                DB::statement("UPDATE `ingridient_ingridient_store` SET stock = 5");
-                DB::statement("UPDATE `machine_machine_store` SET stock = 5");
-                DB::statement("UPDATE `transport_transport_store` SET stock = 3");
+                DB::statement("UPDATE `services` SET stock = 5");
+                DB::statement("UPDATE `ingridient_ingridient_store` SET stock = 40");
+                DB::statement("UPDATE `machine_machine_store` SET stock = 20");
+                DB::statement("UPDATE `transport_transport_store` SET stock = 10");
 
                 //Kalau musim hujan semua mesin sealer yang dimiliki semua team akan dihapus
                 if ($seasonNow->number == 2) {
