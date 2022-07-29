@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <h4>{{ $team->tc }} TC</h4>
+                    <h4>{{ $team->total_income-$team->total_spend }} TC</h4>
                 </div>
             </div>
         </div>

@@ -41,7 +41,7 @@ class DashboardController extends Controller
                 
                 // Tambahkan Ingridient
                 for ($i=1; $i <= 30 ; $i++) { 
-                    DB::statement("INSERT INTO `ingridient_team` (`expired_time`, `team_id`, `ingridient_id`, `amount_have`, `amount_use`, `total`) VALUES (DATE_ADD(STR_TO_DATE(now(), '%Y-%m-%d %H:%i:%s'), INTERVAL 10 MINUTE), ".$i.", '5', '5', NULL, NULL);");
+                    DB::statement("INSERT INTO `ingridient_team` (`expired_time`, `team_id`, `ingridient_id`, `amount_have`, `amount_use`, `total`) VALUES (DATE_ADD(STR_TO_DATE(now(), '%Y-%m-%d %H:%i:%s'), INTERVAL 10 MINUTE), ".$i.", '1', '5', NULL, NULL);");
                 }
             } else {
                 $next_season = Season::where('number', $seasonNow->number + 1)->first();
@@ -87,7 +87,7 @@ class DashboardController extends Controller
         
         // Tambahi keterangan mesin sealer rusak
         if ($seasonNow->number == 2) {
-            $msg += " Seluruh mesin sealer telah rusak!";
+            $msg .= " Seluruh mesin sealer telah rusak!";
         }
 
         if ($response != 'error') event(new UpdateSeason($msg));
