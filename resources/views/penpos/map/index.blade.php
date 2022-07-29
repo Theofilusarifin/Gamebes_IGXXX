@@ -49,12 +49,16 @@
     }
 
     .company {
-        background-color: #e3f821;
         width: 30px;
+        background-image: url(../../../assets/img/logo/Company.png);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
     }
 
     .home {
-        background-color: #5bac66;
+        background-color: rgba(75, 223, 70, 0.4);
         width: 30px;
     }
 
