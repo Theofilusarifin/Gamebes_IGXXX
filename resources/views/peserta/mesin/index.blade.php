@@ -658,11 +658,12 @@
               option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
             }
           }
-          else if (tipe == "filter")
-          // Filter Air ID 2
-            if(available_machine.machine.id == 2){
-              option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
-            }
+          else if (tipe == "filter"){
+            // Filter Air ID 2
+              if(available_machine.machine.id == 2){
+                option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
+              }
+          }
           else{
             option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
           }

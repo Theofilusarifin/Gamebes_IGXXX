@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Peserta;
 use App\Http\Controllers\Controller;
 use App\Machine;
 use App\MachineCombination;
+use App\Season;
 use App\SeasonNow;
 use App\TeamMachine;
 use Illuminate\Http\Request;
@@ -13,6 +14,24 @@ use Illuminate\Support\Facades\DB;
 
 class MesinController extends Controller
 {
+    public function game_authorization()
+    {
+        $season = Season::find(SeasonNow::first()->number);
+        // Belum Mulai
+        if ($season->number == 1 && $season->start_time == null && $season->end_time == null) {
+            return false;
+        }
+        // Udah Selesai
+        // Waktu di Surabaya sekarang
+        $now = date('Y-m-d H:i:s');
+        if ($season->end_time != null) {
+            if ($season->number == 3 && $season->end_time < $now) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public function resetIsUsed($all_team_machines)
     {
         foreach ($all_team_machines as $team_mesin) {
@@ -32,6 +51,10 @@ class MesinController extends Controller
 
     public function index()
     {
+        if (!$this->game_authorization()) {
+            return redirect()->back();
+        }
+        
         //Declare
         $teams = Auth::user()->team;
 

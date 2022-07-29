@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
 use App\Ingridient;
+use App\Season;
+use App\SeasonNow;
 use App\Team;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -11,8 +13,30 @@ use Illuminate\Support\Facades\DB;
 
 class InventoryController extends Controller
 {
+    public function game_authorization()
+    {
+        $season = Season::find(SeasonNow::first()->number);
+        // Belum Mulai
+        if ($season->number == 1 && $season->start_time == null && $season->end_time == null) {
+            return false;
+        }
+        // Udah Selesai
+        // Waktu di Surabaya sekarang
+        $now = date('Y-m-d H:i:s');
+        if ($season->end_time != null) {
+            if ($season->number == 3 && $season->end_time < $now) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public function index()
     {
+        if (!$this->game_authorization()) {
+            return redirect()->back();
+        }
+        
         //Declare
         $team = Auth::user()->team;
         $team_products = $team->products->where('pivot.amount_have', '>', '0')->all();

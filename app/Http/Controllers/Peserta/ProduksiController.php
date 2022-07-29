@@ -18,8 +18,30 @@ use Illuminate\Support\Facades\Log;
 
 class ProduksiController extends Controller
 {
+    public function game_authorization()
+    {
+        $season = Season::find(SeasonNow::first()->number);
+        // Belum Mulai
+        if ($season->number == 1 && $season->start_time == null && $season->end_time == null) {
+            return false;
+        }
+        // Udah Selesai
+        // Waktu di Surabaya sekarang
+        $now = date('Y-m-d H:i:s');
+        if ($season->end_time != null) {
+            if ($season->number == 3 && $season->end_time < $now) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
     public function index()
     {
+        if (!$this->game_authorization()) {
+            return redirect()->back();
+        }
+
         return view('peserta.produksi.index');
     }
 

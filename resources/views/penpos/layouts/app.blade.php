@@ -54,7 +54,7 @@
                                 Sisa Waktu Musim {{ $season_now->name }} :
                             </p>
         
-                            <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
+                            <div class="fw-bolder" id="countdown_season"></div>
                             <script>
                                 CountDownTimer('countdown_season');
                                         function CountDownTimer(id)

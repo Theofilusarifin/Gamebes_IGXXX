@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Peserta;
 use App\Http\Controllers\Controller;
 use App\Investation;
 use App\Question;
+use App\Season;
+use App\SeasonNow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -18,9 +20,31 @@ class InvestasiController extends Controller
         return true;
     }
 
+    public function game_authorization()
+    {
+        $season = Season::find(SeasonNow::first()->number);
+        // Belum Mulai
+        if ($season->number == 1 && $season->start_time == null && $season->end_time == null) {
+            return false;
+        }
+        // Udah Selesai
+        // Waktu di Surabaya sekarang
+        $now = date('Y-m-d H:i:s');
+        if ($season->end_time != null) {
+            if ($season->number == 3 && $season->end_time < $now) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public function index()
     {
         if(!$this->authorization()){
+            return redirect()->back();
+        }
+
+        if (!$this->game_authorization()) {
             return redirect()->back();
         }
 
