@@ -652,7 +652,20 @@
       success: function(data) {
         var option_variable = "<option selected disabled>-- Pilih Mesin --</option>";
         $.each(data.available_machines, (key, available_machine) => {
-          option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
+          if (tipe == "ac"){
+            // AC ID 4
+            if(available_machine.machine.id == 4){
+              option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
+            }
+          }
+          else if (tipe == "filter")
+          // Filter Air ID 2
+            if(available_machine.machine.id == 2){
+              option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
+            }
+          else{
+            option_variable += `<option value=${available_machine.id}>${available_machine.id}-${available_machine.machine.name} (${available_machine.performance})</option>`;
+          }
         });
         $('#' + tipe + '_1').html(option_variable);
       }
@@ -805,17 +818,21 @@
             for (let index = 2; index <= 10; index++) {
               $("#udang_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
             }
-          }else if(tipe == "kitosan"){
+          }
+          else if(tipe == "kitosan"){
             $("#kitosan_1").html("<option selected disabled>-- Lakukan Edit --</option>");
             for (let index = 2; index <= 3; index++) {
               $("#kitosan_" + index).html("<option selected disabled>-- Pilih Mesin "+ (index-1) +" --</option>");
             }
-          }else if(tipe == "saus"){
+          }
+          else if(tipe == "saus"){
             $("#saus_1").html("<option selected disabled>-- Lakukan Edit --</option>");
             $("#saus_2").html("<option selected disabled>-- Pilih Mesin 1 --</option>");
-          }else if (tipe == "ac"){
+          }
+          else if (tipe == "ac"){
             $("#ac_1").html("<option selected disabled>-- Lakukan Edit --</option>");
-          }else if (tipe == "filter"){
+          }
+          else if (tipe == "filter"){
             $("#filter_1").html("<option selected disabled>-- Lakukan Edit --</option>");
           }
         }

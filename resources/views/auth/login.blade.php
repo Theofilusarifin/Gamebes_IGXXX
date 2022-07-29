@@ -37,9 +37,9 @@
                             </div>
                         </form>
 
-                        @foreach($errors->all() as $error)
-                        <p class="text-danger">{{ $error }}</p>
-                        @endforeach
+                        @if($errors->any())
+                        <p class="text-danger mt-3">{{ $errors->first() }}</p>
+                        @endif
 
                     </div>
                 </div>

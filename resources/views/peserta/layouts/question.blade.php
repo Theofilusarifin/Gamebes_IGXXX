@@ -46,14 +46,14 @@
                     $season_now = App\Season::where('number',
                     App\SeasonNow::first()->number)->first();
                     @endphp
-        
+
                     {{-- Card Season --}}
                     <div class="d-flex align-items-center card border-0 shadow px-3 mt-4">
                         <div class="card-body d-flex align-items-center">
                             <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
                                 Sisa Waktu Musim {{ $season_now->name }} :
                             </p>
-        
+
                             <div class="fw-bolder" id="countdown_season">Game Besar Belum Dimulai</div>
                             <script>
                                 CountDownTimer('countdown_season');
@@ -70,6 +70,9 @@
                                                     var distance = end - now;
                                                     if (distance < 0) {
                                                         document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
+                                                        if('{{$season->number}}' == 3){
+                                                            return route('logout');
+                                                        }
                                                         return;
                                                     }
                                                     var minutes = Math.floor((distance % _hour) / _minute);
@@ -99,13 +102,14 @@
                     <div class="align-items-center">
                         <ul class="align-items-center navbar-nav w-100">
                             <li class="nav-item dropdown ms-lg-3 me-5">
-                                <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="media d-flex align-items-center">
                                         <img class="avatar rounded-circle logo" alt="Image placeholder"
                                             src="{{ asset('') }}assets/img/logo/Account.png">
                                         <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                                            <span class="mb-0 font-small fw-bold text-gray-900">{{ Auth::user()->username
+                                            <span class="mb-0 font-small fw-bold text-gray-900">{{
+                                                Auth::user()->username
                                                 }}</span>
                                         </div>
                                     </div>
@@ -122,7 +126,7 @@
                                         </svg>
                                         Logout
                                     </a>
-        
+
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
