@@ -80,7 +80,8 @@ class DashboardController extends Controller
                     // Delete semua machine combination kecuali 101 dan 102
                     DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100");
 
-                    DB::statement("UPDATE `team_machines` SET is_used = 0");
+                    // Reset semua team machine
+                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
                 }
 
                 $response = 'success';

@@ -116,25 +116,28 @@ class LevelController extends Controller
             } else {
                 $team->levels()->sync([$team_level->id => ['syarat_1' => 0]], false);
             }
-
+            
             // CHECK SYARAT 2 -> HIGENITY
             if ($team_machine_higenity != null) {
                 if ($team_machine_higenity >= 40) {
                     $team->levels()->sync([$team_level->id => ['syarat_2' => 1]], false);
+
                 } else {
                     $team->levels()->sync([$team_level->id => ['syarat_2' => 0]], false);
+                    
                 }
             } else {
                 $team->levels()->sync([$team_level->id => ['syarat_2' => 0]], false);
             }
 
             // CHECK SYARAT 3 -> TIGGIE COIN
+            
             if ($team->tc >= 1000) {
-
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 1]], false);
-            } else {
 
+            } else {
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 0]], false);
+                
             }
 
             // CHECK SYARAT 4 -> LIMBAH
@@ -243,6 +246,7 @@ class LevelController extends Controller
 
         //Perbaruhi Variabel Team Level
         $team_level = DB::table('team_level')->where('team_id', $team->id)->where('level_id', $level_id)->first();
+        // dd($team_level);
         $status = 'success';
         $msg = 'Syarat Berhasil Diperbaharui';
 
