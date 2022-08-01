@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Penpos;
+namespace App\Http\Controllers\Peserta;
 
 use App\Http\Controllers\Controller;
 use App\Product;
@@ -16,7 +16,7 @@ class MarketingController extends Controller
         $teams = Team::all();
         $products = Product::all();
         $transports = Transport::all();
-        return view('penpos.marketing.index', compact('teams', 'products', 'transports'));
+        return view('peserta.marketing.index', compact('teams', 'products', 'transports'));
     }
 
     public function sell(Request $request)

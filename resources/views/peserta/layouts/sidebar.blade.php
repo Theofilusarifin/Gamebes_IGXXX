@@ -82,6 +82,18 @@
                     <span class="sidebar-text">Produksi</span>
                 </a>
             </li>
+
+            {{-- Marketing --}}
+            <li
+                class="nav-item {{ request()->is('peserta/marketing') ? ' active' : '' }} {{ request()->is('peserta/marketing/*') ? ' active' : '' }}">
+                <a href="{{ route('peserta.marketing') }}" class="nav-link">
+                    <i data-feather='shopping-cart' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Marketing</span>
+                </a>
+            </li>
+
             {{-- Level --}}
             <li class="nav-item {{ request()->is('peserta/level') ? ' active' : '' }}">
                 <a href="{{ route("peserta.level") }}" class="nav-link">

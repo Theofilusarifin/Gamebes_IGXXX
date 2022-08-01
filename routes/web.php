@@ -33,10 +33,6 @@ Route::group(
         Route::post('/map/get/capacity', 'Penpos\MapController@getCapacity')->name('map.get.capacity');
         Route::post('/map/back/to/company', 'Penpos\MapController@backToCompany')->name('map.back.to.company');
 
-        // Marketing
-        Route::get('/marketing', 'Penpos\MarketingController@index')->name('marketing');
-        Route::post('/marketing/sell-items', 'Penpos\MarketingController@sell')->name('marketing.sell');
-
         // Investasi
         Route::get('/investasi', 'Penpos\InvestasiController@index')->name('investasi');
         Route::post('/investasi/save', 'Penpos\InvestasiController@save')->name('investasi.save');
@@ -87,6 +83,10 @@ Route::group(
         // produksi -->
         Route::get('/produksi', 'Peserta\ProduksiController@index')->name('produksi'); // -> /peserta/produksi
         Route::post('/produksi/product', 'Peserta\ProduksiController@production')->name('produksi.produk');
+
+        // Marketing
+        Route::get('/marketing', 'Peserta\MarketingController@index')->name('marketing');
+        Route::post('/marketing/sell-items', 'Peserta\MarketingController@sell')->name('marketing.sell');
 
         // Investasi
         Route::get('/investasi', 'Peserta\InvestasiController@index')->name('investasi');

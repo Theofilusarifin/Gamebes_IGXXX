@@ -46,16 +46,6 @@
             </li>
 
             <li
-                class="nav-item {{ request()->is('penpos/marketing') ? ' active' : '' }} {{ request()->is('penpos/marketing/*') ? ' active' : '' }}">
-                <a href="{{ route('penpos.marketing') }}" class="nav-link">
-                    <i data-feather='shopping-cart' style="width: 24px; height:24px;"></i>
-                    <span class="sidebar-icon">
-                    </span>
-                    <span class="sidebar-text">Marketing</span>
-                </a>
-            </li>
-
-            <li
                 class="nav-item {{ request()->is('penpos/maintenance') ? ' active' : '' }} {{ request()->is('penpos/maintenance/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.maintenance') }}" class="nav-link">
                     <i data-feather='tool' style="width: 24px; height:24px;"></i>

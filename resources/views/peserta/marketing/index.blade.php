@@ -1,4 +1,4 @@
-@extends('penpos.layouts.app')
+@extends('peserta.layouts.app')
 
 @section('style')
 <style>
@@ -17,7 +17,7 @@
 {{-- Card Kitosan --}}
 <main class="row px-5">
     <div class="row my-5">
-        <div class="col-12 col-sm-6 col-xl-6">
+        <div class="col-12 col-sm-12 col-xl-8">
             <div class="card border-0 shadow">
                 <div class="card-header">
                     <div class="row d-flex align-items-center">
@@ -102,7 +102,7 @@
         $('#jual').attr('disabled',true);
         $.ajax({
             type: 'POST',
-            url: "{{ route('penpos.marketing.sell') }}",
+            url: "{{ route('peserta.marketing.sell') }}",
             data:{
                 '_token': $('meta[name="csrf-token"]').attr('content'),
                 'team_id': $('#team_id').val(),
