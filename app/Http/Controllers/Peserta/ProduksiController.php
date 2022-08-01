@@ -520,7 +520,7 @@ class ProduksiController extends Controller
                     // Lepas Kombinasi
                     DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
                     // Lepas is_used
-                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id);
+                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = ".$team->id." AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
                     // Pesan Harap susun mesin ulang
                     $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
                 }

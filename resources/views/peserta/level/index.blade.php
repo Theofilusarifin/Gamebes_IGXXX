@@ -85,6 +85,7 @@
                 success: function (data) {
                     // UBAH GAMBAR
                     var success_count = data.team_level.syarat_1 + data.team_level.syarat_2 + data.team_level.syarat_3 + data.team_level.syarat_4
+                    // alert(success_count);
                     $('#gambar_level').attr("src",'/assets/img/level/'+ data.team.level +'/'+success_count+'.png');
                     
                     // UPDATE BADGE SYARAT 1
@@ -114,7 +115,6 @@
                         class_4 = 'success';
                     }
                     $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
-
 
                     //Tampilin Alert Message
                     if (data.status != ""){
