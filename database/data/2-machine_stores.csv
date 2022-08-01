@@ -3,14 +3,14 @@ MP1;Mesin Pembersih
 MP2;Mesin Pembersih
 MP3;Mesin Pembersih
 MP4;Mesin Pembersih
-MK1;Mk
-MK2;Mk
-MK3;Mk
-MK4;Mk
-MS1;MS
-MS2;MS
-MS3;MS
-MS4;MS
+MK1;Mesin Kemasan
+MK2;Mesin Kemasan
+MK3;Mesin Kemasan
+MK4;Mesin Kemasan
+MS1;Mesin Suhu
+MS2;Mesin Suhu
+MS3;Mesin Suhu
+MS4;Mesin Suhu
 MV1;Mesin Vakum
 MV2;Mesin Vakum
 MV3;Mesin Vakum
@@ -19,11 +19,11 @@ MU1;Mesin UV
 MU2;Mesin UV
 MU3;Mesin UV
 MU4;Mesin UV
-M1;M
-M2;M
-M3;M
-M4;M
-MC1;MC
-MC2;MC
-MC3;MC
-MC4;MC
+M1;Mixer
+M2;Mixer
+M3;Mixer
+M4;Mixer
+MC1;Mesin Crush
+MC2;Mesin Crush
+MC3;Mesin Crush
+MC4;Mesin Crush
