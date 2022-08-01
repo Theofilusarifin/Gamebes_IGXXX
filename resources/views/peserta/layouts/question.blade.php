@@ -232,13 +232,11 @@
 
     <script>
         $('body').bind('copy paste',function(e) {
-                    alert('This Feature is Disabled');
                     e.preventDefault();
                     return false; 
                 });
                 document.addEventListener('contextmenu', event => {
                     event.preventDefault()
-                    alert('This Feature is Disabled');
                     return false;
                 }); // Klik Kanan
                 document.onkeydown = function (e) {

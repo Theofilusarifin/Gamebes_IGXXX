@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -23,6 +24,16 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('auth.login');
+        if(Auth::user() != null){
+            if (Auth::user()->role == 'ketua' || Auth::user()->role == 'peserta'){
+                return redirect()->route('peserta.index');
+            }
+            else if (Auth::user()->role == 'penpos' || Auth::user()->role == 'si') {
+                return redirect()->route('penpos.index');
+            }
+        }
+        else{
+            return view('auth.login');
+        }
     }
 }

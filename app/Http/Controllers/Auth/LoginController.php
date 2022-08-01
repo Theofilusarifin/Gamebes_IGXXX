@@ -76,7 +76,6 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         Auth::logoutOtherDevices($request['password']);
-
         // if (!Auth::user()->active) {
         //     Auth::logout();
         //     return redirect('/login')->with('error', 'Your account is inactive');
