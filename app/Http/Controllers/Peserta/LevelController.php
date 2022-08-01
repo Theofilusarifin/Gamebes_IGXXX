@@ -150,7 +150,7 @@ class LevelController extends Controller
         }
 
         // Pengecekan Level 2
-        if ($team->level == 1) {
+        else if ($team->level == 1) {
 
             // CHECK SYARAT 1 -> EFECTIVITY
             if ($team_machine_effectivity != null) {
@@ -196,7 +196,7 @@ class LevelController extends Controller
         }
 
         //Pengecekan Level 3
-        if ($team->level == 2) {
+        else if ($team->level == 2) {
 
             // CHECK SYARAT 1 -> EFECTIVITY
             if ($team_machine_effectivity != null) {
