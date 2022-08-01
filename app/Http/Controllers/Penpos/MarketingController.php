@@ -98,21 +98,7 @@ class MarketingController extends Controller
                 'msg' => $msg,
             ), 200);
         }
-
-        // Check apakah team sudah di perusahaan
-        if ($team->territory_id < 1000) {
-            $status = 'error';
-            $msg = 'Anda harus berada di perusahaan untuk melakukan marketing!';
-
-            return response()->json(
-                array(
-                    'status' => $status,
-                    'msg' => $msg,
-                ),
-                200
-            );
-        }
-
+        
         // Ambil team product
         $team_product = $team->products->where('id', $product->id)->first();
         // Team punya productnya ga?

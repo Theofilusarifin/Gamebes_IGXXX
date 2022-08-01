@@ -35,7 +35,7 @@ class ProduksiController extends Controller
         }
         return true;
     }
-    
+
     public function index()
     {
         if (!$this->game_authorization()) {
@@ -119,20 +119,6 @@ class ProduksiController extends Controller
                 'status' => $status,
                 'msg' => $msg,
             ), 200);
-        }
-
-        // Check apakah team sudah di perusahaan
-        if ($team->territory_id < 1000) {
-            $status = 'error';
-            $msg = 'Anda harus berada di perusahaan untuk melakukan produksi!';
-
-            return response()->json(
-                array(
-                    'status' => $status,
-                    'msg' => $msg,
-                ),
-                200
-            );
         }
 
         // Produksi Udang Kaleng
@@ -451,7 +437,7 @@ class ProduksiController extends Controller
             // Waktu di Surabaya sekarang
             $start = date('Y-m-d H:i:s');
             // Tambah 10 menit waktu di surabaya sekarang
-            $expired_time = date('Y-m-d H:i:s', strtotime('+10 minutes', strtotime($start)));
+            $expired_time = date('Y-m-d H:i:s', strtotime('+20 minutes', strtotime($start)));
 
             //CEK MESIN HEAD/SKIN PEALER
 
@@ -531,7 +517,12 @@ class ProduksiController extends Controller
                 //CEK kalau performancenya 0 akan dihapus lgsg di databasenya
                 if ($timMesin->performance == 0) {
                     $this->deleteMachine($timMesin->machine_id, $team->id);
-                    $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang';
+                    // Lepas Kombinasi
+                    DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
+                    // Lepas is_used
+                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id);
+                    // Pesan Harap susun mesin ulang
+                    $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
                 }
             }
 

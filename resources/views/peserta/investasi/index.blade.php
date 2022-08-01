@@ -17,7 +17,7 @@
 <main class="px-5">
     <div class="row my-5 d-flex">
         {{-- Card Investasi --}}
-        <div class="col-12 col-sm-12 col-xl-6">
+        <div class="col-12 col-sm-12 col-xl-8">
             <div class="card border-0 shadow">
                 <div class="card-header">
                     <div class="row d-flex justify-content-start align-items-center">

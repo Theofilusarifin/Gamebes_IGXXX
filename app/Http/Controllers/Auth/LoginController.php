@@ -4,8 +4,6 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
-use App\Season;
-use App\SeasonNow;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -78,5 +76,10 @@ class LoginController extends Controller
     protected function authenticated(Request $request, $user)
     {
         Auth::logoutOtherDevices($request['password']);
+
+        // if (!Auth::user()->active) {
+        //     Auth::logout();
+        //     return redirect('/login')->with('error', 'Your account is inactive');
+        // }
     }
 }

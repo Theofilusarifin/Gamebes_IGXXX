@@ -41,7 +41,7 @@ class DashboardController extends Controller
                 
                 // Tambahkan Ingridient
                 for ($i=1; $i <= 30 ; $i++) { 
-                    DB::statement("INSERT INTO `ingridient_team` (`expired_time`, `team_id`, `ingridient_id`, `amount_have`, `amount_use`, `total`) VALUES (DATE_ADD(STR_TO_DATE(now(), '%Y-%m-%d %H:%i:%s'), INTERVAL 10 MINUTE), ".$i.", '1', '5', NULL, NULL);");
+                    DB::statement("INSERT INTO `ingridient_team` (`expired_time`, `team_id`, `ingridient_id`, `amount_have`, `amount_use`, `total`) VALUES (DATE_ADD(STR_TO_DATE(now(), '%Y-%m-%d %H:%i:%s'), INTERVAL 20 MINUTE), ".$i.", '1', '5', NULL, NULL);");
                 }
             } else {
                 $next_season = Season::where('number', $seasonNow->number + 1)->first();
@@ -76,6 +76,11 @@ class DashboardController extends Controller
                 if ($seasonNow->number == 2) {
                     //Ambil semua mesin sealer yang ada dan belum terjual
                     DB::statement("DELETE FROM `team_machines` WHERE machine_id = 8 AND season_sell IS NULL");
+
+                    // Delete semua machine combination kecuali 101 dan 102
+                    DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100");
+
+                    DB::statement("UPDATE `team_machines` SET is_used = 0");
                 }
 
                 $response = 'success';

@@ -311,14 +311,14 @@ class MapController extends Controller
                 $msg = 'TC berkurang karena menabrak tim lain!';
 
                 // Kurangi TC team yang menabrak 
-                $team->tc = $team->tc - 8;
-                $team->total_spend = $team->total_spend + 8;
+                $team->tc = $team->tc - 20;
+                $team->total_spend = $team->total_spend + 20;
                 $team->total_crash = $team->total_crash + 1;
 
                 // Tambahkan TC team yang ditabrak
                 $crashed_team = Team::where('territory_id', $new_territory->id)->first();
-                $crashed_team->tc = $crashed_team->tc + 8;
-                $crashed_team->total_income = $crashed_team->total_income + 8;
+                $crashed_team->tc = $crashed_team->tc + 20;
+                $crashed_team->total_income = $crashed_team->total_income + 20;
                 $crashed_team->save();
             }
 
@@ -625,7 +625,7 @@ class MapController extends Controller
         // Waktu di Surabaya sekarang
         $start = date('Y-m-d H:i:s');
         // Tambah 10 menit waktu di surabaya sekarang
-        $expired_time = date('Y-m-d H:i:s', strtotime('+10 minutes', strtotime($start)));
+        $expired_time = date('Y-m-d H:i:s', strtotime('+20 minutes', strtotime($start)));
 
         // Update tambahkan ingridient yang dibeli
         $team->ingridients()->attach($item->id, [

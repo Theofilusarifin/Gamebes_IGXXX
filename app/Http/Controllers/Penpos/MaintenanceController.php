@@ -43,19 +43,6 @@ class MaintenanceController extends Controller
 
         $msg = '';
         $status = '';
-
-        if($team->territory_id < 1000){
-            $status = 'error';
-            $msg = 'Team harus berada di perusahaan untuk melakukan maintenance!';
-
-            return response()->json(
-                array(
-                    'status' => $status,
-                    'msg' => $msg,
-                ),
-                200
-            );
-        }
         
         //Cek Performa Mesin apakah masih bisa melakukan maintenance
         if($team_machine->performance <= 30){
