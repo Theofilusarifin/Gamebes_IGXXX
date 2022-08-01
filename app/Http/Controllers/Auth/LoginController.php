@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
+use App\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -73,12 +74,8 @@ class LoginController extends Controller
     }
 
     // Untuk login cuma bisa 1 user
-    protected function authenticated(Request $request, $user)
+    protected function authenticated()
     {
-        Auth::logoutOtherDevices($request['password']);
-        // if (!Auth::user()->active) {
-        //     Auth::logout();
-        //     return redirect('/login')->with('error', 'Your account is inactive');
-        // }
+        Auth::logoutOtherDevices(request('password'));
     }
 }

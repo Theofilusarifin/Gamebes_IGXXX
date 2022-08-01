@@ -32,7 +32,6 @@ class CreateTeamsTable extends Migration
             $table->integer('total_maintenance')->nullable();
             $table->double('waste')->nullable();
 
-            $table->tinyInteger('active')->default(1);
             $table->timestamp('cooldown_marketing')->nullable();
 
             $table->foreignId('territory_id')->nullable();

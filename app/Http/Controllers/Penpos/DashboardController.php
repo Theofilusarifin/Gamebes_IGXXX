@@ -93,7 +93,7 @@ class DashboardController extends Controller
         
         // Tambahi keterangan mesin sealer rusak
         if ($seasonNow->number == 2) {
-            $msg .= " Seluruh mesin sealer telah rusak!";
+            $msg .= " Seluruh mesin sealer telah rusak! Harap menyusun ulang kombinasi mesin.";
         }
 
         if ($response != 'error') event(new UpdateSeason($msg));

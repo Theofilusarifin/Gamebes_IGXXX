@@ -86,7 +86,7 @@
                     // UBAH GAMBAR
                     var success_count = data.team_level.syarat_1 + data.team_level.syarat_2 + data.team_level.syarat_3 + data.team_level.syarat_4
                     // alert(success_count);
-                    $('#gambar_level').attr("src",'/assets/img/level/'+ data.team.level +'/'+success_count+'.png');
+                    $('#gambar_level').attr("src",'https://penyisihan.igubaya.com/assets/img/level/'+ data.team.level +'/'+success_count+'.png');
                     
                     // UPDATE BADGE SYARAT 1
                     var class_1 = 'danger';
@@ -157,7 +157,7 @@
                 $('#team_level').html('Level '+data.team_level.pivot.level_id);
                 
                 // UBAH GAMBAR
-                $('#gambar_level').attr("src",'/assets/img/level/'+ data.team.level +'/0.png');
+                $('#gambar_level').attr("src",'https://penyisihan.igubaya.com/assets/img/level/'+ data.team.level +'/0.png');
 
                     // UPDATE BADGE SYARAT 1
                     var class_1 = 'danger';

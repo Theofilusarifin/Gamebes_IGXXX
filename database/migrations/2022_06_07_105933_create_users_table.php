@@ -19,6 +19,8 @@ class CreateUsersTable extends Migration
             $table->string('password');
             $table->string('role')->nullable();
 
+            $table->tinyInteger('can_login')->default(1);
+
             $table->foreignId('team_id')->nullable();
             $table->foreign('team_id')->references('id')->on('teams')->onUpdate('cascade')->onDelete('cascade');
 

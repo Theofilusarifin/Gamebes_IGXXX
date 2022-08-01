@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -25,11 +26,17 @@ class HomeController extends Controller
     public function index()
     {
         if(Auth::user() != null){
-            if (Auth::user()->role == 'ketua' || Auth::user()->role == 'peserta'){
-                return redirect()->route('peserta.index');
+            if (!Auth::user()->can_login) {
+                Auth::logout();
+                return redirect('/login')->withErrors('Game Besar sudah selesai!');
             }
-            else if (Auth::user()->role == 'penpos' || Auth::user()->role == 'si') {
-                return redirect()->route('penpos.index');
+            else{
+                if (Auth::user()->role == 'ketua' || Auth::user()->role == 'peserta'){
+                    return redirect()->route('peserta.index');
+                }
+                else if (Auth::user()->role == 'penpos' || Auth::user()->role == 'si') {
+                    return redirect()->route('penpos.index');
+                }
             }
         }
         else{
