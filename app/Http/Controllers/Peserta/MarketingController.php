@@ -10,6 +10,7 @@ use App\Team;
 use App\Transport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MarketingController extends Controller
 {
@@ -39,10 +40,11 @@ class MarketingController extends Controller
 
         // Deklarasi
         $team = Auth::user()->team;
+        // dd($team->cooldown_marketing);
 
         // Ambil semua transport yang dimiliki team
         $team_transports = $team->transports->all();
-        return view('peserta.marketing.index', compact('team_transports'));
+        return view('peserta.marketing.index', compact('team_transports','team'));
     }
 
     public function sell(Request $request)
@@ -54,7 +56,7 @@ class MarketingController extends Controller
         $banyak_item_1 = ($request['banyak_item_1'] != null) ? (int)$request['banyak_item_1'] : 0;
         $banyak_item_2 = ($request['banyak_item_2'] != null) ? (int)$request['banyak_item_2'] : 0;
         $banyak_item_3 = ($request['banyak_item_3'] != null) ? (int)$request['banyak_item_3'] : 0;
-
+        
         // Cek Transport 
         $transport = Transport::find($request['transport_id']);
 
@@ -112,11 +114,13 @@ class MarketingController extends Controller
         // Ambil team product
         // Product Udang Kaleng 
         $team_product_kaleng = $team->products->where('id', 1)->first();
+        
         // Product Kitosan
         $team_product_kitosan = $team->products->where('id', 2)->first();
+        
         // Product Saus Tomat
         $team_product_saus = $team->products->where('id', 3)->first();
-
+        
         // Team punya productnya ga?
         if ($team_product_kaleng == null) {
             $status = 'error';
@@ -145,43 +149,16 @@ class MarketingController extends Controller
                 'msg' => $msg,
             ), 200);
         }
-
-        //Cek apakah produk yang dipilih masih dimiliki oleh team?
+        
+        // Ambil amount have untuk pengecekan
         $banyak_kaleng_yang_dimiliki = $team_product_kaleng->pivot->amount_have;
-        if ($banyak_kaleng_yang_dimiliki == 0) {
-            $status = 'error';
-            $msg = 'Team ' . $team->name . ' tidak memiliki product Udang Kaleng!';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
         $banyak_kitosan_yang_dimiliki = $team_product_kitosan->pivot->amount_have;
-        if ($banyak_kitosan_yang_dimiliki == 0) {
-            $status = 'error';
-            $msg = 'Team ' . $team->name . ' tidak memiliki product Kitosan!';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
         $banyak_saus_yang_dimiliki = $team_product_saus->pivot->amount_have;
-        if ($banyak_saus_yang_dimiliki == 0) {
-            $status = 'error';
-            $msg = 'Team ' . $team->name . ' tidak memiliki product Saus Tomat!';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
+        
         // Apabila produk yang dimiliki lebih sedikit daripada yang ingin dijual
         if ($banyak_item_1 > $banyak_kaleng_yang_dimiliki) {
             $status = 'error';
-            $msg = 'Team ' . $team->name . ' hanya meliki Udang Kaleng sebanyak ' . $banyak_kaleng_yang_dimiliki . ' buah!';
+            $msg = 'Team ' . $team->name . ' hanya memiliki Udang Kaleng sebanyak ' . $banyak_kaleng_yang_dimiliki . ' buah!';
 
             return response()->json(array(
                 'status' => $status,
@@ -190,8 +167,8 @@ class MarketingController extends Controller
         }
         if ($banyak_item_2 > $banyak_kitosan_yang_dimiliki) {
             $status = 'error';
-            $msg = 'Team ' . $team->name . ' hanya meliki Kitosan sebanyak ' . $banyak_kitosan_yang_dimiliki . ' buah!';
-
+            $msg = 'Team ' . $team->name . ' hanya memiliki Kitosan sebanyak ' . $banyak_kitosan_yang_dimiliki . ' buah!';
+            
             return response()->json(array(
                 'status' => $status,
                 'msg' => $msg,
@@ -199,13 +176,35 @@ class MarketingController extends Controller
         }
         if ($banyak_item_3 > $banyak_saus_yang_dimiliki) {
             $status = 'error';
-            $msg = 'Team ' . $team->name . ' hanya meliki Saus Tomat sebanyak ' . $banyak_saus_yang_dimiliki . ' buah!';
-
+            $msg = 'Team ' . $team->name . ' hanya memiliki Saus Tomat sebanyak ' . $banyak_saus_yang_dimiliki . ' buah!';
+            
             return response()->json(array(
                 'status' => $status,
                 'msg' => $msg,
             ), 200);
         }
+        
+        // Waktu di Surabaya sekarang
+        $now = date('Y-m-d H:i:s');
+        
+        // Cek apakah cooldownya sudah lewat ?
+        if ($team->cooldown_marketing > $now){
+            $status = 'error';
+            $msg = 'Team masih belum bisa melakukan produksi';
+            
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+        // Tambah 1 menit waktu di surabaya sekarang
+        $cooldown_selesai = date(
+            'Y-m-d H:i:s',
+            strtotime('+1 minutes', strtotime($now))
+        );
+
+        // Set waktu untuk season selanjutnya
+        DB::statement("UPDATE `teams` SET cooldown_marketing = '$cooldown_selesai' WHERE id = $team->id");
 
         // Tentuin harga jual product di musim sekarang
         $harga_jual_kaleng = $team_product_kaleng->seasons->where('id', SeasonNow::first()->id)->first()->pivot->price;
@@ -235,21 +234,21 @@ class MarketingController extends Controller
         $amount_sold_new_saus = $team_product_saus->pivot->amount_sold + $banyak_item_3;
 
         // Update databasenya
-        $total_kaleng = $team_product_kaleng->pivot->total + $harga_total;
+        $total_kaleng = $team_product_kaleng->pivot->total + $total_jual_kaleng;
         $team->products()->sync([1 => [
             'amount_have' => $amount_have_new_kaleng,
             'amount_sold' => $amount_sold_new_kaleng,
             'total' => $total_kaleng
         ]], false);
 
-        $total_kitosan = $team_product_kitosan->pivot->total + $harga_total;
+        $total_kitosan = $team_product_kitosan->pivot->total + $total_jual_kitosan;
         $team->products()->sync([2 => [
             'amount_have' => $amount_have_new_kitosan,
             'amount_sold' => $amount_sold_new_kitosan,
             'total' => $total_kitosan
         ]], false);
 
-        $total_saus = $team_product_saus->pivot->total + $harga_total;
+        $total_saus = $team_product_saus->pivot->total + $total_jual_saus;
         $team->products()->sync([3 => [
             'amount_have' => $amount_have_new_saus,
             'amount_sold' => $amount_sold_new_saus,

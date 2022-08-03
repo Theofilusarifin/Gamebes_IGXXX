@@ -59,7 +59,7 @@
                         {{-- Jumlah Barang --}}
                         <div class="col-8 d-flex align-items-center mt-3">
                             <input class="form-control" type="number" min=0 placeholder="-- Banyak Penjualan --"
-                                id='banyak_item_2'>
+                                id='banyak_item_3'>
                         </div>
                     </div>
 
@@ -72,7 +72,7 @@
                         {{-- Jumlah Barang --}}
                         <div class="col-8 d-flex align-items-center mt-3">
                             <input class="form-control" type="number" min=0 placeholder="-- Banyak Penjualan --"
-                                id='banyak_item_1'>
+                                id='banyak_item_2'>
                         </div>
                     </div>
 
@@ -95,7 +95,45 @@
                     </div>
                     <div class="row">
                         <div class="col-12 d-flex justify-content-between">
-                            <label style="text-left">Cooldown: <span id="marketing_cooldown">01:00</span></label>
+                            <label style="text-left">Cooldown: <span id="marketing_cooldown"></span></label>
+                            <script>
+                                CountDownTimer('marketing_cooldown');
+                                        function CountDownTimer(id)
+                                        {
+                                            if('{{$team->cooldown_marketing}}' != ''){
+                                                var end = new Date('{{$team->cooldown_marketing}}');
+                                                var _second = 1000;
+                                                var _minute = _second * 60;
+                                                var _hour = _minute * 60;
+                                                var timer;
+                                                function showRemaining() {
+                                                    var now = new Date();
+                                                    var distance = end - now;
+                                                    if (distance < 0) {
+                                                        document.getElementById(id).innerHTML = "Bisa melakukan produksi!";
+                                                        return;
+                                                    }
+                                                    var minutes = Math.floor((distance % _hour) / _minute);
+                                                    var seconds = Math.floor((distance % _minute) / _second);
+        
+                                                    if (seconds < 10){
+                                                        seconds = "0"+seconds;
+                                                    }
+        
+                                                    if (minutes < 10){
+                                                        minutes = "0"+minutes;
+                                                    }
+        
+                                                    document.getElementById(id).innerHTML = minutes + ':';
+                                                    document.getElementById(id).innerHTML += seconds;
+                                                }
+                                                timer = setInterval(showRemaining, 1000);
+                                            }
+                                            else{
+                                                document.getElementById(id).innerHTML = "Bisa melakukan produksi!";
+                                            }
+                                        }
+                            </script>
                             <button class="btn btn-success" id="jual" type="button" style="width: 100px"
                                 onclick="jual()">Jual</button>
                         </div>
