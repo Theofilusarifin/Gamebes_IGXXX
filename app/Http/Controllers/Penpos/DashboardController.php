@@ -30,6 +30,7 @@ class DashboardController extends Controller
         $status = '';
         $msg = '';
         $response = 'error';
+        $extra_msg = '';
 
         // Update Season
         $seasonNow = SeasonNow::first(); //1
@@ -38,10 +39,10 @@ class DashboardController extends Controller
             $past_season = Season::where('number', $seasonNow->number)->first();
             if ($seasonNow->number == 1 && $past_season->updated == 0) {
                 $next_season = $past_season;
-                
+
                 // Tambahkan Ingridient
-                for ($i=1; $i <= 30 ; $i++) { 
-                    DB::statement("INSERT INTO `ingridient_team` (`expired_time`, `team_id`, `ingridient_id`, `amount_have`, `amount_use`, `total`) VALUES (DATE_ADD(STR_TO_DATE(now(), '%Y-%m-%d %H:%i:%s'), INTERVAL 20 MINUTE), ".$i.", '1', '5', NULL, NULL);");
+                for ($i = 1; $i <= 30; $i++) {
+                    DB::statement("INSERT INTO `ingridient_team` (`expired_time`, `team_id`, `ingridient_id`, `amount_have`, `amount_use`, `total`) VALUES (DATE_ADD(STR_TO_DATE(now(), '%Y-%m-%d %H:%i:%s'), INTERVAL 20 MINUTE), " . $i . ", '1', '5', NULL, NULL);");
                 }
             } else {
                 $next_season = Season::where('number', $seasonNow->number + 1)->first();
@@ -74,26 +75,40 @@ class DashboardController extends Controller
 
                 //Kalau musim hujan semua mesin sealer yang dimiliki semua team akan dihapus
                 if ($seasonNow->number == 2) {
-                    //Ambil semua mesin sealer yang ada dan belum terjual
-                    DB::statement("DELETE FROM `team_machines` WHERE machine_id = 8 AND season_sell IS NULL");
+                    // Ambil semua team machine
+                    $all_sealer_machines = TeamMachine::where('machine_id', 8)->get();
+                    foreach ($all_sealer_machines as $team_machine_sealer) {
+                        // Kurangi performa machine sealer sebanyak 50% 
+                        $team_machine_sealer->performance = $team_machine_sealer->performance - 50;
 
-                    // Delete semua machine combination kecuali 101 dan 102
-                    DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100");
-
-                    // Reset semua team machine
-                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
+                        $team_machine_sealer->save();
+                        // Cek kalau ada mesin yang <= 50% lgsg di buang dan direset kombinasinya 
+                        if ($team_machine_sealer->performance <= 0) {
+                            // Hapus mesin yang performanya udah dibawah 0
+                            DB::statement("DELETE FROM `team_machines` WHERE machine_id = 8 AND season_sell IS NULL AND team_id = ".$team_machine_sealer->team_id);
+    
+                            // Delete team machine combination kecuali 101 dan 102
+                            DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_id = ".$team_machine_sealer->team_id);
+                            
+                            // Reset is_used team machine
+                            DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = ".$team_machine_sealer->team_id." AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
+                            
+                            // Tambahkan pesan
+                            $extra_msg = "Performa mesin sealer menyentuh 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali!";
+                        }
+                    }
+                    
                 }
-
                 $response = 'success';
             }
         }
 
         $status = 'success';
         $msg = 'Season ' . SeasonNow::first()->name . ' telah dimulai!';
-        
+
         // Tambahi keterangan mesin sealer rusak
         if ($seasonNow->number == 2) {
-            $msg .= " Seluruh mesin sealer telah rusak! Harap menyusun ulang kombinasi mesin.";
+            $msg .= " Seluruh mesin sealer mengalami kerusakan yang menyebabkan turunnya performa sebanyak 50%. " + $extra_msg;
         }
 
         if ($response != 'error') event(new UpdateSeason($msg));

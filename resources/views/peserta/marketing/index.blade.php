@@ -110,7 +110,7 @@
                                                     var now = new Date();
                                                     var distance = end - now;
                                                     if (distance < 0) {
-                                                        document.getElementById(id).innerHTML = "Bisa melakukan produksi!";
+                                                        document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
                                                         return;
                                                     }
                                                     var minutes = Math.floor((distance % _hour) / _minute);
@@ -130,7 +130,7 @@
                                                 timer = setInterval(showRemaining, 1000);
                                             }
                                             else{
-                                                document.getElementById(id).innerHTML = "Bisa melakukan produksi!";
+                                                document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
                                             }
                                         }
                             </script>
