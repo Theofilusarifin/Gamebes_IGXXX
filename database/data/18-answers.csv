@@ -29,11 +29,11 @@ id;answer;letter;question_id
 28;0,03;C;6
 29;0,04;D;6
 30;0,05;E;6
-31;Apr-40;A;7
-32;Jun-40;B;7
-33;Jul-40;C;7
-34;Aug-40;D;7
-35;Dec-40;E;7
+31;4/40;A;7
+32;6/40;B;7
+33;7/40;C;7
+34;8/40;D;7
+35;12/40;E;7
 36;m < -18 atau m > 2;A;8
 37;m < -18 atau m > -2;B;8
 38;m < 2 atau m > 1;C;8
@@ -48,7 +48,7 @@ id;answer;letter;question_id
 47;Joseph John Thompson;B;10
 48;Ernest Rutherford;C;10
 49;Niels Bohr;D;10
-50;Erwin Schrödinger;E;10
+50;Erwin Schrodinger;E;10
 51;Norma;A;11
 52;Konvensi;B;11
 53;Peraturan Daerah;C;11
@@ -179,11 +179,11 @@ id;answer;letter;question_id
 178;0,64 m;C;36
 179;0,92 m;D;36
 180;2,32 m;E;36
-181;0 ? a ? 1;A;37
-182;a ? 0 atau a ? 1;B;37
+181;0 <= a <= 1;A;37
+182;a <= 0 atau a >= 1;B;37
 183;-1 < a < 0;C;37
 184;a < -1 atau a > 0;D;37
-185;a ? -2 atau a ? -1;E;37
+185;a <= -2 atau a >= -1;E;37
 186;51/3;A;38
 187;0;B;38
 188;55/3;C;38

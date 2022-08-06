@@ -62,8 +62,8 @@
                             <script>
                                 function CountDownTimer(id, team_transport_id, cooldown_marketing)
                                 {
-                                    if('{{cooldown_marketing}}' != ''){
-                                        var end = new Date('{{cooldown_marketing}}');
+                                    if(cooldown_marketing != ''){
+                                        var end = new Date(cooldown_marketing);
                                         var _second = 1000;
                                         var _minute = _second * 60;
                                         var _hour = _minute * 60;
