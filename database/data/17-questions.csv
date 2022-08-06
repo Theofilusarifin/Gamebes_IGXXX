@@ -1,51 +1,96 @@
 id;description;number;correct_answer;investation_id
-1;Alat musik tradisional yang awalnya digunakan untuk upacara berkaitan dengan panen padi dan berasal dari Jawa Barat dan Banten adalah…;1;A;1
-2;Perhatikan konfigurasi elektron di bawah ini!  Y : [Ne] 3s2 3p5 Dari konfigurasi elektron di atas, dapat disimpulkan bahwa unsur Y berada pada ...;2;C;1
-3;Model atom yang menyerupai roti kismis karena elektronnya tersebar seperti kismis dikemukakan oleh …;3;B;1
-4;Perhatikan jenis hewan berikut: <br><br>(1) Cumi-cumi<br>(2) Ikan Buntal<br>(3) Bekicot<br>(4) Gurita<br>(5) Kerang<br><br>Dari jenis-jenis hewan tersebut yang termasuk kelas cephalopoda ialah:;4;B;1
-5;Arah jam 3 sama dengan arah mata angin…;5;C;1
-6;Jika X1 dan X2 merupakan akar-akar persamaan 5x+1 + 52-x = 126, maka X1 + X2 = ….;6;C;1
-7;kingdom yang mencakup semua makhluk hidup dengan membran inti dan organel bermembran, uniseluler atau multiseluler yang susunan selnya sederhana dan tidak membentuk suatu jaringan adalah…;7;C;1
-8;Sebuah pesawat terbang bergerak ke arah Utara sejauh 13 km kemudian berbelok ke arah Timur sejauh 24 km dan berbelok lagi ke arah Selatan sejauh 3 km. Tentukan perpindahan yang dialami pesawat terbang!;8;D;1
-9;Peluang seorang bayi tidak diimunisasi polio sebesar 0,2. Pada suatu hari di puskesmas Mawar terdapat 5 bayi. Peluang dari bayi tersebut paling banyak 2 bayi belum imunisasi polio adalah….;9;A;1
-10;Besarnya gaya gravitasi antara dua massa yang berjarak tertentu satu sama lain adalah...;10;D;1
-11;Tumpahan minyak di lautan akibat kebocoran kapal tanker dapat menyebabkan permukaan laut tertutup minyak. Kondisi ini dapat menghalangi fotosintesis plankton, selanjutnya menyebabkan rantai makanan terputus. Apakah memungkinkan terjadinya evolusi dalam ekosistem dalam jangka waktu lama?;1;A;2
-12;Sebanyak 365 mL larutan asam asetat (CH3COOH) 0,2 M ditambah 215 mL asam yang sama dari 0,25 M dan kemudian ditambah 320 mL air, maka molalitas asamnya akan menjadi ...;2;A;2
-13;Ada berapa provinsi di Kalimantan pada tahun 2022?;3;B;2
-14;"Diketahui persamaan kuadrat 2x^2-(6 - m)x + m = 0 mempunyai dua akar real berbeda. Batasan nilai m yang memenuhi adalah… (""^"" tanda pangkat)";4;C;2
-15;Unsur dengan nomor atom 34 terletak pada ... dari tabel periodik.;5;C;2
-16;Jumlah kotak dalam papan catur adalah…;6;D;2
-17;Diketahui P dan Q suatu polinomial sehingga P(X)Q(X) dibagi P(X)Q(X) bersisa 3x+5. Jika Q(X) dibagi x-1 bersisa 4. P(X) dibagi x-1 akan bersisa.…;7;C;2
-18;Perhatikan pernyataan dibawah ini : <br><br>1. Laju pertambahan penduduk <br>2. Massa bahan-bahan kimia <br>3. Tingkat kecerdasan anak <br>4. Waktu yang dibutuhkan untuk belajar<br><br>Pernyataan yang mengandung besaran fisika adalah...;8;C;2
-19;Suatu gas ideal pada ruang tertutup memiliki temperatur T, tekanan P, dan volume V. Jika tekanannya dijadikan 4 kali semula dan gas mengalami proses isokhorik, maka pernyataan yang benar adalah….;9;C;2
-20;Cara yang paling efektif untuk memutus daur hidup cacing darah (Schistosoma japonicum) adalah.......;10;C;2
-21;Seorang pemanjat tebing sedang memanjat tebing karang. Massa pemanjat 50 kg dan pertambahan tali 5 cm. Konstanta elastisitas tali (g=10 m/s2);1;C;3
-22;Bensin dan minyak tanah merupakan beberapa contoh hasil dari pemrosesan minyak bumi. Bahan tersebut diperoleh dengan menggunakan proses …;2;B;3
-23;Lingkaran L1 mempunyai jari-jari 5 dengan titik pusat (0,0), sedangkan lingkaran L2 mempunyai jari-jari 3 dengan titik pusat pada sumbu x positif. Jika persamaan garis singgung persekutuan dalam kedua lingkaran tersebut 4x + 3y - 25 = 0, maka jarak titik pusat kedua lingkaran itu adalah….;3;B;3
-24;Hari listrik nasional diperingati pada tanggal;4;C;3
-25;Jika pencerminan titik P(s,t) terhadap garis x=a dan dilanjutkan dengan pencerminan terhadap garis y=b menghasilkan dilatasi sebesar 3 kali, maka ab=…. ;5;D;3
-26;Di antara fosil manusia purba di bawah  yang paling pertama ditemukan di pulau jawa adalah…;6;E;3
-27;Lanjutkan deret angka pada soal berikut ini! 3, 88, 91, 179, 270, 449, 719,……;7;C;3
-28;Sebuah mobil bermassa 400 kg melaju dengan kecepatan 30 m/s ke arah selatan. Momentum yang dimiliki mobil tersebut adalah . . . kg.m/s;8;A;3
-29;Suatu perkebunan membutuhkan tanaman yang memiliki kemampuan atau daya tahan terhadap serangan hama dan penyakit. Teknik bioteknologi yang dapat dilakukan untuk memenuhi kebutuhan tersebut adalah dengan membuat.......;9;A;3
-30;Suatu zat X jika direaksikan dengan pereaksi Fehling terbentuk endapan merah bata. Maka zat X tersebut kemungkinan mengandung ...;10;D;3
+1;Alat musik tradisional yang awalnya digunakan untuk upacara berkaitan dengan panen padi dan berasal dari Jawa Barat dan Banten adalah..;1;A;1
+2;Arah jam 3 sama dengan arah mata angin..;2;C;1
+3;Saraf yang menghantarkan impuls dari saraf pusat ke system koordinasi adalah..;3;B;1
+4;Sifat apa yg menyebabkan jaringan epitel pada kulit diciptakan dalam struktural atau sel-sel yang saling berkesinambungan?;4;A;1
+5;Tekanannya dijadikan 4 kali semula dan gas mengalami proses isokhorik, maka pernyataan yang benar adalah..;5;D;1
+6;Bola pingpong bermassa 5 gram jatuh bebas dari ketinggian tertentu (g = 10 m/s^2). Ketika menumbuk lantai kecepatan bola 6 m/s dan sesaat setelah menumbuk lantai, bola terpantul ke atas dengan kecepatan 4 m/s. Besar impuls yang bekerja pada bola pingpong adalah .. Ns;6;E;1
+7;Suatu kandang ayam memuat 40 ayam. Banyaknya ayam jantan ada 25 dan diantara ayam jantan terdapat 12 ayam putih. Banyaknya ayam putih seluruhnya adalah 20 ayam, diambil 1 ayam secara acak dari kandang tersebut, maka peluang terpilih ayam betina bukan berwarna putih adalah....;7;C;1
+8;Diketahui persamaan kuadrat 2x^2-(6 - m)x + m = 0 mempunyai dua akar real berbeda. Batasan nilai m yang memenuhi adalah..;8;C;1
+9;"Perhatikan konfigurasi elektron di bawah ini! Y : [Ne]3s23p6 Dari konfigurasi elektron di atas, dapat disimpulkan bahwa unsur Y berada pada ..
+
+";9;C;1
+10;Model atom yang menyerupai roti kismis karena elektronnya tersebar seperti kismis dikemukakan oleh..;10;B;1
+11;Undang-undang tidak tertulis disebut..;1;B;2
+12;Apa saja 3P dalam pilar sustainability?;2;B;2
+13;Kelompok hewan yang termasuk tripoblastic adalah..;3;C;2
+14;"Perhatikan jenis hewan berikut: 
+
+(1) Cumi-cumi
+(2) Ikan Buntal
+(3) Sotong
+(4) Gurita
+(5) Kerang
+
+Dari jenis-jenis hewan tersebut yang termasuk kelas cephalopoda ialah:";4;D;2
+15;Sebuah pesawat terbang bergerak ke arah Utara sejauh 13 km kemudian berbelok ke arah Timur sejauh 24 km dan berbelok lagi ke arah Selatan sejauh 3 km. Tentukan perpindahan yang dialami pesawat terbang!;5;D;2
+16;Seorang anak memukul bola tenis yang massanya 100 gr dengan gaya 10 N menggunakan sebuah raket. Bola menempel pada raket selama 0,2 sekon. Kecepatan bola waktu lepas dari raket adalah..;6;B;2
+17;"Lanjutkan deret angka pada soal berikut ini!
+3, 88, 91, 179, 270, 449, 719,....";7;C;2
+18;Diketahui P dan Q suatu polinomial sehingga P(X)Q(X) dibagi P(X)Q(X) bersisa 3x+5. Jika Q(X) dibagi x-1 bersisa 4. P(X) dibagi x-1 akan bersisa...;8;D;2
+19;Unsur golongan ketiga yang bersifat metaloid adalah ..;9;D;2
+20;Logam transisi yang digunakan pada termometer kaca adalah ..;10;E;2
+21;Perusahaan yang melakukan produksi berdasarkan permintaan dari konsumen yang spesifik dan customized, di mana ketika permintaan tersebut diterima, maka proses produksi diawali dengan perancangan produk, survey, riset dan lain sebagainya merupakan jenis perusahaan..;1;A;3
+22;Rumah khas Papua adalah..;2;D;3
+23;"Peristiwa pencukuran rambut/bulu pada domba merupakan peristiwa yang sangat sering dilakukan secara berkala untuk memperoleh bahan baku kain wool. Pencukuran tersebut mengakibatkan adanya perubahan laju pertukaran panas/suhu antara domba dengan lingkungan sekitarnya dan juga mengubah kondisi fisiologi dari domba tersebut.
+
+Manakah dari keempat pernyataan berikut yang bernilai benar? 
+(1) Pemotongan rambut/bulu domba meningkatkan transfer panas dari tubuh domba ke lingkungan.
+(2) Pemotongan rambut/bulu domba mengakibatkan penurunan detak jantung.
+(3) Pemotongan rambut/bulu domba sebaiknya dilakukan pada musim panas.
+(4) Pemotongan rambut/bulu menyebabkan pelebaran pembuluh darah di permukaan kulit.
+(5) Pemotongan rambut/bulu membuat domba tersebut selalu sehat";3;B;3
+24;Kevin sering mengalami nyeri pada ulu hati serta bagian dada dan tenggorokannya. Kevin sering merasa tenggorokannya sakit serta merasakan benjolan di tenggorokan. Ibunya pun mengajak kevin ke dokter, ternyata dokter menyatakan bahwa sebagian makanan di lambung naik ke kerongkongan. Berdasarkan informasi tersebut, Kevin diperkirakan menderita penyakit ..;4;C;3
+25;"Benda bermassa 2 kg bergerak secara beraturan dalam lintasan melingkar berjari-jari 0,5 m dengan kecepatan sudutnya 8 rad/s 
+
+Perhatikan pernyataan berikut : 
+1. Gaya sentripetalnya 64 N 
+2. Percepatan sentripetalnya 32 m/s2 
+3. Setiap detik terjadi sudut yang ditempuh sebesar 458,56 derajat  
+
+Pernyataan yang benar terkait kasus diatas adalah...";5;A;3
+26;Suatu sumber bunyi bergerak menjauhi seorang Pendengar yang tidak bergerak dengan kecepatan 108 km/jam. Apabila frekuensinya 120 Hz dan Cepat rambat bunyi di udara 340 m/s, tentukanlah frekuensi yang terdengar oleh Pendengar !;6;C;3
+27;Diketahui an dan bn adalah dua barisan aritmatika dengan a1 = 5, a2 = 8, b1 = 3 dan b2 = 7. Jika A = {a1, a2, .., a100} dan B = {b1, b2,.., b100}, maka banyaknya anggota A ? B adalah...;7;A;3
+28;Titik potong kurva-kurva y = x^2-6x+8 dan y=-(x-3)^2+1 adalah...;8;E;3
+29;Unsur dengan nomor atom 34 terletak pada .. dari tabel periodik.;9;E;3
+30;"Perhatikan beberapa sifat unsur berikut:
+1. Senyawanya berwarna
+2. Membentuk molekul diatomik
+3. Memiliki beberapa bilangan oksidasi
+4. Titik didih dan titik leleh sangat tinggi
+Sifat yang dimiliki unsur halogen terdapat pada nomor ..";10;D;3
 31;Pada masa apa bangunan Koloseum di Roma selesai didirikan?;1;A;4
-32;"Berapa mol air yang terproduksi dari reaksi pembakaran sempurna 14,4 gram C5H12? (Mr C = 12 g/mol; H = 1 g/mol)";2;D;4
-33;Apa sungai yang terdalam di dunia?;3;D;4
-34;Diketahui an dan bn adalah dua barisan aritmatika dengan a1 = 5, a2 = 8, b1 = 3 dan b2 = 7. Jika A = {a1, a2, …, a100} dan B = {b1, b2,…, b100}, maka banyaknya anggota A ∩ B adalah…;4;A;4
-35;Diketahui segitiga ABC dan garis bagi BAC memotong sisi BC di titik D. Lingkaran dengan pusat C dan melalui D memotong di E (D ≠ E), dan lingkaran dengan pusat A dan melalui E memotong AB di X (X ≠ A). diketahui bahwa E terletak di dalam segitiga ABC. Jika AB = 15, AD = 9 dan AC = 6, maka BX = ….;5;E;4
-36;Dua buah muatan yang berjarak R dengan Gaya Coulomb F mengalami perubahan jarak menjadi 2R. F baru adalah ;6;D;4
-37;Suatu reaksi kimia yang berlangsung pada suhu 40°C memerlukan waktu 40 detik. Setiap kenaikan suhu 15°C, reaksi akan lebih cepat dua kali dari semula. Berapakah waktu yang diperlukan jika suhu dinaikkan menjadi 70°C?;7;C;4
-38;30 mL Ca(NO3)2 0,1 M direaksikan dengan 15 mL Na3PO4 0,2 M. Ion apakah yang memiliki konsentrasi paling rendah saat larutan selesai tercampur rata?;8;B;4
-39;Tahap pemisahan pemisahan kromatid dari bagian sentromer yang kemudian membentuk kromosom baru terjadi adalah?;9;C;4
-40;Saat berkelana meninggalkan kerajaan clover, Asta menemukan tumbuhan dengan ciri-ciri sebagai berikut: batangnya berupa rizoma, berakar serabut, tidak mempunyai bunga, dan berkembangbiak dengan spora. Tumbuhan tersebut termasuk ke dalam divisi?;10;C;4
-41;Misalkan x1 dan x2 akar-akar dari persamaan x2 - 3x + a = 0 dan y1 dan y2 akar-akar dari persamaan x2 - 12x - b = 0. Jika x1, x2, y1, dan y2 membentuk barisan geometri yang naik, maka nilai ab = …..;1;E;5
-42;Sifat apa yg menyebabkan jaringan epitel pada kulit diciptakan dalam struktural atau sel-sel yang saling berkesinambungan ?;2;A;5
-43;Salah satu takhayul yang menghantui komposer-komposer klasik pada sekitar abad ke-18 dan 19 yaitu seorang komposer akan meninggal setelah menyelesaikan simfoni mereka yang ke-…;3;E;5
-44;Jika kecepatan aliran udara di bagian bawah sayap adalah 60m/s dan beda tekanan di atas dan di bawah sayap adalah 130 Pa, maka kecepatan aliran udara di bagian atas sayap adalah.....(massa jenis udara = 1,3 kg/m3) Jika kecepatan aliran udara di bagian bawah sayap adalah 60m/s dan beda tekanan di atas dan di bawah sayap adalah 130 Pa, maka kecepatan aliran udara di bagian atas sayap adalah.....(massa jenis udara = 1,3 kg/m3) Jika kecepatan aliran udara di bagian bawah sayap adalah 60m/s dan beda tekanan di atas dan di bawah sayap adalah 130 Pa, maka kecepatan aliran udara di bagian atas sayap adalah.....(massa jenis udara = 1,3 kg/m3);4;A;5
-45;Dari nama-nama di bawah ini, manakah yang merupakan perancang menara Eiffel?;5;B;5
-46;Jika kacang polong bulat kuning disilangkan dengan kacang polong hijau kisut, berapakah probabilitas F2 untuk kacang yang berwarna bulat hijau?;6;E;5
-47;Pada kubus KLMN.OPQR, titik U adalah titik tengah PQ dan titik V adalah titik tengah LP. Perpanjangan RP dan KV berpotongan di perpanjangan OP di titik W. Jika panjang rusuk kubus 6 cm, maka bidang KVUR membagi volume kubus dengan perbandingan…;7;D;5
-48;Sebuah gaya tertentu menghasilkan percepatan 5m/s2 pada benda standar. Jika gaya yang sama dikenakan pada benda kedua, gaya itu menghasilkan percepatan 15m/s2 . berapakah massa benda kedua, dan berapakah besarnya gaya itu?Karena percepatan benda kedua adalah 3 kali percepatan benda standar yang dipengaruhi gaya yang sama, massa benda kedua adalah ⅓ massa benda standar atau 0,33 kg.;8;E;5
-49;Pada struktur molekul senyawa organik sering dijumpai atom C primer (Cpri), C sekunder (Csek), C tersier (Cter) dan atom C kuarter (Ckuar). Bila diketahui energi ikat (energi yang diperlukan untuk memutus ikatan) antar atom Cpri-H = 400 kJ/mol dan Cpri-Ckuar = 300 kJ/mol, maka reaksi disosiasi satu mol CH3C(CH3)2CH3 → 5C + 12H memerlukan energi sebesar ... kJ;9;E;5
-50;Apa pengaruhnya terhadap pH larutan bila ditambahkan 1,0 mL larutan aqueous 0,010 M KCl ke dalam 200 mL larutan 0,20 M asam asetat? (anggap volume tetap);10;C;5
+32;Terdapat berbagai jenis tipe layout. Prinsip di mana tata letak fasilitas/mesin produksi disusun berdasarkan urutan proses operasi pembuatan dari suatu produk disebut..;2;B;4
+33;Sel darah putih yang memakan bibit penyakit termasuk dalam peristiwa..;3;D;4
+34;Makrofag merupakan bagian dari jaringan..;4;A;4
+35;Sebuah balon awalnya berisi gas 1 liter, lalu ditambahkan gas yang sama. Sehingga, volumenya menjadi 1,2 liter dan massa gasnya menjadi 1,5 kali semula. Jika suhu gas tetap, maka rasio pertambahan tekanan terhadap tekanan awal adalah ....;5;A;4
+36;Sebuah bola pejal berjari-jari R dan bermassa m didorong dengan kecepatan awal 3 m/s ke atas sebuah bidang miring yang memiliki kemiringan 30 derajat dengan koefisien gesek kinetik 0,2 dan koefisien gesek statik 0,3. Ketika menaiki bidang miring tersebut, bola selalu menggelinding dan tidak pernah tergilincir. Ketinggian maksimum yang dapat dicapai bola tersebut adalah sekitar ..;6;C;4
+37;Diketahui F(x) = bx^3 - 3(1+a)x^2 - 3x. Jika F''(x) habis dibagi x - 1 dan kurva y = F(x) mempunyai titik ekstrem lokal, maka nilai a yang memenuhi adalah...;7;E;4
+38;Diketahui segitiga ABC dan garis bagi ? BAC memotong sisi BC di titik D. Lingkaran dengan pusat C dan melalui D memotong di E (D ? E), dan lingkaran dengan pusat A dan melalui E memotong AB di X (X ? A). diketahui bahwa E terletak di dalam segitiga ABC. Jika AB = 15, AD = 9 dan AC = 6, maka BX = ...;8;E;4
+39;"Berikut ini beberapa contoh penerapan sifat koligatif dalam kehidupan sehari-
+hari:
+
+(1) Desalinasi air laut
+(2) Penggunaan etilen glikol pada radiator mobil
+(3) Penggunaan garam untuk membunuh lintah
+(4) Pencairan salju menggunakan garam
+(5) Penggunaan garam pada pembuatan es puter
+
+Contoh penerapan sifat koligatif yang berhubungan dengan proses osmosis
+adalah nomor ..";9;B;4
+40;"Perhatikan konfigurasi elektron di bawah ini!
+Z : [Kr]5s^2 4d^6
+Dari konfigurasi elektron di atas, dapat disimpulkan bahwa unsur Z berada pada";10;E;4
+41;Salah satu takhayul yang menghantui komposer-komposer klasik pada sekitar abad ke-18 dan 19 yaitu seorang komposer akan meninggal setelah menyelesaikan simfoni mereka yang ke-..;1;E;5
+42;Huruf apa yang tidak ada di ke-50 nama negara bagian di Amerika Serikat?;2;B;5
+43;Bulu babi adalah contoh dari makhluk hidup yang terdiri atas..;3;B;5
+44;Kartilago yang terletak di pembuluh eustachius merupakan jaringan..;4;E;5
+45;Mesin Carnot dioperasikan antara 2 reservoir kalor masing-masing suhunya T1 dan T2 , dengan T2 > T1. Efisiensi mesin tersebut 40% , dan besarnya T1 = 27 derajat Celcius. Supaya efisiensinya naik 60% , maka besarnya perubahan T2 adalah ...;5;A;5
+46;Sebuah gaya tertentu menghasilkan percepatan 5m/s^2 pada benda standar. Jika gaya yang sama dikenakan pada benda kedua, gaya itu menghasilkan percepatan 15m/s^2 . berapakah massa benda kedua, dan berapakah besarnya gaya itu?;6;A;5
+47;Pada kubus KLMN.OPQR, titik U adalah titik tengah PQ dan titik V adalah titik tengah LP. Perpanjangan RP dan KV berpotongan di perpanjangan OP di titik W. Jika panjang rusuk kubus 6 cm, maka bidang KVUR membagi volume kubus dengan perbandingan..;7;D;5
+48;Lingkaran L1 mempunyai jari-jari 5 dengan titik pusat (0,0), sedangkan lingkaran L2 mempunyai jari-jari 3 dengan titik pusat pada sumbu x positif. Jika persamaan garis singgung persekutuan dalam kedua lingkaran tersebut 4x + 3y - 25 = 0, maka jarak titik pusat kedua lingkaran itu adalah...;8;B;5
+49;"Sebanyak 365 mL larutan asam asetat (CH3COOH) 0,2 M ditambah 215 mL asam
+yang sama dari 0,25 M dan kemudian ditambah 320 mL air, maka molalitas
+asamnya akan menjadi ..";9;A;5
+50;"Salah satu jenis sel elektrokimia adalah sel elektrolisis. Berikut ini pernyataan
+yang salah terkait sel elektrolisis adalah ..";10;D;5
