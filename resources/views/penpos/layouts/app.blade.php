@@ -141,7 +141,7 @@
         <br>
 
         <!-- Modal -->
-        <div class="modal fade" id="modal-season" tabindex="-1" role="dialog" aria-labelledby="modalTitleNotify"
+        <div class="modal fade" id="modal-season" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalTitleNotify"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">

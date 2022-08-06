@@ -37,6 +37,70 @@
                     {{-- Alert --}}
                     @include('penpos.layouts.alerts')
 
+                    <div class="row">
+                        <div class="col-12">
+                            {{-- Pilih Team --}}
+                            <div class="mb-4">
+                                <label class="my-1 me-2" for="transport_id">Pilih Transport</label>
+                                <select class="form-select" id="transport_id" aria-label="Default select example" onchange="getCooldown()">
+                                    <option selected disabled>-- Pilih Transport --</option>
+                                    @foreach ($team_transports as $transport)
+                                    <option value="{{ $transport->pivot->id }}">
+                                        {{ $transport->name }}
+                                    </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mb-4">
+                        <div class="col-12 d-flex justify-content-between">
+                            <label style="text-left">
+                                <span id="marketing_cooldown"></span>
+                            </label>
+                            <script>
+                                function CountDownTimer(id, team_transport_id, cooldown_marketing)
+                                {
+                                    if('{{cooldown_marketing}}' != ''){
+                                        var end = new Date('{{cooldown_marketing}}');
+                                        var _second = 1000;
+                                        var _minute = _second * 60;
+                                        var _hour = _minute * 60;
+                                        var timer;
+                                        function showRemaining() {
+                                            var now = new Date();
+                                            var distance = end - now;
+                                            if (distance < 0) {
+                                                nullCooldown(team_transport_id);
+                                                document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
+                                                return;
+                                            }
+                                            var minutes = Math.floor((distance % _hour) / _minute);
+                                            var seconds = Math.floor((distance % _minute) / _second);
+
+                                            if (seconds < 10){
+                                                seconds = "0"+seconds;
+                                            }
+
+                                            if (minutes < 10){
+                                                minutes = "0"+minutes;
+                                            }
+
+                                            document.getElementById(id).innerHTML = 'Countdown = ';
+                                            document.getElementById(id).innerHTML += minutes + ':';
+                                            document.getElementById(id).innerHTML += seconds;
+                                        }
+                                        timer = setInterval(showRemaining, 1000);
+                                    }
+                                    else{
+                                        document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
+                                    }
+                                }
+                            </script>
+                        </div>
+                    </div>
+
                     {{-- Udang kaleng --}}
                     <div class="row d-flex align-items-center justify-content-center mt-2">
                         <div class="col-4" style="text-align:center">
@@ -76,66 +140,11 @@
                         </div>
                     </div>
 
-
                     <div class="row mt-4">
-                        <div class="col-12">
-                            {{-- Pilih Team --}}
-                            <div class="mb-4">
-                                <label class="my-1 me-2" for="transport_id">Pilih Transport</label>
-                                <select class="form-select" id="transport_id" aria-label="Default select example">
-                                    <option selected disabled>-- Pilih Transport --</option>
-                                    @foreach ($team_transports as $transport)
-                                    <option value="{{ $transport->id }}">
-                                        {{ $transport->name }}
-                                    </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 d-flex justify-content-between">
-                            <label style="text-left">Cooldown: <span id="marketing_cooldown"></span></label>
-                            <script>
-                                CountDownTimer('marketing_cooldown');
-                                        function CountDownTimer(id)
-                                        {
-                                            if('{{$team->cooldown_marketing}}' != ''){
-                                                var end = new Date('{{$team->cooldown_marketing}}');
-                                                var _second = 1000;
-                                                var _minute = _second * 60;
-                                                var _hour = _minute * 60;
-                                                var timer;
-                                                function showRemaining() {
-                                                    var now = new Date();
-                                                    var distance = end - now;
-                                                    if (distance < 0) {
-                                                        document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
-                                                        return;
-                                                    }
-                                                    var minutes = Math.floor((distance % _hour) / _minute);
-                                                    var seconds = Math.floor((distance % _minute) / _second);
-        
-                                                    if (seconds < 10){
-                                                        seconds = "0"+seconds;
-                                                    }
-        
-                                                    if (minutes < 10){
-                                                        minutes = "0"+minutes;
-                                                    }
-        
-                                                    document.getElementById(id).innerHTML = minutes + ':';
-                                                    document.getElementById(id).innerHTML += seconds;
-                                                }
-                                                timer = setInterval(showRemaining, 1000);
-                                            }
-                                            else{
-                                                document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
-                                            }
-                                        }
-                            </script>
+                        <div class="col-12 d-flex justify-content-end">
                             <button class="btn btn-success" id="jual" type="button" style="width: 100px"
                                 onclick="jual()">Jual</button>
+
                         </div>
                     </div>
                 </div>
@@ -147,6 +156,33 @@
 
 @section('script')
 <script>
+    function getCooldown() {
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('peserta.marketing.cooldown') }}",
+            data:{
+                '_token': $('meta[name="csrf-token"]').attr('content'),
+                'transport_id': $('#transport_id').val(),
+            },
+            success: function (data) {
+                CountDownTimer('marketing_cooldown', data.team_transport.id, data.team_transport.cooldown_maintenance);
+            }
+        });
+    }
+
+    function nullCooldown(team_transport_id) {
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('peserta.marketing.null.cooldown') }}",
+            data:{
+                '_token': $('meta[name="csrf-token"]').attr('content'),
+                'team_transport_id': team_transport_id,
+            },
+            success: function (data) {
+            }
+        });
+    }
+    
     function jual() {
         $('#jual').attr('disabled',true);
         $.ajax({

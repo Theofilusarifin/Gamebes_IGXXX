@@ -443,6 +443,58 @@
                 </div>
             </div>
         </div>
+
+        {{-- Button Undo --}}
+        <div class="card card-body border-0 shadow mt-4 me-5" style="background-color:#1f2937;">
+            <div class="card-body">
+                <p class="text-white">Move Undo</p>
+                <div class="d-flex justify-content-center px-4 mt-2">
+                    <button type="button" class="btn btn-gray-50 me-3 mb-3 btn-control-action-undo"
+                        onclick="undo('kanan_atas')" style="width: 58px; height:58px;">
+                        <i data-feather='arrow-up-left' style="width: 24px; height:24px;"></i>
+                    </button>
+                    <button type="button" class="btn btn-gray-50 mb-3 btn-control-action-undo" onclick="undo('atas')"
+                        style="width: 58px; height:58px;">
+                        <i data-feather='arrow-up' style="width: 24px; height:24px;"></i>
+                    </button>
+                    <button type="button" class="btn btn-gray-50 ms-3 mb-3 btn-control-action-undo"
+                        onclick="undo('kiri_atas')" style="width: 58px; height:58px;">
+                        <i data-feather='arrow-up-right' style="width: 24px; height:24px;"></i>
+                    </button>
+                </div>
+                <div class="d-flex justify-content-center px-4">
+                    <button type="button" class="btn btn-gray-50 me-3 btn-control-action-undo" onclick="undo('kiri')"
+                        style="width: 58px; height:58px;">
+                        <i data-feather='arrow-left' style="width: 24px; height:24px;"></i>
+                    </button>
+                    <button type="button" class="btn btn-icon btn-gray-500 btn-control-action-undo" onclick="action()"
+                        style="width: 58px; height:58px;">
+                        <i data-feather='zap' style="width: 24px; height:24px;"></i>
+                    </button>
+                    <button type="button" class="btn btn-gray-50 ms-3 btn-control-action-undo" onclick="undo('kanan')"
+                        style="width: 58px; height:58px;">
+                        <i data-feather='arrow-right' style="width: 24px; height:24px;"></i>
+                    </button>
+                </div>
+                <div class="d-flex justify-content-center px-4">
+                    <button type="button" class="btn btn-gray-50 me-3 mt-3 btn-control-action-undo"
+                        onclick="undo('kiri_bawah')" style="width: 58px; height:58px;">
+                        <i data-feather='arrow-down-left' style="width: 24px; height:24px;"></i>
+                    </button>
+                    <button type="button" class="btn btn-gray-50 mt-3 btn-control-action-undo" onclick="undo('bawah')"
+                        style="width: 58px; height:58px;">
+                        <i data-feather='arrow-down' style="width: 24px; height:24px;"></i>
+                    </button>
+                    <button type="button" class="btn btn-gray-50 ms-3 mt-3 btn-control-action-undo"
+                        onclick="undo('kanan_bawah')" style="width: 58px; height:58px;">
+                        <i data-feather='arrow-down-right' style="width: 24px; height:24px;"></i>
+                    </button>
+                </div>
+
+                {{-- Alert --}}
+                @include('penpos.layouts.alerts')
+            </div>
+        </div>
     </div>
 </div>
 @endsection
@@ -654,6 +706,7 @@
                 // END TABLE RIGHT
 
                 $(".btn-control-action").attr("disabled", false);
+                $(".btn-control-action-undo").attr("disabled", false);
             },
         });
     });
@@ -721,6 +774,40 @@
                         $('#alert').removeClass("alert-success");
                         $('#alert').addClass("alert-danger");
                         $('.btn-control-action').attr('disabled', false);
+                    }
+                }
+            }
+        })
+    }
+
+    function undo(arah) {
+        $('.btn-control-action-undo').attr('disabled', true);
+
+        $.ajax({
+            type: 'POST',
+            url: "{{ route('penpos.map.undo') }}",
+            data:{
+                    '_token': $('meta[name="csrf-token"]').attr('content'),
+                    'arah': arah,
+                    'team_id': $('#team_id').val(),
+                },
+            success: function (data) {
+                if (data.status != ""){
+                    $('#alert').hide();
+                    $('#alert').show();
+                    $('#alert-body').html(data.msg);
+
+                    $("#alert").fadeTo(5000, 500).hide(1000, function(){
+                        $("#alert").hide(1000);
+                    });
+                    if (data.status == "success") {
+                        $('#alert').removeClass("alert-danger");
+                        $('#alert').addClass("alert-success");
+                    } 
+                    else if (data.status == "error") {
+                        $('#alert').removeClass("alert-success");
+                        $('#alert').addClass("alert-danger");
+                        $('.btn-control-action-undo').attr('disabled', false);
                     }
                 }
             }

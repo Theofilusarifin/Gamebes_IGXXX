@@ -18,6 +18,7 @@ use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MapController extends Controller
 {
@@ -286,6 +287,168 @@ class MapController extends Controller
             ), 200);
         }
 
+
+        // Pengecekan Posisi Apakah Ada 2 orang
+        else if ($new_territory->num_occupant >= 2) {
+            $status = 'error';
+            $response = 'error';
+            $msg = 'Territory sudah ditempati dua orang!';
+        }
+        // Pengecekan apakah territory adalah wall?
+        else if ($new_territory->is_wall) {
+            $status = 'error';
+            $response = 'error';
+            $msg = 'Tidak dapat melewati wall!';
+        }
+        // Territory aman
+        else {
+            $status = '';
+            $msg = '';
+
+            // Pengecekan apakah ada 1 orang
+            if ($new_territory->num_occupant == 1) {
+                $status = 'error';
+                $response = 'success';
+                $msg = 'TC berkurang karena menabrak tim lain!';
+
+                // Kurangi TC team yang menabrak 
+                $team->tc = $team->tc - 20;
+                $team->total_spend = $team->total_spend + 20;
+                $team->total_crash = $team->total_crash + 1;
+
+                // Tambahkan TC team yang ditabrak
+                $crashed_team = Team::where('territory_id', $new_territory->id)->first();
+                $crashed_team->tc = $crashed_team->tc + 20;
+                $crashed_team->total_income = $crashed_team->total_income + 20;
+                $crashed_team->save();
+            }
+
+            // Update Posisi ke database
+            $team->territory_id = $t_id;
+            $team->save();
+
+            // Update num occupant di territory lama
+            $old_territory->num_occupant = $old_territory->num_occupant - 1;
+            $old_territory->save();
+            // Update num occupant di territory baru
+            $new_territory->num_occupant = $new_territory->num_occupant + 1;
+            $new_territory->save();
+        }
+
+        if ($response != 'error') event(new UpdateMap("updateMap"));
+        return response()->json(array(
+            'response' => $response,
+            'status' => $status,
+            'msg' => $msg,
+        ), 200);
+    }
+
+    public function undo(Request $request)
+    {
+        // Ambil variabel awal yang dibutuhkan
+        $team = Team::find($request['team_id']);
+        $arah = $request['arah'];
+        $jalan_lurus = false;
+        $jalan_diagonal = false;
+        $harga_jalan = 0;
+
+        // Status dan message yang diberikan
+        $status = '';
+        $msg = '';
+        $response = 'success';
+
+        // Penpos belum select team
+        if (!isset($team)) {
+            $status = 'error';
+            $response = 'error';
+            $msg = 'Harap select team terlebih dahulu!';
+
+            return response()->json(array(
+                'response' => $response,
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
+        // Apabila team belum berada pada suatu territory atau berada di home
+        if ((!isset($team->territory_id)) || ($team->territory_id > 1000)) {
+            $status = 'error';
+            $response = 'error';
+            $msg = 'Harap pilih Pelabuhan terlebih dahulu!';
+
+            return response()->json(array(
+                'response' => $response,
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
+        // Posisi lama pemain
+        $t_id = $team->territory_id;
+        // Territory Lama
+        $old_territory = Territory::find($t_id);
+
+        // Menentukan lebar map
+        $lebar_map = 42;
+
+        // Menentukan Posisi
+        if ($arah == 'atas') {
+            $t_id -= $lebar_map;
+            $jalan_lurus = true;
+        } else if ($arah == 'kanan_atas') {
+            $t_id -= ($lebar_map + 1);
+            $jalan_diagonal = true;
+        } else if ($arah == 'kiri_atas') {
+            $t_id -= ($lebar_map - 1);
+            $jalan_diagonal = true;
+        } else if ($arah == 'kanan') {
+            $t_id += 1;
+            $jalan_lurus = true;
+        } else if ($arah == 'kiri') {
+            $t_id -= 1;
+            $jalan_lurus = true;
+        } else if ($arah == 'bawah') {
+            $t_id += $lebar_map;
+            $jalan_lurus = true;
+        } else if ($arah == 'kanan_bawah') {
+            $t_id += ($lebar_map + 1);
+            $jalan_diagonal = true;
+        } else if ($arah == 'kiri_bawah') {
+            $t_id += ($lebar_map - 1);
+            $jalan_diagonal = true;
+        }
+
+        // Menentukan harga jalan
+        if ($jalan_lurus) $harga_jalan = 1;
+        else if ($jalan_diagonal) $harga_jalan = 3;
+
+        // Update uang team
+        $team->tc = $team->tc + $harga_jalan;
+        // Update Total Spen Team
+        $team->total_spend = $team->total_spend - $harga_jalan;
+
+        // Update banyak jalan team
+        if ($jalan_lurus) {
+            $team->s_moves = $team->s_moves - 1;
+        } else if ($jalan_diagonal) {
+            $team->d_moves = $team->d_moves - 1;
+        }
+
+        // Ambil territory
+        $new_territory = Territory::find($t_id);
+
+        // Territory baru tidak valid
+        if (!isset($new_territory)) {
+            $status = 'error';
+            $response = 'error';
+            $msg = 'Territory tidak valid!';
+
+            return response()->json(array(
+                'response' => $response,
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
 
         // Pengecekan Posisi Apakah Ada 2 orang
         else if ($new_territory->num_occupant >= 2) {
@@ -623,7 +786,7 @@ class MapController extends Controller
         $item->ingridientStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
 
         // Waktu di Surabaya sekarang
-        $start = date('Y-m-d H:i:s');
+        $start = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
         // Tambah 10 menit waktu di surabaya sekarang
         $expired_time = date('Y-m-d H:i:s', strtotime('+20 minutes', strtotime($start)));
 

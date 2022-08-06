@@ -11,6 +11,7 @@ use App\Service;
 use App\Transport;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class ListHargaController extends Controller
 {
@@ -23,7 +24,7 @@ class ListHargaController extends Controller
         }
         // Udah Selesai
         // Waktu di Surabaya sekarang
-        $now = date('Y-m-d H:i:s');
+        $now = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
         if ($season->end_time != null) {
             if ($season->number == 3 && $season->end_time < $now) {
                 return false;

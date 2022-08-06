@@ -32,8 +32,6 @@ class CreateTeamsTable extends Migration
             $table->integer('total_maintenance')->nullable();
             $table->double('waste')->nullable();
 
-            $table->timestamp('cooldown_marketing')->nullable();
-
             $table->foreignId('territory_id')->nullable();
             $table->foreign('territory_id')->references('id')->on('territories')->onUpdate('cascade')->onDelete('cascade');
 

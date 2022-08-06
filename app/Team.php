@@ -22,7 +22,7 @@ class Team extends Model
     public function transports()
     {
         return $this->belongsToMany(Transport::class, 'transport_team', 'team_id', 'transport_id')
-            ->withPivot(['amount_have', 'use_num']);
+            ->withPivot(['id', 'amount_have', 'use_num','cooldown_marketing']);
     }
 
     public function territory()

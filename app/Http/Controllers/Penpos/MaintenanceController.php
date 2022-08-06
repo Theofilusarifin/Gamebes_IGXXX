@@ -59,15 +59,12 @@ class MaintenanceController extends Controller
         $total_price = 0;
         // Logic harga maintenance
         if($nilai_maintenance == 25){
-            $total_price = 10;
-        }
-        else if ($nilai_maintenance == 50) {
             $total_price = 15;
         }
-        else if ($nilai_maintenance == 75) {
+        else if ($nilai_maintenance == 50) {
             $total_price = 20;
         }
-        else if ($nilai_maintenance == 100) {
+        else if ($nilai_maintenance == 75) {
             $total_price = 25;
         }
         else{

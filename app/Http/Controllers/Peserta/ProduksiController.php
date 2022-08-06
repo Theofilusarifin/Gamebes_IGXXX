@@ -27,7 +27,7 @@ class ProduksiController extends Controller
         }
         // Udah Selesai
         // Waktu di Surabaya sekarang
-        $now = date('Y-m-d H:i:s');
+        $now = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
         if ($season->end_time != null) {
             if ($season->number == 3 && $season->end_time < $now) {
                 return false;
@@ -435,8 +435,8 @@ class ProduksiController extends Controller
             }
 
             // Waktu di Surabaya sekarang
-            $start = date('Y-m-d H:i:s');
-            // Tambah 10 menit waktu di surabaya sekarang
+            $start = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
+            // Tambah 20 menit waktu di surabaya sekarang
             $expired_time = date('Y-m-d H:i:s', strtotime('+20 minutes', strtotime($start)));
 
             //CEK MESIN HEAD/SKIN PEALER
@@ -520,7 +520,7 @@ class ProduksiController extends Controller
                     // Lepas Kombinasi
                     DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
                     // Lepas is_used
-                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = ".$team->id." AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
+                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id . " AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
                     // Pesan Harap susun mesin ulang
                     $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
                 }

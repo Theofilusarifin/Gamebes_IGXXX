@@ -9,6 +9,7 @@ use App\Season;
 use App\SeasonNow;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class InvestasiController extends Controller
 {
@@ -29,7 +30,7 @@ class InvestasiController extends Controller
         }
         // Udah Selesai
         // Waktu di Surabaya sekarang
-        $now = date('Y-m-d H:i:s');
+        $now = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
         if ($season->end_time != null) {
             if ($season->number == 3 && $season->end_time < $now) {
                 return false;
@@ -40,7 +41,7 @@ class InvestasiController extends Controller
 
     public function index()
     {
-        if(!$this->authorization()){
+        if (!$this->authorization()) {
             return redirect()->back();
         }
 
@@ -113,7 +114,7 @@ class InvestasiController extends Controller
 
         $answer = $request['answer'];
 
-        $team = Auth::user()->team; 
+        $team = Auth::user()->team;
         if (isset($answer)) {
 
             //Get Jawaban Benar

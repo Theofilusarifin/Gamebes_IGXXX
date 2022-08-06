@@ -23,6 +23,7 @@ Route::group(
         // Fitur Map
         Route::get('/map', 'Penpos\MapController@index')->name('map');
         Route::post('/map/move', 'Penpos\MapController@move')->name('map.move');
+        Route::post('/map/undo', 'Penpos\MapController@undo')->name('map.undo');
         Route::post('/map/spawn', 'Penpos\MapController@spawn')->name('map.spawn');
         Route::post('/map/action', 'Penpos\MapController@action')->name('map.action');
         Route::post('/map/action/buy/transport', 'Penpos\MapController@buyTransport')->name('map.buy.transport');
@@ -87,6 +88,8 @@ Route::group(
         // Marketing
         Route::get('/marketing', 'Peserta\MarketingController@index')->name('marketing');
         Route::post('/marketing/sell-items', 'Peserta\MarketingController@sell')->name('marketing.sell');
+        Route::post('/marketing/cooldown', 'Peserta\MarketingController@cooldown')->name('marketing.cooldown');
+        Route::post('/marketing/null/cooldown', 'Peserta\MarketingController@nullCooldown')->name('marketing.null.cooldown');
 
         // Investasi
         Route::get('/investasi', 'Peserta\InvestasiController@index')->name('investasi');
@@ -97,6 +100,5 @@ Route::group(
         Route::get('/level', 'Peserta\LevelController@index')->name('level');
         Route::post('/level/update-syarat', 'Peserta\LevelController@updateSyarat')->name('level.update');
         Route::post('/level/upgrade-level', 'Peserta\LevelController@upgradeLevel')->name('level.upgrade');
-
     }
 );

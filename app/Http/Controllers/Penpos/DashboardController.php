@@ -48,7 +48,8 @@ class DashboardController extends Controller
                 $next_season = Season::where('number', $seasonNow->number + 1)->first();
             }
             // Waktu di Surabaya sekarang
-            $now = date('Y-m-d H:i:s');
+            // $now = date('Y-m-d H:i:s');
+            $now = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
 
             // Check apakah season belum terupdate dan apakah sudah waktunya melakukan update
             if (!$next_season->updated && $past_season->end_time <= $now) {
@@ -58,7 +59,7 @@ class DashboardController extends Controller
                 $seasonNow->save();
 
                 // Waktu di Surabaya sekarang
-                $now = date('Y-m-d H:i:s');
+                $now = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
                 // Tambah 20 menit waktu di surabaya sekarang
                 $season_end = date(
                     'Y-m-d H:i:s',
@@ -85,19 +86,18 @@ class DashboardController extends Controller
                         // Cek kalau ada mesin yang <= 50% lgsg di buang dan direset kombinasinya 
                         if ($team_machine_sealer->performance <= 0) {
                             // Hapus mesin yang performanya udah dibawah 0
-                            DB::statement("DELETE FROM `team_machines` WHERE machine_id = 8 AND season_sell IS NULL AND team_id = ".$team_machine_sealer->team_id);
-    
+                            DB::statement("DELETE FROM `team_machines` WHERE machine_id = 8 AND season_sell IS NULL AND team_id = " . $team_machine_sealer->team_id);
+
                             // Delete team machine combination kecuali 101 dan 102
-                            DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_id = ".$team_machine_sealer->team_id);
-                            
+                            DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_id = " . $team_machine_sealer->team_id);
+
                             // Reset is_used team machine
-                            DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = ".$team_machine_sealer->team_id." AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
-                            
+                            DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team_machine_sealer->team_id . " AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
+
                             // Tambahkan pesan
                             $extra_msg = "Performa mesin sealer menyentuh 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali!";
                         }
                     }
-                    
                 }
                 $response = 'success';
             }

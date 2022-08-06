@@ -23,7 +23,7 @@ class MesinController extends Controller
         }
         // Udah Selesai
         // Waktu di Surabaya sekarang
-        $now = date('Y-m-d H:i:s');
+        $now = DB::select(DB::raw("SELECT CURRENT_TIMESTAMP() as waktu"))[0]->waktu;
         if ($season->end_time != null) {
             if ($season->number == 3 && $season->end_time < $now) {
                 return false;
@@ -31,7 +31,7 @@ class MesinController extends Controller
         }
         return true;
     }
-    
+
     public function resetIsUsed($all_team_machines)
     {
         foreach ($all_team_machines as $team_mesin) {
@@ -45,7 +45,7 @@ class MesinController extends Controller
         if (!$this->game_authorization()) {
             return redirect()->back();
         }
-        
+
         //Declare
         $teams = Auth::user()->team;
 
@@ -389,7 +389,7 @@ class MesinController extends Controller
             // Kombinasi ada
             if ($found) {
                 // Hapus kombinasi kecuali kombinasi kitosan  dan saus tomat
-                
+
                 // Ambil Kombinasi
                 if (count($combination_found) > 1) {
                     //Ini set di team_machine_combination
