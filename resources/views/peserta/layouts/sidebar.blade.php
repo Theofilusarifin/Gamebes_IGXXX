@@ -46,15 +46,6 @@
                     <span class="sidebar-text">List Harga</span>
                 </a>
             </li>
-            {{-- Inventory --}}
-            <li class="nav-item {{ request()->is('peserta/inventory') ? ' active' : '' }}">
-                <a href="{{ route("peserta.inventory") }}" class="nav-link">
-                    <i data-feather='shopping-bag' style="width: 24px; height:24px;"></i>
-                    <span class="sidebar-icon">
-                    </span>
-                    <span class="sidebar-text">Inventory</span>
-                </a>
-            </li>
             {{-- Deskripsi Mesin --}}
             <li class="nav-item {{ request()->is('peserta/deskripsi') ? ' active' : '' }}">
                 <a href="{{ route("peserta.deskripsi") }}" class="nav-link">
@@ -82,7 +73,15 @@
                     <span class="sidebar-text">Produksi</span>
                 </a>
             </li>
-
+            {{-- Inventory --}}
+            <li class="nav-item {{ request()->is('peserta/inventory') ? ' active' : '' }}">
+                <a href="{{ route("peserta.inventory") }}" class="nav-link">
+                    <i data-feather='shopping-bag' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Inventory</span>
+                </a>
+            </li>
             {{-- Marketing --}}
             <li
                 class="nav-item {{ request()->is('peserta/marketing') ? ' active' : '' }} {{ request()->is('peserta/marketing/*') ? ' active' : '' }}">

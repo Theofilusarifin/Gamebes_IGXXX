@@ -45,6 +45,7 @@
                     @php
                     $season_now = App\Season::where('number',
                     App\SeasonNow::first()->number)->first();
+                    $tz = 'Asia/Jakarta';  
                     @endphp
         
                     {{-- Card Season --}}
@@ -66,6 +67,13 @@
                                                 var _hour = _minute * 60;
                                                 var timer;
                                                 function showRemaining() {
+                                                    // $timestamp = time();
+                                                    // $dt = new DateTime("now", new DateTimeZone($tz)); //first argument "must" be a string
+                                                    // $dt->setTimestamp($timestamp); //adjust the object to correct timestamp
+                                                    // $now = $dt->format('Y-m-d H:i:s');
+                                                    // var now = new Date().toLocaleString("id-ID", {timeZone: "Asia/Jakarta"});
+                                                    // now.replace("/","-");
+                                                    // alert(now);
                                                     var now = new Date();
                                                     var distance = end - now;
                                                     if (distance < 0) {

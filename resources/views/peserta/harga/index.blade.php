@@ -113,7 +113,7 @@
                     <div class="row d-flex justify-content-start align-items-center">
                         {{-- Judul --}}
                         <div class="col-6">
-                            <h1 class="fs-5 fw-bold text-white mb-0">Product</h1>
+                            <h1 class="fs-5 fw-bold text-white mb-0">Harga Jual</h1>
                         </div>
                     </div>
                 </div>

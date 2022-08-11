@@ -31,6 +31,7 @@ class DashboardController extends Controller
             $team_machines2[$index]->name = $nama_mesin;
             $index++;
         }
+        // dd($team->transports);
 
         $team_transports = $team->transports->all();
         $team_services = Service::find($team->service_id);

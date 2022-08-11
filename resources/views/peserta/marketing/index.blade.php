@@ -117,7 +117,7 @@
                     {{-- Saos Tomat --}}
                     <div class="row d-flex align-items-center justify-content-center mt-4">
                         <div class="col-4" style="text-align:center">
-                            <p class="mb-2 ms-2" style="font-weight: 800">Saos Tomat</p>
+                            <p class="mb-2 ms-2" style="font-weight: 800">Saos Udang</p>
                             <img src="{{ asset('assets/img/icons/products/Saos Tomat.png') }}" alt="">
                         </div>
                         {{-- Jumlah Barang --}}

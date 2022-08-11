@@ -50,7 +50,7 @@
                                     <option selected value="">-- Pilih Nama Produk --</option>
                                     <option value="1">Udang Kaleng</option>
                                     <option value="2">Kitosan</option>
-                                    <option value="3">Saos Tomat</option>
+                                    <option value="3">Saos Udang</option>
                                 </select>
                             </div>
                         </div>
