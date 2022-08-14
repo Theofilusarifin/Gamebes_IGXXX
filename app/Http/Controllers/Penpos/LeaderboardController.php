@@ -33,8 +33,8 @@ class LeaderboardController extends Controller
 
             // Set machine effectivity dan higenity
             if ($team_machine_combination != null) {
-                $machine_effectivity = $team_machine_combination[0]->effectivity/100;
-                $machine_higenity = $team_machine_combination[0]->higenity/100;
+                $machine_effectivity = $team_machine_combination[0]->effectivity / 100;
+                $machine_higenity = $team_machine_combination[0]->higenity / 100;
             }
 
             // HITUNG SCORE
@@ -54,6 +54,10 @@ class LeaderboardController extends Controller
             }
 
             if ($team->waste < 0) {
+                $score_limbah = 0;
+            }
+
+            if ($score_limbah < 0){
                 $score_limbah = 0;
             }
 
