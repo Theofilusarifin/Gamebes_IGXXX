@@ -52,26 +52,26 @@
                             alt="" id="gambar_level">
                     </div>
                     <div class="col-12 col-sm-12 col-xl-12 d-flex justify-content-between">
-                        @if (Auth::user()->team->level < 3)
-                        <button class="btn btn-info" type="button" id="update_syarat" onclick="updateSyarat()">Update
+                        @if (Auth::user()->team->level < 3) <button class="btn btn-info" type="button"
+                            id="update_syarat" onclick="updateSyarat()">Update
                             Syarat</button>
-                        @else
-                        <button disabled class="btn btn-info" type="button" id="update_syarat">Level Sudah Max</button>
-                        @endif
-
-                        @if (Auth::user()->team->level < 3)
-                            @if ($success_count == 4)
-                            <button class="btn btn-success" id="upgrade_level" type="button"
-                                onclick="upgradeLevel()">Upgrade
-                                Level</button>
                             @else
-                            <button disabled class="btn btn-success" id="upgrade_level" type="button"
-                                onclick="upgradeLevel()">Upgrade
-                                Level</button>
+                            <button disabled class="btn btn-info" type="button" id="update_syarat">Level Sudah
+                                Max</button>
                             @endif
-                        @else
-                            <button disabled class="btn btn-success" id="upgrade_level" type="button">Level Sudah Max</button>
-                        @endif
+
+                            @if (Auth::user()->team->level < 3) @if ($success_count==4) <button class="btn btn-success"
+                                id="upgrade_level" type="button" onclick="upgradeLevel()">Upgrade
+                                Level</button>
+                                @else
+                                <button disabled class="btn btn-success" id="upgrade_level" type="button"
+                                    onclick="upgradeLevel()">Upgrade
+                                    Level</button>
+                                @endif
+                                @else
+                                <button disabled class="btn btn-success" id="upgrade_level" type="button">Level Sudah
+                                    Max</button>
+                                @endif
                     </div>
                 </div>
             </div>
@@ -93,7 +93,7 @@
                 },
                 success: function (data) {
                     // UBAH GAMBAR
-                    var success_count = data.team_level.syarat_1 + data.team_level.syarat_2 + data.team_level.syarat_3 + data.team_level.syarat_4
+                    var success_count = data.team_level.syarat_1 + data.team_level.syarat_2 + data.team_level.syarat_3 + data.team_level.syarat_4;
                     // alert(success_count);
                     $('#gambar_level').attr("src",'https://penyisihan.igubaya.com/assets/img/level/'+ data.team.level +'/'+success_count+'.png');
                     
