@@ -123,6 +123,17 @@ class ProduksiController extends Controller
             ), 200);
         }
 
+        // Pengecekan banyak item negatif
+        if ($banyak_item <= 0) {
+            $status = 'error';
+            $msg = 'Banyak item harus lebih besar dari 0!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
         $tipe_udang = $request['tipe_udang']; //Id Udang yang dipilih team
         // Tidak masukin banyak_item
         if ($tipe_udang == null) {

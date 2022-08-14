@@ -89,39 +89,6 @@ class MarketingController extends Controller
         $banyak_item_2 = ($request['banyak_item_2'] != null) ? (int)$request['banyak_item_2'] : 0;
         $banyak_item_3 = ($request['banyak_item_3'] != null) ? (int)$request['banyak_item_3'] : 0;
 
-        // Apabila banyak item melebihi kapasitas transport
-        if ($banyak_item_1 < 0) {
-            $status = 'error';
-            $msg = 'Caught Cheating! Score -1';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
-        // Apabila banyak item melebihi kapasitas transport
-        if ($banyak_item_2 < 0) {
-            $status = 'error';
-            $msg = 'Caught Cheating! Score -1';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
-        // Apabila banyak item melebihi kapasitas transport
-        if ($banyak_item_3 < 0) {
-            $status = 'error';
-            $msg = 'Caught Cheating! Score -1';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
         // Ambil Team Transport yang dipilih 
         $team_transport = TeamTransport::find($request['transport_id']);
 
@@ -140,6 +107,39 @@ class MarketingController extends Controller
         if (!isset($team_transport)) {
             $status = 'error';
             $msg = 'Pilih transport terlebih dahulu!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
+        // Apabila banyak item kurang dari 0
+        if ($banyak_item_1 < 0) {
+            $status = 'error';
+            $msg = 'Harap memasukkan banyak item yang sesuai!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
+        // Apabila banyak item kurang dari 0
+        if ($banyak_item_2 < 0) {
+            $status = 'error';
+            $msg = 'Harap memasukkan banyak item yang sesuai!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
+        // Apabila banyak item kurang dari 0
+        if ($banyak_item_3 < 0) {
+            $status = 'error';
+            $msg = 'Harap memasukkan banyak item yang sesuai!';
 
             return response()->json(array(
                 'status' => $status,
