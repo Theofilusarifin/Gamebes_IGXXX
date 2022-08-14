@@ -98,9 +98,43 @@ class ProduksiController extends Controller
         // Ambil data dari ajax
         $team = Auth::user()->team;
         $product = Product::find($request['product_id']);
+        
+        // Tidak masukin Product
+        if ($product == null) {
+            $status = 'error';
+            $msg = 'Pilih product terlebih dahulu!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
         //Input user
         $banyak_item = $request['banyak_produksi']; //Kalau Kitosan kelipatan 1/2/3/4/5/6, sisanya kelipatan 4/8/12/16/20
+        // Tidak masukin banyak_item
+        if ($banyak_item == null) {
+            $status = 'error';
+            $msg = 'Masukkan banyak item terlebih dahulu!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+        
         $tipe_udang = $request['tipe_udang']; //Id Udang yang dipilih team
+        // Tidak masukin banyak_item
+        if ($tipe_udang == null) {
+            $status = 'error';
+            $msg = 'Masukkan Tipe Udang terlebih dahulu!';
+
+            return response()->json(array(
+                'status' => $status,
+                'msg' => $msg,
+            ), 200);
+        }
+
         // Status dan message untuk respond
         $status = '';
         $msg = '';
