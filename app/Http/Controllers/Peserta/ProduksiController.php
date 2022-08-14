@@ -98,7 +98,7 @@ class ProduksiController extends Controller
         // Ambil data dari ajax
         $team = Auth::user()->team;
         $product = Product::find($request['product_id']);
-        
+
         // Tidak masukin Product
         if ($product == null) {
             $status = 'error';
@@ -122,7 +122,7 @@ class ProduksiController extends Controller
                 'msg' => $msg,
             ), 200);
         }
-        
+
         $tipe_udang = $request['tipe_udang']; //Id Udang yang dipilih team
         // Tidak masukin banyak_item
         if ($tipe_udang == null) {

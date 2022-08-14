@@ -130,7 +130,7 @@ class MarketingController extends Controller
         // Cek apakah ada cooldown?
         if ($team_transport->cooldown_marketing != null) {
             $status = 'error';
-            $msg = 'Team masih belum bisa melakukan marketing menggunakan transport ' . $transport->name;
+            $msg = $transport->name. ' masih dalam cooldown!';
 
             return response()->json(array(
                 'status' => $status,
