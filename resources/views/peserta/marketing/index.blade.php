@@ -42,11 +42,12 @@
                             {{-- Pilih Team --}}
                             <div class="mb-4">
                                 <label class="my-1 me-2" for="transport_id">Pilih Transport</label>
-                                <select class="form-select" id="transport_id" aria-label="Default select example" onchange="getCooldown()">
+                                <select class="form-select" id="transport_id" aria-label="Default select example"
+                                    onchange="getCooldown()">
                                     <option selected disabled>-- Pilih Transport --</option>
                                     @foreach ($team_transports as $transport)
-                                    <option value="{{ $transport->pivot->id }}">
-                                        {{ $transport->name }}
+                                    <option value="{{ $transport->id }}">
+                                        {{ App\Transport::find($transport->transport_id)->name }}
                                     </option>
                                     @endforeach
                                 </select>

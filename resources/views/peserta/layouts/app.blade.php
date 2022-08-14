@@ -68,30 +68,37 @@
                                         var _hour = _minute * 60;
                                         var timer;
                                         function showRemaining() {
-                                            var now = new Date();
-                                            var distance = end - now;
-                                            if (distance < 0) {
-                                                document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
-                                                if('{{$season_now->number}}' == 3){
-                                                    document.getElementById('logout-form').submit();
+                                                    // Declare Waktu Surabaya
+                                                    var sby_time = new Date().toLocaleString("id-ID", {timeZone: "Asia/Jakarta"});
+                                                    // Ganti / jadi - dan . jadi :
+                                                    sby_time = sby_time.replaceAll("/","-");
+                                                    sby_time = sby_time.replaceAll(".",":");
+                                                    // Karena fixed Agustus 2022 jadinya dipindah lgsg hardcode di depan 
+                                                    sby_time = sby_time.replace("-8-2022","");
+                                                    sby_time = '2022-08-' + sby_time;
+                                                    // Convert String into Datetime
+                                                    var now = new Date(sby_time);
+                                                    // Calculate remaining time
+                                                    var distance = end - now;
+                                                    if (distance < 0) {
+                                                        document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
+                                                        return;
+                                                    }
+                                                    var minutes = Math.floor((distance % _hour) / _minute);
+                                                    var seconds = Math.floor((distance % _minute) / _second);
+        
+                                                    if (seconds < 10){
+                                                        seconds = "0"+seconds;
+                                                    }
+        
+                                                    if (minutes < 10){
+                                                        minutes = "0"+minutes;
+                                                    }
+        
+                                                    document.getElementById(id).innerHTML = minutes + ':';
+                                                    document.getElementById(id).innerHTML += seconds;
                                                 }
-                                                return;
-                                            }
-                                            var minutes = Math.floor((distance % _hour) / _minute);
-                                            var seconds = Math.floor((distance % _minute) / _second);
-
-                                            if (seconds < 10){
-                                                seconds = "0"+seconds;
-                                            }
-
-                                            if (minutes < 10){
-                                                minutes = "0"+minutes;
-                                            }
-
-                                            document.getElementById(id).innerHTML = minutes + ':';
-                                            document.getElementById(id).innerHTML += seconds;
-                                        }
-                                        timer = setInterval(showRemaining, 1000);
+                                                timer = setInterval(showRemaining, 1000);
                                     }
                                     else{
                                         document.getElementById(id).innerHTML = "Game Besar Belum Dimulai";
@@ -110,13 +117,15 @@
                                         <img class="avatar rounded-circle logo" alt="Image placeholder"
                                             src="{{ asset('') }}assets/img/logo/Account.png">
                                         <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                                            <span class="mb-0 font-small fw-bold text-gray-900">{{ Auth::user()->username
+                                            <span class="mb-0 font-small fw-bold text-gray-900">{{
+                                                Auth::user()->username
                                                 }}</span>
                                         </div>
                                     </div>
                                 </a>
                                 <div class="dropdown-menu dashboard-dropdown dropdown-menu-end mt-2 py-1">
-                                    <a class="dropdown-item d-flex align-items-center" onclick="event.preventDefault();
+                                    <a class="dropdown-item d-flex align-items-center"
+                                        onclick="event.preventDefault();
                                                                         document.getElementById('logout-form').submit();">
                                         <svg class="dropdown-icon text-danger me-2" fill="none" stroke="currentColor"
                                             viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -126,7 +135,7 @@
                                         </svg>
                                         Logout
                                     </a>
-    
+
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
@@ -144,8 +153,8 @@
         <br>
 
         <!-- Modal -->
-        <div class="modal fade" id="modal-season" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalTitleNotify"
-            aria-hidden="true">
+        <div class="modal fade" id="modal-season" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            role="dialog" aria-labelledby="modalTitleNotify" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">

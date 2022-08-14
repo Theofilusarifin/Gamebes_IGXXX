@@ -45,16 +45,16 @@
                     @php
                     $season_now = App\Season::where('number',
                     App\SeasonNow::first()->number)->first();
-                    $tz = 'Asia/Jakarta';  
+                    $tz = 'Asia/Jakarta';
                     @endphp
-        
+
                     {{-- Card Season --}}
                     <div class="d-flex align-items-center card border-0 shadow px-3 mt-4">
                         <div class="card-body d-flex align-items-center">
                             <p class="me-2 d-flex align-items-center text-primary" style="margin-bottom:0">
                                 Sisa Waktu Musim {{ $season_now->name }} :
                             </p>
-        
+
                             <div class="fw-bolder" id="countdown_season"></div>
                             <script>
                                 CountDownTimer('countdown_season');
@@ -67,14 +67,17 @@
                                                 var _hour = _minute * 60;
                                                 var timer;
                                                 function showRemaining() {
-                                                    // $timestamp = time();
-                                                    // $dt = new DateTime("now", new DateTimeZone($tz)); //first argument "must" be a string
-                                                    // $dt->setTimestamp($timestamp); //adjust the object to correct timestamp
-                                                    // $now = $dt->format('Y-m-d H:i:s');
-                                                    // var now = new Date().toLocaleString("id-ID", {timeZone: "Asia/Jakarta"});
-                                                    // now.replace("/","-");
-                                                    // alert(now);
-                                                    var now = new Date();
+                                                    // Declare Waktu Surabaya
+                                                    var sby_time = new Date().toLocaleString("id-ID", {timeZone: "Asia/Jakarta"});
+                                                    // Ganti / jadi - dan . jadi :
+                                                    sby_time = sby_time.replaceAll("/","-");
+                                                    sby_time = sby_time.replaceAll(".",":");
+                                                    // Karena fixed Agustus 2022 jadinya dipindah lgsg hardcode di depan 
+                                                    sby_time = sby_time.replace("-8-2022","");
+                                                    sby_time = '2022-08-' + sby_time;
+                                                    // Convert String into Datetime
+                                                    var now = new Date(sby_time);
+                                                    // Calculate remaining time
                                                     var distance = end - now;
                                                     if (distance < 0) {
                                                         document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
@@ -107,13 +110,14 @@
                     <div class="align-items-center">
                         <ul class="align-items-center navbar-nav w-100">
                             <li class="nav-item dropdown ms-lg-3 me-5">
-                                <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button" data-bs-toggle="dropdown"
-                                    aria-expanded="false">
+                                <a class="nav-link dropdown-toggle pt-1 px-0" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
                                     <div class="media d-flex align-items-center">
                                         <img class="avatar rounded-circle logo" alt="Image placeholder"
                                             src="{{ asset('') }}assets/img/logo/Account.png">
                                         <div class="media-body ms-2 text-dark align-items-center d-none d-lg-block">
-                                            <span class="mb-0 font-small fw-bold text-gray-900">{{ Auth::user()->username
+                                            <span class="mb-0 font-small fw-bold text-gray-900">{{
+                                                Auth::user()->username
                                                 }}</span>
                                         </div>
                                     </div>
@@ -130,7 +134,7 @@
                                         </svg>
                                         Logout
                                     </a>
-        
+
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
                                         @csrf
                                     </form>
@@ -149,8 +153,8 @@
         <br>
 
         <!-- Modal -->
-        <div class="modal fade" id="modal-season" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" role="dialog" aria-labelledby="modalTitleNotify"
-            aria-hidden="true">
+        <div class="modal fade" id="modal-season" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            role="dialog" aria-labelledby="modalTitleNotify" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-body">

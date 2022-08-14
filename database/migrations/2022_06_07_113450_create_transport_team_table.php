@@ -24,7 +24,7 @@ class CreateTransportTeamTable extends Migration
 
             $table->timestamp('cooldown_marketing')->nullable();
 
-            $table->integer('amount_have');
+            $table->integer('amount_have')->default(1);
             $table->integer('use_num')->nullable();
         });
     }

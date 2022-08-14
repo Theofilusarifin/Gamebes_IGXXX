@@ -48,9 +48,36 @@
         background-color: rgba(223, 169, 70, 0.6);
     }
 
-    .company {
+    .company_0 {
         width: 30px;
-        background-image: url(../../../assets/img/logo/Company.png);
+        background-image: url(../../../assets/img/logo/Company_0.png);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    .company_1 {
+        width: 30px;
+        background-image: url(../../../assets/img/logo/Company_1.png);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    .company_2 {
+        width: 30px;
+        background-image: url(../../../assets/img/logo/Company_2.png);
+        -webkit-background-size: cover;
+        -moz-background-size: cover;
+        -o-background-size: cover;
+        background-size: cover;
+    }
+
+    .company_3 {
+        width: 30px;
+        background-image: url(../../../assets/img/logo/Company_3.png);
         -webkit-background-size: cover;
         -moz-background-size: cover;
         -o-background-size: cover;
@@ -82,11 +109,11 @@
         color: #FFF;
     }
 
-    td:not(.water, .company, .empty, .home) {
+    td:not(.water, .company_0, .company_1, .company_2, .company_3, .empty, .home) {
         border: 1px dashed rgb(84, 84, 84);
     }
 
-    td:not(.water, .company, .empty, .home, .harbour):hover {
+    td:not(.water, .company_0, .company_1, .company_2, .company_3, .empty, .home, .harbour):hover {
         background-color: rgba(212, 206, 206, 0.6);
     }
 
@@ -175,7 +202,7 @@
                     <tr>
                         {{-- Tentukan Class --}}
                         @php($class="empty")
-                        @if ($left_company->is_company) @php($class="company")@endif
+                        @if ($left_company->is_company) @php($class="company_".App\Team::find($left_company->url_company)->level)@endif
                         @if ($left_company->is_home) @php($class="home")@endif
 
                         @if($left_company->num_occupant > 0)
@@ -196,7 +223,7 @@
                             @foreach ($upper_companies as $upper_company)
                             {{-- Tentukan Class --}}
                             @php($class="empty")
-                            @if ($upper_company->is_company) @php($class="company")@endif
+                            @if ($upper_company->is_company) @php($class="company_".App\Team::find($upper_company->url_company)->level)@endif
                             @if ($upper_company->is_home) @php($class="home")@endif
 
                             @if($upper_company->num_occupant > 0)
@@ -230,7 +257,7 @@
                             {{-- Kasik nama ke pelabuhan --}}
                             @php($alias = "P".$index_pelabuhan)
                             @php($index_pelabuhan+=1)
-                            @elseif ($territory->is_company) @php($class="company")
+                            @elseif ($territory->is_company) @php($class="company_".App\Team::find($territory->url_company)->level)
 
                             {{-- Store --}}
                             @elseif (isset($territory->transport_store_id))
@@ -291,7 +318,7 @@
                             @foreach ($lower_companies as $lower_company)
                             {{-- Tentukan Class --}}
                             @php($class="empty")
-                            @if ($lower_company->is_company) @php($class="company")@endif
+                            @if ($lower_company->is_company) @php($class="company_".App\Team::find($lower_company->url_company)->level)@endif
                             @if ($lower_company->is_home) @php($class="home")@endif
 
                             @if($lower_company->num_occupant > 0)
@@ -313,7 +340,7 @@
                     <tr>
                         {{-- Tentukan Class --}}
                         @php($class="empty")
-                        @if ($right_company->is_company) @php($class="company")@endif
+                        @if ($right_company->is_company) @php($class="company_".App\Team::find($right_company->url_company)->level)@endif
                         @if ($right_company->is_home) @php($class="home")@endif
 
                         @if($right_company->num_occupant > 0)

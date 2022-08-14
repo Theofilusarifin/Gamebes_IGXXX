@@ -66,13 +66,20 @@
                                                 var _hour = _minute * 60;
                                                 var timer;
                                                 function showRemaining() {
-                                                    var now = new Date();
+                                                    // Declare Waktu Surabaya
+                                                    var sby_time = new Date().toLocaleString("id-ID", {timeZone: "Asia/Jakarta"});
+                                                    // Ganti / jadi - dan . jadi :
+                                                    sby_time = sby_time.replaceAll("/","-");
+                                                    sby_time = sby_time.replaceAll(".",":");
+                                                    // Karena fixed Agustus 2022 jadinya dipindah lgsg hardcode di depan 
+                                                    sby_time = sby_time.replace("-8-2022","");
+                                                    sby_time = '2022-08-' + sby_time;
+                                                    // Convert String into Datetime
+                                                    var now = new Date(sby_time);
+                                                    // Calculate remaining time
                                                     var distance = end - now;
                                                     if (distance < 0) {
                                                         document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
-                                                        if('{{$season_now->number}}' == 3){
-                                                            document.getElementById('logout-form').submit();
-                                                        }
                                                         return;
                                                     }
                                                     var minutes = Math.floor((distance % _hour) / _minute);

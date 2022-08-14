@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class TeamTransport extends Model
 {
-    protected $table = "team_transport";
+    protected $table = "transport_team";
 }

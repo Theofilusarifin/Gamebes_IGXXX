@@ -11,6 +11,7 @@ use App\IngridientStore;
 use App\MachineStore;
 use App\Service;
 use App\TeamMachine;
+use App\TeamTransport;
 use App\Transport;
 use App\TransportStore;
 use DateInterval;
@@ -32,6 +33,8 @@ class MapController extends Controller
         $lower_companies = Territory::where('id', '>=', 1062)->where('id', '<=', 1103)->orderBy('id', 'DESC')->get();
         $left_companies = Territory::where('id', '>=', 1104)->where('id', '<=', 1123)->orderBy('id', 'DESC')->get();
 
+        // $teamCoba = Team::find(1);
+        // dd($teamCoba);
         $teams = Team::all();
         return view('penpos.map.index', compact('territories', 'teams', 'upper_companies', 'right_companies', 'lower_companies', 'left_companies'));
     }
@@ -621,13 +624,6 @@ class MapController extends Controller
         // Ambil data item dari team
         $team_item = $team->transports->where('id', $item_id)->first();
 
-        $amount_have = 0;
-        // Kalau punya barang ganti amount have sesuai yang dipunyai
-        if ($team_item != null) {
-            // Ambil banyaknya yang dimiliki sekarang
-            $amount_have = $team_item->pivot->amount_have;
-        }
-
         // Ambil stock dari store
         $stock = $item->pivot->stock;
         // Apabila stock tidak tersedia
@@ -667,8 +663,14 @@ class MapController extends Controller
         // Update Stock
         $item->transportStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
 
-        // Update tambahkan banyak yang sekarang dengan yang dibeli
-        $team->transports()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
+        for ($i = 0; $i < $banyak_item; $i++) {
+            $teamTransport = new TeamTransport;
+            $teamTransport->team_id = $team->id;
+            $teamTransport->transport_id = Transport::find($item_id)->id;
+            $teamTransport->save();
+        }
+        // // Update tambahkan banyak yang sekarang dengan yang dibeli
+        // $team->transports()->sync([$item->id => ['amount_have' => $amount_have + $banyak_item]], false);
 
         $status = 'success';
         $response = 'success';
