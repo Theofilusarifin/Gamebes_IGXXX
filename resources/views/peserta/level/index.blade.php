@@ -93,7 +93,7 @@
                 },
                 success: function (data) {
                     // UBAH GAMBAR
-                    var success_count = data.team_level.syarat_1 + data.team_level.syarat_2 + data.team_level.syarat_3 + data.team_level.syarat_4;
+                    var success_count = data.team_level.syarat_1*1 + data.team_level.syarat_2*1 + data.team_level.syarat_3*1 + data.team_level.syarat_4*1;
                     // alert(success_count);
                     $('#gambar_level').attr("src",'https://penyisihan.igubaya.com/assets/img/level/'+ data.team.level +'/'+success_count+'.png');
                     
