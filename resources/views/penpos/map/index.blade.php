@@ -202,7 +202,7 @@
                     <tr>
                         {{-- Tentukan Class --}}
                         @php($class="empty")
-                        @if ($left_company->is_company) @php($class="company_".App\Team::find($left_company->url_company)->level)@endif
+                        @if ($left_company->is_company) @php($class="company_".$left_company->company_level)@endif
                         @if ($left_company->is_home) @php($class="home")@endif
 
                         @if($left_company->num_occupant > 0)
@@ -223,7 +223,7 @@
                             @foreach ($upper_companies as $upper_company)
                             {{-- Tentukan Class --}}
                             @php($class="empty")
-                            @if ($upper_company->is_company) @php($class="company_".App\Team::find($upper_company->url_company)->level)@endif
+                            @if ($upper_company->is_company) @php($class="company_".$upper_company->company_level)@endif
                             @if ($upper_company->is_home) @php($class="home")@endif
 
                             @if($upper_company->num_occupant > 0)
@@ -257,7 +257,7 @@
                             {{-- Kasik nama ke pelabuhan --}}
                             @php($alias = "P".$index_pelabuhan)
                             @php($index_pelabuhan+=1)
-                            @elseif ($territory->is_company) @php($class="company_".App\Team::find($territory->url_company)->level)
+                            @elseif ($territory->is_company) @php($class="company_".$territory->company_level)
 
                             {{-- Store --}}
                             @elseif (isset($territory->transport_store_id))
@@ -318,7 +318,7 @@
                             @foreach ($lower_companies as $lower_company)
                             {{-- Tentukan Class --}}
                             @php($class="empty")
-                            @if ($lower_company->is_company) @php($class="company_".App\Team::find($lower_company->url_company)->level)@endif
+                            @if ($lower_company->is_company) @php($class="company_".$lower_company->company_level)@endif
                             @if ($lower_company->is_home) @php($class="home")@endif
 
                             @if($lower_company->num_occupant > 0)
@@ -340,7 +340,7 @@
                     <tr>
                         {{-- Tentukan Class --}}
                         @php($class="empty")
-                        @if ($right_company->is_company) @php($class="company_".App\Team::find($right_company->url_company)->level)@endif
+                        @if ($right_company->is_company) @php($class="company_".$right_company->company_level)@endif
                         @if ($right_company->is_home) @php($class="home")@endif
 
                         @if($right_company->num_occupant > 0)
@@ -526,7 +526,6 @@
 </div>
 @endsection
 
-
 @section('script')
 
 <script>
@@ -550,7 +549,7 @@
                     // Tentukan Class
                     let classLeft = "empty";
                     if (left_company.is_company == 1) {
-                        classLeft = "company";
+                        classLeft = 'company_'+left_company.company_level;
                     }
                     if (left_company.is_home == 1) {
                         classLeft = "home";
@@ -576,7 +575,7 @@
                 $.each(data.upper_companies, (key, upper_company) => {
                     let classUpper = "empty";
                     if (upper_company.is_company == 1) {
-                        classUpper = "company";
+                        classUpper = "company_"+upper_company.company_level;
                     }
                     if (upper_company.is_home == 1) {
                         classUpper = "home";
@@ -622,7 +621,7 @@
                         alias = "P" + index_pelabuhan;
                         index_pelabuhan++;
                     } else if (territory.is_company == 1) {
-                        classes = "company";
+                        classes = "company_"+territory.company_level;
                     }
                     // Store
                     else if (territory.transport_store_id != null) {
@@ -686,7 +685,7 @@
                 $.each(data.lower_companies, (key, lower_company) => {
                     let classLower = "empty";
                     if (lower_company.is_company == 1) {
-                        classLower = "company";
+                        classLower = "company_"+lower_company.company_level;
                     }
                     if (lower_company.is_home == 1) {
                         classLower = "home";
@@ -711,7 +710,7 @@
                     // Tentukan Class
                     let classRight = "empty";
                     if (right_company.is_company == 1) {
-                        classRight = "company";
+                        classRight = "company_"+right_company.company_level;
                     }
                     if (right_company.is_home == 1) {
                         classRight = "home";

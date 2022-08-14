@@ -530,6 +530,8 @@ class ProduksiController extends Controller
             //Hasil produk akhir setelah proses defect (dibulatin kebawah)
             $hasil_produk_akhir = floor($hasil_setelah_defect);
             if ($hasil_produk_akhir >= 1) {
+                $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi ' . $trashMsg;
+
                 $udang_kaleng_team = $team->products->where('id', $product->id)->first();
                 // Apabila punya udang kaleng sebelumnya, tambahkan amount havenya dengan yang diproduksi
                 if ($udang_kaleng_team != null) {
@@ -538,7 +540,6 @@ class ProduksiController extends Controller
                 $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
                 $status = 'success';
-                $msg = 'Produksi berhasil dilakukan! ' . $hasil_produk_akhir . ' ' . $product->name . ' berhasil diproduksi\n' . $trashMsg;
             } else {
                 $status = 'error';
                 $msg = 'Semua produk yang dihasilkan cacat akibat defect mesin yang tinggi!';

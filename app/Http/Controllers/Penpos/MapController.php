@@ -664,9 +664,12 @@ class MapController extends Controller
         $item->transportStores()->sync([$store->id => ['stock' => $item->pivot->stock - $banyak_item]], false);
 
         for ($i = 0; $i < $banyak_item; $i++) {
+            // Tambahkan data transport baru
             $teamTransport = new TeamTransport;
             $teamTransport->team_id = $team->id;
             $teamTransport->transport_id = Transport::find($item_id)->id;
+
+            // Simpan Data baru
             $teamTransport->save();
         }
         // // Update tambahkan banyak yang sekarang dengan yang dibeli

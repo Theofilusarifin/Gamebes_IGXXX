@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Product;
 use App\Season;
 use App\SeasonNow;
+use App\Territory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -285,6 +286,11 @@ class LevelController extends Controller
                 'syarat_3' => 0,
                 'syarat_4' => 0,
             ]);
+
+            // Update Team Company di territory team
+            $team_company = Territory::where('url_company', $team->id)->first();
+            $team_company->company_level = $team_company->company_level + 1;
+            $team_company->save();
 
             $status = 'success';
             $msg = 'Selamat! Team anda telah berhasil mencapai level ' . $team->level . '!';

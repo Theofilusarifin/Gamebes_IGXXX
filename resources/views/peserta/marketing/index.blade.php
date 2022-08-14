@@ -61,42 +61,64 @@
                                 <span id="marketing_cooldown"></span>
                             </label>
                             <script>
-                                function CountDownTimer(id, team_transport_id, cooldown_marketing)
+                                var timer;
+                                function CooldownTimer(id, team_transport_id, cooldown_marketing)
                                 {
-                                    if(cooldown_marketing != ''){
+                                    // var sudahNull = false;
+                                    var sudahNull = '';
+                                    var done = 0;
+                                    if(cooldown_marketing != null){
                                         var end = new Date(cooldown_marketing);
+                                        // Meskipun di databse NULL dia ngambil 1 Januari 1970
                                         var _second = 1000;
                                         var _minute = _second * 60;
                                         var _hour = _minute * 60;
-                                        var timer;
-                                        function showRemaining() {
-                                            var now = new Date();
-                                            var distance = end - now;
-                                            if (distance < 0) {
-                                                nullCooldown(team_transport_id);
-                                                document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
-                                                return;
-                                            }
-                                            var minutes = Math.floor((distance % _hour) / _minute);
-                                            var seconds = Math.floor((distance % _minute) / _second);
+                                        function showRemainingCooldown() {
+                                            if (!done){
+                                                // Declare Waktu Surabaya
+                                                var sby_time = new Date().toLocaleString("id-ID", {timeZone: "Asia/Jakarta"});
+                                                // Ganti / jadi - dan . jadi :
+                                                sby_time = sby_time.replaceAll("/","-");
+                                                sby_time = sby_time.replaceAll(".",":");
+                                                // Karena fixed Agustus 2022 jadinya dipindah lgsg hardcode di depan 
+                                                sby_time = sby_time.replace("-8-2022","");
+                                                sby_time = '2022-08-' + sby_time;
+                                                // Convert String into Datetime
+                                                var now = new Date(sby_time);
+                                                // Calculate remaining time
+                                                var distance = end - now;
+                                                if (distance < 0) {
+                                                    nullCooldown(team_transport_id);
+                                                    document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
+                                                    done = 1;
+                                                    return;
+                                                }
+                                                var minutes = Math.floor((distance % _hour) / _minute);
+                                                var seconds = Math.floor((distance % _minute) / _second);
 
-                                            if (seconds < 10){
-                                                seconds = "0"+seconds;
-                                            }
+                                                if (seconds < 10){
+                                                    seconds = "0"+seconds;
+                                                }
 
-                                            if (minutes < 10){
-                                                minutes = "0"+minutes;
-                                            }
+                                                if (minutes < 10){
+                                                    minutes = "0"+minutes;
+                                                }
 
-                                            document.getElementById(id).innerHTML = 'Countdown = ';
-                                            document.getElementById(id).innerHTML += minutes + ':';
-                                            document.getElementById(id).innerHTML += seconds;
+                                                document.getElementById(id).innerHTML = 'Countdown = ';
+                                                document.getElementById(id).innerHTML += minutes + ':';
+                                                document.getElementById(id).innerHTML += seconds;
+                                            }
                                         }
-                                        timer = setInterval(showRemaining, 1000);
+                                        if (!done){
+                                            timer = setInterval(showRemainingCooldown, 1000);
+                                        }
                                     }
                                     else{
                                         document.getElementById(id).innerHTML = "Bisa melakukan marketing!";
                                     }
+                                }
+                                function stopTimer(){
+                                    clearInterval(timer);
                                 }
                             </script>
                         </div>
@@ -119,7 +141,7 @@
                     <div class="row d-flex align-items-center justify-content-center mt-4">
                         <div class="col-4" style="text-align:center">
                             <p class="mb-2 ms-2" style="font-weight: 800">Saos Udang</p>
-                            <img src="{{ asset('assets/img/icons/products/Saos Tomat.png') }}" alt="">
+                            <img src="{{ asset('assets/img/icons/products/Saos Udang.png') }}" alt="">
                         </div>
                         {{-- Jumlah Barang --}}
                         <div class="col-8 d-flex align-items-center mt-3">
@@ -158,6 +180,8 @@
 @section('script')
 <script>
     function getCooldown() {
+        stopTimer();
+        $('#marketing_cooldown').html('');
         $.ajax({
             type: 'POST',
             url: "{{ route('peserta.marketing.cooldown') }}",
@@ -166,7 +190,7 @@
                 'transport_id': $('#transport_id').val(),
             },
             success: function (data) {
-                CountDownTimer('marketing_cooldown', data.team_transport.id, data.team_transport.cooldown_maintenance);
+                CooldownTimer('marketing_cooldown', data.team_transport.id, data.team_transport.cooldown_marketing);
             }
         });
     }
@@ -182,6 +206,7 @@
             success: function (data) {
             }
         });
+        getCooldown();
     }
     
     function jual() {
@@ -214,8 +239,10 @@
                         $('#alert').removeClass("alert-success");
                         $('#alert').addClass("alert-danger");
                     }
-                }
+                };
+                
                 $('#jual').attr('disabled',false);
+                getCooldown();
             }
         });
     }

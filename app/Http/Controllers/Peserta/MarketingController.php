@@ -59,7 +59,7 @@ class MarketingController extends Controller
 
     public function nullCooldown(Request $request)
     {
-        $team_transport = TeamTransport::find($request['transport_id']);
+        $team_transport = TeamTransport::find($request['team_transport_id']);
 
         if ($team_transport == null) {
             $status = 'error';
@@ -70,7 +70,7 @@ class MarketingController extends Controller
             ), 200);
         }
 
-        DB::statement("UPDATE `team_transports` SET cooldown_marketing = NULL WHERE id = $team_transport->id");
+        DB::statement("UPDATE `transport_team` SET cooldown_marketing = NULL WHERE id = $team_transport->id");
         $status = 'success';
 
         return response()->json(array(
@@ -91,6 +91,7 @@ class MarketingController extends Controller
 
         // Ambil Team Transport yang dipilih 
         $team_transport = TeamTransport::find($request['transport_id']);
+
         // Cek Transport 
         $transport = Transport::find($team_transport->transport_id);
 
@@ -273,12 +274,11 @@ class MarketingController extends Controller
         );
 
         // Set waktu untuk cooldownya
-        DB::statement("UPDATE `team_transports` SET cooldown_marketing = '$cooldown_selesai' WHERE id = $team_transport->id");
+        DB::statement("UPDATE `transport_team` SET cooldown_marketing = '$cooldown_selesai' WHERE id = $team_transport->id");
 
         // Tambahkan penggunaan transport
-        $team->transports()->sync([$team_transport->id => [
-            'use_num' => $team_transport->pivot->use_num + 1
-        ]], false);
+        $team_transport->use_num = $team_transport->use_num + 1;
+        $team_transport->save();
 
         $status = 'success';
         $msg = 'Penjualan berhasil dilakukan!';
