@@ -102,7 +102,7 @@ class LevelController extends Controller
         //     Efektivitas & Higenity 
         //Level 1 --> 40++ & 40++, TC >= 1000, Persentase Limbah <= 20%
         //Level 2 --> 60++ & 60++, TC >= 1500, Persentase Limbah <= 15%
-        //Level 3 --> 70++ & 80++, TC >= 2000, Persentase Limbah <= 10% 
+        //Level 3 --> 70++ & 80++, TC >= 2000, Persentase Limbah <= 10%
 
         //Pengecekan Level 1
         if ($team->level == 0) {

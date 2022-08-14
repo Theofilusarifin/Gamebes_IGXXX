@@ -141,7 +141,7 @@ class MarketingController extends Controller
         // Ambil team product
         // Product Udang Kaleng 
         $team_product_kaleng = $team->products->where('id', 1)->first();
-
+        $banyak_kaleng_yang_dimiliki = 0;
         // Team punya productnya ga?
         if ($team_product_kaleng != null) {
             // Ambil amount have untuk pengecekan
@@ -180,9 +180,22 @@ class MarketingController extends Controller
                 'total' => $total_kaleng
             ]], false);
         }
+        else{
+            // Apabila produk yang dimiliki lebih sedikit daripada yang ingin dijual
+            if ($banyak_item_1 > $banyak_kaleng_yang_dimiliki) {
+                $status = 'error';
+                $msg = 'Team ' . $team->name . ' hanya memiliki Udang Kaleng sebanyak ' . $banyak_kaleng_yang_dimiliki . ' buah!';
+
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
+        }
 
         // Product Kitosan
         $team_product_kitosan = $team->products->where('id', 2)->first();
+        $banyak_kitosan_yang_dimiliki = 0;
         // Team punya productnya ga?
         if ($team_product_kitosan != null) {
             // Ambil amount have untuk pengecekan
@@ -221,8 +234,21 @@ class MarketingController extends Controller
                 'total' => $total_kitosan
             ]], false);
         }
+        else{
+            // Apabila produk yang dimiliki lebih sedikit daripada yang ingin dijual
+            if ($banyak_item_2 > $banyak_kitosan_yang_dimiliki) {
+                $status = 'error';
+                $msg = 'Team ' . $team->name . ' hanya memiliki Kitosan sebanyak ' . $banyak_kitosan_yang_dimiliki . ' buah!';
+
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
+        }
         // Product Saus Tomat
         $team_product_saus = $team->products->where('id', 3)->first();
+        $banyak_saus_yang_dimiliki =  0;
 
         // Team punya productnya ga?
         if ($team_product_saus != null) {
@@ -261,6 +287,18 @@ class MarketingController extends Controller
                 'amount_sold' => $amount_sold_new_saus,
                 'total' => $total_saus
             ]], false);
+        }
+        else{
+            // Apabila produk yang dimiliki lebih sedikit daripada yang ingin dijual
+            if ($banyak_item_3 > $banyak_saus_yang_dimiliki) {
+                $status = 'error';
+                $msg = 'Team ' . $team->name . ' hanya memiliki Saus Tomat sebanyak ' . $banyak_saus_yang_dimiliki . ' buah!';
+
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
         }
 
         // SET COOLDOWN
