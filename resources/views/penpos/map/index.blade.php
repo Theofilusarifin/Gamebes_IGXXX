@@ -364,8 +364,7 @@
                 {{-- Team --}}
                 <p class="text-white">Nama Team</p>
 
-                <select class="select2 form-select" id="team_id" tabindex="-1" aria-hidden="true"
-                    onchange="getCapacity()">
+                <select class="select2 form-select" id="team_id" tabindex="-1" aria-hidden="true">
                     <option selected disabled>-- Pilih Nama Team --</option>
                     @foreach ($teams as $team)
                     <option value="{{ $team->id }}">
@@ -399,9 +398,9 @@
                 </div>
 
                 {{-- Capacity --}}
-                <div class="d-flex justify-content-center px-4 mt-4 mb-1">
+                {{-- <div class="d-flex justify-content-center px-4 mt-4 mb-1">
                     <h5 class="text-white"><b>Capacity : <span id="capacity">0</span></b></h5>
-                </div>
+                </div> --}}
 
                 {{-- Button Move --}}
                 <div class="d-flex justify-content-center px-4 mt-2">
@@ -1046,7 +1045,7 @@
                 },
             success: function (data) {
                 // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
-                getCapacity();
+                // getCapacity();
                 if (data.status != ""){
                     $('#alert').hide();
                     $('#alert').show();
@@ -1082,7 +1081,7 @@
                 },
             success: function (data) {
                 // Jalankan funtion get cpaacity untuk melihat capacity baru yang sudah ditambah
-                getCapacity();
+                // getCapacity();
                 if (data.status != ""){
                     $('#alert').hide();
                     $('#alert').show();
@@ -1232,21 +1231,21 @@
         second_2 = 30;
     });
 
-    function getCapacity() {
-        $.ajax({
-            type: 'POST',
-            url: "{{ route('penpos.map.get.capacity') }}",
-            data:{
-                    '_token': $('meta[name="csrf-token"]').attr('content'),
-                    'team_id': $('#team_id').val(),
-                },
-            success: function (data) {
-                if (data.status == "success") {
-                    $('#capacity').html(data.team.current_capacity);
-                } 
-            }
-        });
-    }
+    // function getCapacity() {
+    //     $.ajax({
+    //         type: 'POST',
+    //         url: "{{ route('penpos.map.get.capacity') }}",
+    //         data:{
+    //                 '_token': $('meta[name="csrf-token"]').attr('content'),
+    //                 'team_id': $('#team_id').val(),
+    //             },
+    //         success: function (data) {
+    //             if (data.status == "success") {
+    //                 $('#capacity').html(data.team.current_capacity);
+    //             } 
+    //         }
+    //     });
+    // }
 
     function backToCompany() {
         $.ajax({

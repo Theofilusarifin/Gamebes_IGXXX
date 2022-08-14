@@ -508,29 +508,29 @@ class MapController extends Controller
         ), 200);
     }
 
-    public function getCapacity(Request $request)
-    {
-        // Ambil variabel awal yang dibutuhkan
-        $team = Team::find($request['team_id']);
-        $status = 'success';
-        return response()->json(array(
-            'team' => $team,
-            'status' => $status,
-        ), 200);
-    }
+    // public function getCapacity(Request $request)
+    // {
+    //     // Ambil variabel awal yang dibutuhkan
+    //     $team = Team::find($request['team_id']);
+    //     $status = 'success';
+    //     return response()->json(array(
+    //         'team' => $team,
+    //         'status' => $status,
+    //     ), 200);
+    // }
 
-    public function checkCapacity(Team $team, $item_weight)
-    {
-        // item_weight itu jumlah * berat per ingridient/mesin
-        // Ambil kendaraan paling besar kapasitasnya
-        $team_transport = $team->transports()->orderByDesc('id')->first();
-        // Pengecekan apakah capacity sudah melebihi
+    // public function checkCapacity(Team $team, $item_weight)
+    // {
+    //     // item_weight itu jumlah * berat per ingridient/mesin
+    //     // Ambil kendaraan paling besar kapasitasnya
+    //     $team_transport = $team->transports()->orderByDesc('id')->first();
+    //     // Pengecekan apakah capacity sudah melebihi
 
-        if ($team->current_capacity + $item_weight > $team_transport->max_weight) {
-            return false;
-        }
-        return true;
-    }
+    //     if ($team->current_capacity + $item_weight > $team_transport->max_weight) {
+    //         return false;
+    //     }
+    //     return true;
+    // }
 
     public function action(Request $request)
     {
@@ -756,19 +756,6 @@ class MapController extends Controller
             ), 200);
         }
 
-        // Check Capacity
-        if (!$this->checkCapacity($team, $total_weight)) {
-            $status = 'error';
-            $response = 'error';
-            $msg = 'Kapasitas kendaraan tidak cukup!';
-
-            return response()->json(array(
-                'response' => $response,
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
         $biaya_total = $biaya * $banyak_item;
         // Apanbila tc yang dimiliki tidak cukup
         if ($team->tc < $biaya_total) {
@@ -803,7 +790,7 @@ class MapController extends Controller
         ]);
 
         // Tambahkan capacity team
-        $team->current_capacity = $team->current_capacity + $total_weight;
+        // $team->current_capacity = $team->current_capacity + $total_weight;
         $team->save();
 
         $status = 'success';
@@ -856,19 +843,6 @@ class MapController extends Controller
         // Hitung total weight
         $total_weight = $item->weight * $banyak_item;
 
-        // Check Capacity
-        if (!$this->checkCapacity($team, $total_weight)) {
-            $status = 'error';
-            $response = 'error';
-            $msg = 'Kapasitas kendaraan tidak cukup!';
-
-            return response()->json(array(
-                'response' => $response,
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
         if ($stock < $banyak_item) {
             $status = 'error';
             $response = 'error';
@@ -900,7 +874,7 @@ class MapController extends Controller
         // Tambahkan team total spend 
         $team->total_spend = $team->total_spend + $biaya_total;
         // Tambahkan current kapasitas dengan weight item yang dibeli
-        $team->current_capacity = $team->current_capacity + $total_weight;
+        // $team->current_capacity = $team->current_capacity + $total_weight;
 
         $team->save();
 
@@ -1080,7 +1054,7 @@ class MapController extends Controller
 
         // Update Posisi ke database
         $team->territory_id = $team_company->id;
-        $team->current_capacity = 0;
+        // $team->current_capacity = 0;
         $team->save();
 
         // Update num occupant di territory lama
