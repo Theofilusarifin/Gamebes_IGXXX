@@ -99,28 +99,28 @@
                     
                     // UPDATE BADGE SYARAT 1
                     var class_1 = 'danger';
-                    if (data.team_level.syarat_1){
+                    if (data.team_level.syarat_1*1){
                         class_1 = 'success';   
                     }
                     $('#badge_syarat_1').attr("class", 'badge bg-'+class_1+' p-1');
                     
                     // UPDATE BADGE SYARAT 2
                     var class_2 = 'danger';
-                    if (data.team_level.syarat_2){
+                    if (data.team_level.syarat_2*1){
                         class_2 = 'success';   
                     }
                     $('#badge_syarat_2').attr("class", 'badge bg-'+class_2+' p-1');
 
                     // UPDATE BADGE SYARAT 3
                     var class_3 = 'danger';
-                    if (data.team_level.syarat_3){
+                    if (data.team_level.syarat_3*1){
                         class_3 = 'success';   
                     }
                     $('#badge_syarat_3').attr("class", 'badge bg-'+class_3+' p-1');
                     
                     // UPDATE BADGE SYARAT 4
                     var class_4 = 'danger';
-                    if (data.team_level.syarat_4){
+                    if (data.team_level.syarat_4*1){
                         class_4 = 'success';
                     }
                     $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
@@ -146,7 +146,7 @@
 
                     $('#update_syarat').attr('disabled', false);
                     //Enable Upgrade Level
-                    if(data.team_level.syarat_1 && data.team_level.syarat_2 && data.team_level.syarat_3 && data.team_level.syarat_4)
+                    if(data.team_level.syarat_1*1 && data.team_level.syarat_2*1 && data.team_level.syarat_3*1 && data.team_level.syarat_4*1)
                     {
                         $('#upgrade_level').attr('disabled', false);            
                     }
@@ -170,28 +170,28 @@
 
                     // UPDATE BADGE SYARAT 1
                     var class_1 = 'danger';
-                    if (data.team_level.syarat_1){
+                    if (data.team_level.syarat_1*1){
                         class_1 = 'success';   
                     }
                     $('#badge_syarat_1').attr("class", 'badge bg-'+class_1+' p-1');
                     
                     // UPDATE BADGE SYARAT 2
                     var class_2 = 'danger';
-                    if (data.team_level.syarat_2){
+                    if (data.team_level.syarat_2*1){
                         class_2 = 'success';   
                     }
                     $('#badge_syarat_2').attr("class", 'badge bg-'+class_2+' p-1');
 
                     // UPDATE BADGE SYARAT 3
                     var class_3 = 'danger';
-                    if (data.team_level.syarat_3){
+                    if (data.team_level.syarat_3*1){
                         class_3 = 'success';   
                     }
                     $('#badge_syarat_3').attr("class", 'badge bg-'+class_3+' p-1');
                     
                     // UPDATE BADGE SYARAT 4
                     var class_4 = 'danger';
-                    if (data.team_level.syarat_4){
+                    if (data.team_level.syarat_4*1){
                         class_4 = 'success';
                     }
                     $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
