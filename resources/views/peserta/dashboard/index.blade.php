@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <h4>{{ $team->total_income }} TC</h4>
+                    {{-- <h4>{{ $team->total_income }} TC</h4> --}}
                 </div>
             </div>
         </div>
@@ -44,7 +44,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <h4>{{ $team->total_spend }} TC</h4>
+                    {{-- <h4>{{ $team->total_spend }} TC</h4> --}}
                 </div>
             </div>
         </div>
@@ -61,7 +61,7 @@
                     </div>
                 </div>
                 <div class="card-body">
-                    <h4>{{ $team->total_income-$team->total_spend }} TC</h4>
+                    {{-- <h4>{{ $team->total_income-$team->total_spend }} TC</h4> --}}
                 </div>
             </div>
         </div>
@@ -88,7 +88,7 @@
                                     <th class="border-bottom" scope="col">Jumlah</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            {{-- <tbody>
                                 @foreach ($team_ingridients as $ingridient)
                                 <tr>
                                     <td class="fw-bolder text-gray-500">{{ $ingridient->name }}</td>
@@ -113,7 +113,7 @@
                                     <td class="fw-bolder text-gray-500">1</td>
                                 </tr>
                                 @endif
-                            </tbody>
+                            </tbody> --}}
                         </table>
                     </div>
                 </div>
@@ -130,7 +130,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                {{-- <div class="card-body">
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
@@ -151,7 +151,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -176,7 +176,7 @@
                                     <th class="border-bottom" scope="col">Total (TC)</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            {{-- <tbody>
                                 <tr>
                                     <td class="text-gray-900" scope="row">Modal Awal</td>
                                     <td class="fw-bolder text-gray-500">500</td>
@@ -187,7 +187,7 @@
                                     <td class="fw-bolder text-gray-500">{{$investasi->pivot->total_profit}}</td>
                                 </tr>
                                 @endforeach
-                            </tbody>
+                            </tbody> --}}
                         </table>
                     </div>
                 </div>
@@ -204,7 +204,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="card-body">
+                {{-- <div class="card-body">
                     <div class="table-responsive">
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
@@ -247,7 +247,7 @@
                             </tbody>
                         </table>
                     </div>
-                </div>
+                </div> --}}
             </div>
         </div>
     </div>
@@ -265,7 +265,7 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table class="table align-items-center table-flush">
+                        {{-- <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
                                     <th class="border-bottom" scope="col">Nama Mesin</th>
@@ -284,7 +284,7 @@
                                 </tr>
                                 @endforeach
                             </tbody>
-                        </table>
+                        </table> --}}
                     </div>
                 </div>
             </div>

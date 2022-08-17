@@ -1153,7 +1153,7 @@
             $('#col_map').removeClass('d-flex')
             $('#col_map').removeClass('justify-content-center')
             $('#col_controller').attr('class', 'col-3')
-            $('#col_controller').css('display', 'flex')
+            $('#col_controller').removeAttr('style')
         }
     }
 </script>

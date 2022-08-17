@@ -31,22 +31,22 @@ class RegisterController extends Controller
      * @var string
      */
     protected $redirectTo = RouteServiceProvider::HOME;
-    public function redirectTo()
-    {
-        switch (Auth::user()->role) {
-            case 'penpos':
-                $this->redirectTo = '/penpos';
-                return $this->redirectTo;
-                break;
-            case 'peserta':
-                $this->redirectTo = '/peserta';
-                return $this->redirectTo;
-                break;
-            default:
-                $this->redirectTo = '/login';
-                return $this->redirectTo;
-        }
-    }
+    // public function redirectTo()
+    // {
+    //     switch (Auth::user()->role) {
+    //         case 'penpos':
+    //             $this->redirectTo = '/penpos';
+    //             return $this->redirectTo;
+    //             break;
+    //         case 'peserta':
+    //             $this->redirectTo = '/peserta';
+    //             return $this->redirectTo;
+    //             break;
+    //         default:
+    //             $this->redirectTo = '/login';
+    //             return $this->redirectTo;
+    //     }
+    // }
     /**
      * Create a new controller instance.
      *
@@ -54,8 +54,8 @@ class RegisterController extends Controller
      */
     public function __construct()
     {
-        // $this->middleware('guest');
-        abort(404);
+        $this->middleware('guest');
+        // abort(404);
     }
 
     /**
@@ -84,6 +84,7 @@ class RegisterController extends Controller
         return User::create([
             'username' => $data['username'],
             'password' => Hash::make($data['password']),
+            'role' => 'peserta',
         ]);
     }
 }

@@ -229,7 +229,7 @@
             })
     </script>
 
-    {{-- <script>
+    <script>
         $('body').bind('copy paste',function(e) {
                     e.preventDefault();
                     return false; 
@@ -244,7 +244,7 @@
                     if(e.ctrlKey && e.shiftKey && e.keyCode == 74) { alert('This Feature is Disabled'); return false; } // Ctrl shift j -> Menu Console
                     if(e.ctrlKey && e.keyCode == 85) { alert('This Feature is Disabled'); return false; } // Ctrl U -> View Page Source
                 }
-    </script> --}}
+    </script>
 
     <script src="../js/app.js"></script>
     <script>
