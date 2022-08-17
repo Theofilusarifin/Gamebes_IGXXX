@@ -1,4 +1,4 @@
-@extends('peserta.layouts.app')
+@extends('penpos.layouts.app')
 
 @section('style')
 <style>
@@ -41,8 +41,7 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                @for ($i = 0; $i <= 19; $i++)
-                                <tr>
+                                @for ($i = 0; $i <= 19; $i++) <tr>
                                     <td class="fw-bolder text-gray-500">{{ $i+1 }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $teams[$i]->name }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $teams[$i]->score }}</td>
@@ -51,10 +50,10 @@
                                     <td class="fw-bolder text-gray-500">{{ $teams[$i+20]->name }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $teams[$i+20]->score }}</td>
                                     @endif
-                                </tr>
-                                @endfor
-                                {{-- @foreach ($teams as $team)
-                                @endforeach --}}
+                                    </tr>
+                                    @endfor
+                                    {{-- @foreach ($teams as $team)
+                                    @endforeach --}}
                             </tbody>
                         </table>
                     </div>

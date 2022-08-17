@@ -51,7 +51,11 @@ Route::group(
         Route::get('/update-season', 'Penpos\DashboardController@updateSeason')->name('update.season');
 
         // LeaderBoard
-        Route::get('/leader-board', 'Penpos\LeaderboardController@index')->name('leaderboard');
+        Route::get('/leaderboard', 'Penpos\LeaderboardController@index')->name('leaderboard');
+        Route::get('/leaderboard/update/waste-variable', 'Penpos\LeaderboardController@waste')->name('leaderboard.waste');
+
+        // LeaderBoard Team
+        Route::get('/leaderboard/team', 'Penpos\LeaderboardController@leaderboardPeserta')->name('leaderboardteam');
     }
 );
 
@@ -97,7 +101,7 @@ Route::group(
         Route::post('/investasi/submit', 'Peserta\InvestasiController@submission')->name('investasi.submit');
 
         // Leaderboard Pemain
-        Route::get('/leaderboard', 'Peserta\LeaderboardPemainController@index')->name('leaderboard');
+        // Route::get('/leaderboard', 'Peserta\LeaderboardPemainController@index')->name('leaderboard');
 
         // Level
         Route::get('/level', 'Peserta\LevelController@index')->name('level');

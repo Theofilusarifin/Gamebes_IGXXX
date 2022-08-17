@@ -33,6 +33,6 @@ class DatabaseSeeder extends Seeder
         $this->call(QuestionSeeder::class, false);
         $this->call(AnswerSeeder::class, false);
         $this->call(LevelSeeder::class, false);
-
+        $this->call(LeaderboardSeeder::class, false);
     }
 }

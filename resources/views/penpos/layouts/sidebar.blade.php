@@ -36,6 +36,16 @@
             </li>
 
             <li
+                class="nav-item {{ request()->is('penpos/leaderboard') ? ' active' : '' }} {{ request()->is('penpos/leader-board/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.leaderboardteam') }}" class="nav-link">
+                    <i data-feather='user' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Leaderboard Team</span>
+                </a>
+            </li>
+
+            <li
                 class="nav-item {{ request()->is('penpos/map') ? ' active' : '' }} {{ request()->is('penpos/map/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.map') }}" class="nav-link">
                     <i data-feather='map' style="width: 24px; height:24px;"></i>
@@ -90,7 +100,7 @@
             @endif
 
             <li
-                class="nav-item {{ request()->is('penpos/leader-board') ? ' active' : '' }} {{ request()->is('penpos/leader-board/*') ? ' active' : '' }}">
+                class="nav-item {{ request()->is('penpos/leaderboard/team') ? ' active' : '' }} {{ request()->is('penpos/leader-board/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.leaderboard') }}" class="nav-link">
                     <i data-feather='bar-chart-2' style="width: 24px; height:24px;"></i>
                     <span class="sidebar-icon">
