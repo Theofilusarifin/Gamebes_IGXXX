@@ -17,7 +17,7 @@
 {{-- Card Maintenance --}}
 <main class="row px-5">
     <div class="row my-5">
-        <div class="col-12 col-sm-6 col-xl-6">
+        <div class="col-7 col-sm-7 col-xl-7">
             <div class="card border-0 shadow">
                 <div class="card-header">
                     <div class="row d-flex align-items-center">
@@ -74,6 +74,13 @@
                                 onclick="maintenance()">Submit</button>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-5 col-sm-5 col-xl-5">
+            <div class="card border-0 shadow">
+                <div class="card-body">
+                    <img src="{{ asset('assets/img/background/maintenance_poster.png') }}" alt="">
                 </div>
             </div>
         </div>

@@ -52,10 +52,10 @@ Route::group(
 
         // LeaderBoard
         Route::get('/leaderboard', 'Penpos\LeaderboardController@index')->name('leaderboard');
-        Route::get('/leaderboard/update/waste-variable', 'Penpos\LeaderboardController@waste')->name('leaderboard.waste');
-
+        
         // LeaderBoard Team
-        Route::get('/leaderboard/team', 'Penpos\LeaderboardController@leaderboardPeserta')->name('leaderboardteam');
+        Route::get('/leaderboard/team', 'Penpos\LeaderboardController@leaderboardTeam')->name('leaderboard.team');
+        Route::get('/leaderboard/update/waste-variable', 'Penpos\LeaderboardController@waste')->name('leaderboard.waste');
     }
 );
 

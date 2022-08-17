@@ -29,31 +29,84 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
+                        <div class="row">
+                            <div class="col-12">
+                                {{-- Pilih Team --}}
+                                <div class="mb-4">
+                                    <form action="" method="post">
+                                        <label class="my-1 me-2" for="waste_variable">Waste Variable</label>
+                                        <div class="row d-flex justify-content-center align-items-center">
+                                            <div class="col-8">
+                                                <input class="form-control" type="number" value="{{ $leaderboard->waste_variable }}" name="waste_variable"
+                                                    id="waste_variable">
+                                            </div>
+                                            <div class="col-4">
+                                                <input class="btn btn-success" type="submit" name="submit"
+                                                    value="Submit">
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
                         <table class="table align-items-center table-flush">
                             <thead class="thead-light">
                                 <tr>
-                                    <th class="border-bottom" scope="col">Rank</th>
-                                    <th class="border-bottom" scope="col">Nama Tim</th>
-                                    <th class="border-bottom" scope="col">Total Score</th>
-                                    <th class="border-bottom" scope="col">Rank</th>
-                                    <th class="border-bottom" scope="col">Nama Tim</th>
-                                    <th class="border-bottom" scope="col">Total Score</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Rank
+                                    </th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Nama Tim
+                                    </th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat
+                                        Efetivitas</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat
+                                        Higenis</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Saldo
+                                        Akhir</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin
+                                        Level</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total
+                                        Produk</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total
+                                        Mesin</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Jenis
+                                        Transport</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin
+                                        Tambahan</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin
+                                        Limbah</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total
+                                        Poin</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @for ($i = 0; $i <= 19; $i++) <tr>
-                                    <td class="fw-bolder text-gray-500">{{ $i+1 }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $teams[$i]->name }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $teams[$i]->score }}</td>
-                                    @if(!($i + 20 > count($teams)-1))
-                                    <td class="fw-bolder text-gray-500">{{ $i+21 }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $teams[$i+20]->name }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $teams[$i+20]->score }}</td>
-                                    @endif
-                                    </tr>
-                                    @endfor
-                                    {{-- @foreach ($teams as $team)
-                                    @endforeach --}}
+                                @foreach ($teams as $team)
+                                <tr>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $loop->index+1 }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->name }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->effectivity }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->higenity }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->saldo_akhir }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->score }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->product }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->mesin }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->transport }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->score_tambahan }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->waste }}</td>
+                                    <td class="fw-bolder text-gray-500" style="width:5%; text-align:center">{{
+                                        $team->score_total }}</td>
+                                </tr>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>

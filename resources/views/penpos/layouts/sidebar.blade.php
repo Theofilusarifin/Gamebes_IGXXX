@@ -26,22 +26,13 @@
                 </a>
             </li>
 
-            <li class="nav-item {{ request()->is('penpos/dashboard/*') ? ' active' : '' }}">
-                <a href="{{ route('penpos.dashboard.peserta.data', [1]) }}" class="nav-link">
-                    <i data-feather='user' style="width: 24px; height:24px;"></i>
-                    <span class="sidebar-icon">
-                    </span>
-                    <span class="sidebar-text">Dashboard Team</span>
-                </a>
-            </li>
-
             <li
-                class="nav-item {{ request()->is('penpos/leaderboard') ? ' active' : '' }} {{ request()->is('penpos/leader-board/*') ? ' active' : '' }}">
-                <a href="{{ route('penpos.leaderboardteam') }}" class="nav-link">
-                    <i data-feather='user' style="width: 24px; height:24px;"></i>
+                class="nav-item {{ request()->is('penpos/leaderboard') ? ' active' : '' }}">
+                <a href="{{ route('penpos.leaderboard') }}" class="nav-link">
+                    <i data-feather='bar-chart-2' style="width: 24px; height:24px;"></i>
                     <span class="sidebar-icon">
                     </span>
-                    <span class="sidebar-text">Leaderboard Team</span>
+                    <span class="sidebar-text">Leaderboard</span>
                 </a>
             </li>
 
@@ -99,13 +90,22 @@
 
             @endif
 
-            <li
-                class="nav-item {{ request()->is('penpos/leaderboard/team') ? ' active' : '' }} {{ request()->is('penpos/leader-board/*') ? ' active' : '' }}">
-                <a href="{{ route('penpos.leaderboard') }}" class="nav-link">
-                    <i data-feather='bar-chart-2' style="width: 24px; height:24px;"></i>
+            <li class="nav-item {{ request()->is('penpos/dashboard/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.dashboard.peserta.data', [1]) }}" class="nav-link">
+                    <i data-feather='user' style="width: 24px; height:24px;"></i>
                     <span class="sidebar-icon">
                     </span>
-                    <span class="sidebar-text">Leaderboard</span>
+                    <span class="sidebar-text">Dashboard Team</span>
+                </a>
+            </li>
+            
+            <li
+                class="nav-item {{ request()->is('penpos/leaderboard/team') ? ' active' : '' }} {{ request()->is('penpos/leaderboard/team/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.leaderboard.team') }}" class="nav-link">
+                    <i data-feather='user' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Leaderboard Team</span>
                 </a>
             </li>
 
