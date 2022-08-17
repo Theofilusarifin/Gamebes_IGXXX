@@ -38,7 +38,6 @@
                                     <th class="border-bottom" scope="col">Gambar</th>
                                     <th class="border-bottom" scope="col">Nama</th>
                                     <th class="border-bottom" scope="col">Harga</th>
-                                    <th class="border-bottom" scope="col">Berat</th>
                                     <th class="border-bottom" scope="col">Satuan</th>
                                     <th class="border-bottom" scope="col">Stock Tersedia</th>
                                 </tr>
@@ -52,7 +51,6 @@
                                     </td>
                                     <td class="fw-bolder text-gray-500">{{ $ingridient->name }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $ingridient->pivot->price }} TC</td>
-                                    <td class="fw-bolder text-gray-500">{{ $ingridient->weight }} KG</td>
                                     <td class="fw-bolder text-gray-500">{{ $ingridient->packet }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $ingridient->stock }}</td>
                                 </tr>
@@ -83,7 +81,6 @@
                                     <th class="border-bottom" scope="col">Gambar</th>
                                     <th class="border-bottom" scope="col">Nama</th>
                                     <th class="border-bottom" scope="col">Harga</th>
-                                    <th class="border-bottom" scope="col">Berat</th>
                                     <th class="border-bottom" scope="col">Stock Tersedia</th>
                                 </tr>
                             </thead>
@@ -95,7 +92,6 @@
                                     </td>
                                     <td class="fw-bolder text-gray-500">{{ $machine->name }}</td>
                                     <td class="fw-bolder text-gray-500">{{ $machine->price }} TC</td>
-                                    <td class="fw-bolder text-gray-500">{{ $machine->weight }} KG</td>
                                     <td class="fw-bolder text-gray-500">{{ $machine->stock }}</td>
                                 </tr>
                                 @endforeach

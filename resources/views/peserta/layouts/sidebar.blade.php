@@ -102,6 +102,16 @@
                     <span class="sidebar-text">Level</span>
                 </a>
             </li>
+
+            {{-- Leaderboard --}}
+            <li class="nav-item {{ request()->is('peserta/leaderboard') ? ' active' : '' }}">
+                <a href="{{ route("peserta.leaderboard") }}" class="nav-link">
+                    <i data-feather='bar-chart-2' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Leaderboard</span>
+                </a>
+            </li>
         </ul>
     </div>
 </nav>

@@ -623,7 +623,7 @@
                     {{$nama_season[$team_machine->season_buy-1]}}
                   </td>
                   <td class="fw-bolder text-gray-500" scope="row" style="width:20%; text-align:center">
-                    <button class="btn btn-danger me-3" tipe="button" onclick="jual('{{$team_machine->id}}')">
+                    <button class="btn btn-danger me-3" tipe="button" onclick="showModal('{{$team_machine->id}}')">
                       Jual
                     </button>
                   </td>
@@ -636,7 +636,30 @@
       </div>
     </div>
   </div>
-
+  
+  <!-- Modal -->
+  <div class="modal fade" id="modal-confirm" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+  role="dialog" aria-labelledby="modalKonfirmasi" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="">Messagebox</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+              <div class="py-3 text-center">
+                  <h2 class="h4 modal-title my-3">Pesan Konfirmasi</h2>
+                  <p id="modal-season-body">Apakah tim yakin untuk menjual mesin?</p>
+              </div>
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-danger me-3" data-bs-dismiss="modal">Batal</button>
+              <button id="konfirmasi" type="button" onClick=""
+                  class="btn btn-sm btn-success" data-bs-dismiss="modal">Konfirmasi</button>
+          </div>
+      </div>
+  </div>
+  </div>
 </main>
 @endsection
 
@@ -893,6 +916,14 @@
       }
     });
 
+  }
+
+  function showModal(tim_machine_id){    
+    var msg_modal = "Apakah tim yakin untuk menjual mesin?";
+
+    $('#konfirmasi').attr("onclick","jual("+tim_machine_id+")");
+    $('#modal-season-body').html(msg_modal);
+    $('#modal-confirm').modal('show');
   }
 
   function save(tipe) {

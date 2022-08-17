@@ -96,6 +96,9 @@ Route::group(
         Route::get('/investasi/{investation}/{question:nomor}', 'Peserta\InvestasiController@show')->name('investasi.show');
         Route::post('/investasi/submit', 'Peserta\InvestasiController@submission')->name('investasi.submit');
 
+        // Leaderboard Pemain
+        Route::get('/leaderboard', 'Peserta\LeaderboardPemainController@index')->name('leaderboard');
+
         // Level
         Route::get('/level', 'Peserta\LevelController@index')->name('level');
         Route::post('/level/update-syarat', 'Peserta\LevelController@updateSyarat')->name('level.update');

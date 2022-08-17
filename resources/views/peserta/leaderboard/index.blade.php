@@ -1,4 +1,4 @@
-@extends('penpos.layouts.app')
+@extends('peserta.layouts.app')
 
 @section('style')
 <style>
@@ -34,23 +34,27 @@
                                 <tr>
                                     <th class="border-bottom" scope="col">Rank</th>
                                     <th class="border-bottom" scope="col">Nama Tim</th>
-                                    <th class="border-bottom" scope="col">Tingkat Efetivitas</th>
-                                    <th class="border-bottom" scope="col">Tingkat Higenis</th>
-                                    <th class="border-bottom" scope="col">Saldo Akhir</th>
-                                    <th class="border-bottom" scope="col">Score</th>
+                                    <th class="border-bottom" scope="col">Total Score</th>
+                                    <th class="border-bottom" scope="col">Rank</th>
+                                    <th class="border-bottom" scope="col">Nama Tim</th>
+                                    <th class="border-bottom" scope="col">Total Score</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($teams as $team)
+                                @for ($i = 0; $i <= 19; $i++)
                                 <tr>
-                                    <td class="fw-bolder text-gray-500">{{ $loop->index+1 }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $team->name }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $team->effectivity }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $team->higenity }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $team->tc }}</td>
-                                    <td class="fw-bolder text-gray-500">{{ $team->score }}</td>
+                                    <td class="fw-bolder text-gray-500">{{ $i+1 }}</td>
+                                    <td class="fw-bolder text-gray-500">{{ $teams[$i]->name }}</td>
+                                    <td class="fw-bolder text-gray-500">{{ $teams[$i]->score }}</td>
+                                    @if(!($i + 20 > count($teams)-1))
+                                    <td class="fw-bolder text-gray-500">{{ $i+21 }}</td>
+                                    <td class="fw-bolder text-gray-500">{{ $teams[$i+20]->name }}</td>
+                                    <td class="fw-bolder text-gray-500">{{ $teams[$i+20]->score }}</td>
+                                    @endif
                                 </tr>
-                                @endforeach
+                                @endfor
+                                {{-- @foreach ($teams as $team)
+                                @endforeach --}}
                             </tbody>
                         </table>
                     </div>
