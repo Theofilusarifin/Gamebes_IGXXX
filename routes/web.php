@@ -55,7 +55,7 @@ Route::group(
         
         // LeaderBoard Team
         Route::get('/leaderboard/team', 'Penpos\LeaderboardController@leaderboardTeam')->name('leaderboard.team');
-        Route::get('/leaderboard/update/waste-variable', 'Penpos\LeaderboardController@waste')->name('leaderboard.waste');
+        Route::post('/leaderboard/update/waste-variable', 'Penpos\LeaderboardController@waste')->name('leaderboard.waste');
     }
 );
 
