@@ -29,11 +29,17 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
+                        @if(session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                        @endif
                         <div class="row">
                             <div class="col-12">
-                                {{-- Pilih Team --}}
+                                {{-- Wate Variable --}}
                                 <div class="mb-4">
-                                    <form action="" method="post">
+                                    <form action="{{ route('penpos.leaderboard.waste') }}" method="post">
+                                        @csrf
                                         <label class="my-1 me-2" for="waste_variable">Waste Variable</label>
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <div class="col-8">
@@ -42,7 +48,7 @@
                                             </div>
                                             <div class="col-4">
                                                 <input class="btn btn-success" type="submit" name="submit"
-                                                    value="Submit">
+                                                    value="Update">
                                             </div>
                                         </div>
                                     </form>
