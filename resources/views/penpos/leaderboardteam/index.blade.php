@@ -48,7 +48,7 @@
                                             </div>
                                             <div class="col-4">
                                                 <input class="btn btn-success" type="submit" name="submit"
-                                                    value="Submit">
+                                                    value="Update">
                                             </div>
                                         </div>
                                     </form>
