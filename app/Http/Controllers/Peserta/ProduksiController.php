@@ -547,13 +547,13 @@ class ProduksiController extends Controller
                     ->where('is_used', 1)
                     ->first();
                 //Hitung kelipatan untuk menghitung penurunan performance mesin
-                $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 12);
+                $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
                 //Hitung totalPenurunanPerformance
                 $totalPenurunanPerformance = $kelipatan * $kenaikan;
                 //Kurangkan performance tiap mesin
                 $timMesin->performance = $timMesin->performance - $totalPenurunanPerformance;
                 //Hitung sisa produksi yang nanti akan memperbaruhi productProduced tiap mesin
-                $sisaProduksi = ($banyak_item + $timMesin->product_produced) % 12;
+                $sisaProduksi = ($banyak_item + $timMesin->product_produced) % 20;
                 //Update product produce
                 $timMesin->product_produced = $sisaProduksi;
                 //Lakukan save
