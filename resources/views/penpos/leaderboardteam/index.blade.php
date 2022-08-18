@@ -34,6 +34,7 @@
                                 {{-- Wate Variable --}}
                                 <div class="mb-4">
                                     <form action="{{ route('penpos.leaderboard.waste') }}" method="post">
+                                        @csrf
                                         <label class="my-1 me-2" for="waste_variable">Waste Variable</label>
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <div class="col-8">
