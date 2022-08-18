@@ -31,9 +31,9 @@
                     <div class="table-responsive">
                         <div class="row">
                             <div class="col-12">
-                                {{-- Pilih Team --}}
+                                {{-- Wate Variable --}}
                                 <div class="mb-4">
-                                    <form action="" method="post">
+                                    <form action="{{ route('penpos.leaderboard.waste') }}" method="post">
                                         <label class="my-1 me-2" for="waste_variable">Waste Variable</label>
                                         <div class="row d-flex justify-content-center align-items-center">
                                             <div class="col-8">
