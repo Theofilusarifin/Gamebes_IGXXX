@@ -29,6 +29,11 @@
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
+                        @if(session()->has('success'))
+                        <div class="alert alert-success">
+                            {{ session()->get('success') }}
+                        </div>
+                        @endif
                         <div class="row">
                             <div class="col-12">
                                 {{-- Wate Variable --}}

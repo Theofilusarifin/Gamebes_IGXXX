@@ -177,6 +177,6 @@ class LeaderboardController extends Controller
         $leaderboard->waste_variable = $waste_variable;
         $leaderboard->save();
 
-        return redirect()->route('penpos.leaderboard.team');
+        return redirect()->route('penpos.leaderboard.team')->with('success', 'Update Waste Variable berhasil dilakukan!');;
     }
 }
