@@ -852,7 +852,7 @@ class ProduksiController extends Controller
         // Produksi Saos Tomat 101
         else if ($product->id == 3) {
             // Hitung banyaknya produksi dengan cara dibagi 4
-            $banyak_produksi = $banyak_item/  4;
+            $banyak_produksi = $banyak_item / 4;
             // Ambil kombinasi machine udang kaleng yang digunakan oleh team saat ini
             $team_machine_combination = $team->machineCombinations
                 ->where('id', '101')
