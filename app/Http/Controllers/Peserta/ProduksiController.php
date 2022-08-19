@@ -226,7 +226,7 @@ class ProduksiController extends Controller
                     ->where('is_used', 1)
                     ->first();
                 //Hitung kelipatan
-                $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 12);
+                $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
                 $totalPenurunanPerformance = $kelipatan * $kenaikan;
                 //Cek Performance utk setiap mesin
                 if ($timMesin->performance < $totalPenurunanPerformance) {
@@ -965,7 +965,7 @@ class ProduksiController extends Controller
             // PRODUKSI MULAI
             while ($berhasil_diproduksi < $banyak_produksi) {
 
-                //Cek apakah ingridient paling sedikit lebih dari banyak produksi 
+                //Cek apakah ingridient paling sedikit lebih dari banyak produksi
                 if ($min_ingridient_now > ($banyak_produksi - $berhasil_diproduksi)) {
                     //Kalau lebih ubah minimalnya jadi sama dengan banyak produksi
                     $min_ingridient_now = ($banyak_produksi - $berhasil_diproduksi);
