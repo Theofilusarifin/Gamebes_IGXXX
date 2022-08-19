@@ -63,7 +63,7 @@ class DashboardController extends Controller
                 // Tambah 20 menit waktu di surabaya sekarang
                 $season_end = date(
                     'Y-m-d H:i:s',
-                    strtotime('+1 minutes', strtotime($now))
+                    strtotime('+20 minutes', strtotime($now))
                 );
                 // Set waktu untuk season selanjutnya
                 DB::statement("UPDATE `seasons` SET start_time = '$now', end_time = '$season_end' , updated = 1 WHERE number = $next_season->number");
