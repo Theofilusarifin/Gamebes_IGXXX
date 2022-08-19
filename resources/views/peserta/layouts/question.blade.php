@@ -80,6 +80,9 @@
                                                     var distance = end - now;
                                                     if (distance < 0) {
                                                         document.getElementById(id).innerHTML = "Season {{ $season_now->name }} telah selesai!";
+                                                        if ('{{ $season_now->number }}' == 3){
+                                                            document.getElementById('logout-form').submit();
+                                                        }
                                                         return;
                                                     }
                                                     var minutes = Math.floor((distance % _hour) / _minute);
