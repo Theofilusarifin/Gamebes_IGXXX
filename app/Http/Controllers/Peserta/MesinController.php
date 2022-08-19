@@ -97,13 +97,16 @@ class MesinController extends Controller
         $machine_kitosan_tersimpan = "";
 
         if ($machine_combination_udang != null) {
-            $machine_udang_tersimpan = $machine_combination_udang->machines->sortBy('pivot.order');
+            // $machine_udang_tersimpan = $machine_combination_udang->machines->sortBy('pivot.order');
+            $machine_udang_tersimpan = DB::select(DB::raw("SELECT * FROM `machine_machine_combination` mmc INNER JOIN `machines` m ON mmc.machine_id = m.id WHERE mmc.machine_combination_id = $machine_combination_udang->id ORDER BY mmc.order "));
         }
         if ($machine_combination_saus != null) {
-            $machine_saus_tersimpan = $machine_combination_saus->machines->sortBy('pivot.order');
+            // $machine_saus_tersimpan = $machine_combination_saus->machines->sortBy('pivot.order');
+            $machine_udang_tersimpan = DB::select(DB::raw("SELECT * FROM `machine_machine_combination` mmc INNER JOIN `machines` m ON mmc.machine_id = m.id WHERE mmc.machine_combination_id = $machine_combination_saus->id ORDER BY mmc.order "));
         }
         if ($machine_combination_kitosan != null) {
-            $machine_kitosan_tersimpan = $machine_combination_kitosan->machines->sortBy('pivot.order');
+            // $machine_kitosan_tersimpan = $machine_combination_kitosan->machines->sortBy('pivot.order');
+            $machine_udang_tersimpan = DB::select(DB::raw("SELECT * FROM `machine_machine_combination` mmc INNER JOIN `machines` m ON mmc.machine_id = m.id WHERE mmc.machine_combination_id = $machine_combination_kitosan->id ORDER BY mmc.order "));
         }
 
         return view('peserta.mesin.index', compact(

@@ -156,7 +156,7 @@ class ProduksiController extends Controller
 
         // Produksi Udang Kaleng
         if ($product->id == 1) {
-            
+
             $tipe_udang = $request['tipe_udang']; //Id Udang yang dipilih team
             // Tidak masukin banyak_item
             if ($tipe_udang == null) {
@@ -220,12 +220,23 @@ class ProduksiController extends Controller
             //Dapat data mesin-mesin (asli) yang digunakan sama tim pada kombinasinya kaleng udang
 
             $mesin_dalam_kombinasis = $team_machine_combination->machines;
+
             foreach ($mesin_dalam_kombinasis as $mesin_dalam_kombinasi) {
+                
                 //Ambil Team Machine yang idnya sama dengan $mesin_dalam_kombinasi dan is_usednya 1
                 $timMesin = $team->teamMachines
                     ->where('machine_id', $mesin_dalam_kombinasi->id)
                     ->where('is_used', 1)
                     ->first();
+
+                if ($timMesin == null) {
+                    $status = 'error';
+                    $msg = 'Terjadi Error hubungi panitia!';
+                    return response()->json(array(
+                        'status' => $status,
+                        'msg' => $msg,
+                    ), 200);
+                }
                 //Hitung kelipatan
                 $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
                 $totalPenurunanPerformance = $kelipatan * $kenaikan;
@@ -238,6 +249,21 @@ class ProduksiController extends Controller
                         'msg' => $msg,
                     ), 200);
                 }
+
+                // if ($timMesin != null) {
+                //     //Hitung kelipatan
+                //     $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
+                //     $totalPenurunanPerformance = $kelipatan * $kenaikan;
+                //     //Cek Performance utk setiap mesin
+                //     if ($timMesin->performance < $totalPenurunanPerformance) {
+                //         $status = 'error';
+                //         $msg = 'Performance mesin ' . $timMesin->name . ' tidak mampu untuk memproduksi banyak produk yang diinginkan!';
+                //         return response()->json(array(
+                //             'status' => $status,
+                //             'msg' => $msg,
+                //         ), 200);
+                //     }
+                // }
             }
 
             // Kalkulasi banyak udang yang dibutuhkan
@@ -532,10 +558,25 @@ class ProduksiController extends Controller
                     ->where('is_used', 1)
                     ->first();
 
+                if ($timMesin == null) {
+                    $status = 'error';
+                    $msg = 'Terjadi Error hubungi panitia!';
+                    return response()->json(array(
+                        'status' => $status,
+                        'msg' => $msg,
+                    ), 200);
+                }
                 //Hitung defect timMesinnya
                 $defect = 100 - $timMesin->performance;
                 //Proses hitung total wastenya dan hasil produk akhir
                 $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
+                
+                // if ($timMesin != null) {            
+                    // //Hitung defect timMesinnya
+                    // $defect = 100 - $timMesin->performance;
+                    // //Proses hitung total wastenya dan hasil produk akhir
+                    // $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
+                // }
             }
             //Total produk cacat yang nanti masuk waste (dibulatin keatas)
             $total_defect = ceil($banyak_item - $hasil_setelah_defect); //Ini nanti masuk waste
@@ -547,6 +588,16 @@ class ProduksiController extends Controller
                     ->where('machine_id', $team_mesin->id)
                     ->where('is_used', 1)
                     ->first();
+
+                if ($timMesin == null) {
+                    $status = 'error';
+                    $msg = 'Terjadi Error hubungi panitia!';
+                    return response()->json(array(
+                        'status' => $status,
+                        'msg' => $msg,
+                    ), 200);
+                }
+                
                 //Hitung kelipatan untuk menghitung penurunan performance mesin
                 $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
                 //Hitung totalPenurunanPerformance
@@ -570,6 +621,33 @@ class ProduksiController extends Controller
                     // Pesan Harap susun mesin ulang
                     $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
                 }
+                
+                // if ($timMesin != null) {
+
+                //     //Hitung kelipatan untuk menghitung penurunan performance mesin
+                //     $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
+                //     //Hitung totalPenurunanPerformance
+                //     $totalPenurunanPerformance = $kelipatan * $kenaikan;
+                //     //Kurangkan performance tiap mesin
+                //     $timMesin->performance = $timMesin->performance - $totalPenurunanPerformance;
+                //     //Hitung sisa produksi yang nanti akan memperbaruhi productProduced tiap mesin
+                //     $sisaProduksi = ($banyak_item + $timMesin->product_produced) % 20;
+                //     //Update product produce
+                //     $timMesin->product_produced = $sisaProduksi;
+                //     //Lakukan save
+                //     $timMesin->save();
+    
+                //     //CEK kalau performancenya 0 akan dihapus lgsg di databasenya
+                //     if ($timMesin->performance == 0) {
+                //         $this->deleteMachine($timMesin->machine_id, $team->id);
+                //         // Lepas Kombinasi
+                //         DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
+                //         // Lepas is_used
+                //         DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id . " AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
+                //         // Pesan Harap susun mesin ulang
+                //         $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
+                //     }
+                // }
             }
 
             // PRODUK DIBUAT DAN DISIMPAN KE DATABASE
@@ -904,7 +982,7 @@ class ProduksiController extends Controller
             $nama_ingridient = '';
             // Cek apakah total kepala udang, tomat, gula, garam, msg cukup untuk produksi?
             // 1000 gram kepala udang, 1 kg tomat, 1 bungkus gula, 1 bungkus garam, dan 1 bungkus msg
-            if ($total_shrimp_head < ($banyak_produksi)) { //Karena kepala disimpan dalam gram
+            if ($total_shrimp_head < $banyak_produksi) { //Karena kepala disimpan dalam gram
                 $ingridient_insufficient = true;
                 $nama_ingridient = 'Kepala Udang';
             }
@@ -1141,7 +1219,7 @@ class ProduksiController extends Controller
             }
 
             // PRODUK DIBUAT DAN DISIMPAN KE DATABASE
-            $hasil_produk_akhir = $banyak_produksi;
+            $hasil_produk_akhir = $banyak_item;
             $saus_udang = $team->products->where('id', $product->id)->first();
 
             // Apabila punya udang kaleng sebelumnya, tambahkan amount havenya dengan yang diproduksi
@@ -1151,7 +1229,7 @@ class ProduksiController extends Controller
             $team->products()->sync([$product->id => ['amount_have' => $hasil_produk_akhir]], false);
 
             $status = 'success';
-            $msg = 'Produksi berhasil dilakukan! ' . $banyak_produksi . ' ' . $product->name . ' berhasil diproduksi';
+            $msg = 'Produksi berhasil dilakukan! ' . $banyak_item . ' ' . $product->name . ' berhasil diproduksi';
 
             // HITUNG TOTAL LIMBAH/WASTE DAN SIMPAN KE DATABASE
             // Limbah air dihitung setiap melakukan klik button
