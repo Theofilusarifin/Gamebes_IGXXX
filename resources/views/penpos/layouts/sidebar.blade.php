@@ -69,16 +69,6 @@
             @if (Auth::user()->role == "si")
 
             <li
-                class="nav-item {{ request()->is('penpos/inventory') ? ' active' : '' }} {{ request()->is('penpos/inventory/*') ? ' active' : '' }}">
-                <a href="{{ route('penpos.inventory', [1]) }}" class="nav-link">
-                    <i data-feather='shopping-bag' style="width: 24px; height:24px;"></i>
-                    <span class="sidebar-icon">
-                    </span>
-                    <span class="sidebar-text">Inventory</span>
-                </a>
-            </li>
-
-            <li
                 class="nav-item {{ request()->is('penpos/update-season') ? ' active' : '' }} {{ request()->is('penpos/update-season/*') ? ' active' : '' }}">
                 <a href="{{ route('penpos.update.season') }}" class="nav-link">
                     <i data-feather='arrow-up' style="width: 24px; height:24px;"></i>
@@ -88,6 +78,16 @@
                 </a>
             </li>
 
+            <li
+                class="nav-item {{ request()->is('penpos/inventory') ? ' active' : '' }} {{ request()->is('penpos/inventory/*') ? ' active' : '' }}">
+                <a href="{{ route('penpos.inventory', [1]) }}" class="nav-link">
+                    <i data-feather='shopping-bag' style="width: 24px; height:24px;"></i>
+                    <span class="sidebar-icon">
+                    </span>
+                    <span class="sidebar-text">Inventory Team</span>
+                </a>
+            </li>
+            
             @endif
 
             <li class="nav-item {{ request()->is('penpos/dashboard/*') ? ' active' : '' }}">
