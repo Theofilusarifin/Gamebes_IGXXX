@@ -134,18 +134,6 @@ class ProduksiController extends Controller
             ), 200);
         }
 
-        $tipe_udang = $request['tipe_udang']; //Id Udang yang dipilih team
-        // Tidak masukin banyak_item
-        if ($tipe_udang == null) {
-            $status = 'error';
-            $msg = 'Masukkan Tipe Udang terlebih dahulu!';
-
-            return response()->json(array(
-                'status' => $status,
-                'msg' => $msg,
-            ), 200);
-        }
-
         // Status dan message untuk respond
         $status = '';
         $msg = '';
@@ -168,6 +156,19 @@ class ProduksiController extends Controller
 
         // Produksi Udang Kaleng
         if ($product->id == 1) {
+            
+            $tipe_udang = $request['tipe_udang']; //Id Udang yang dipilih team
+            // Tidak masukin banyak_item
+            if ($tipe_udang == null) {
+                $status = 'error';
+                $msg = 'Masukkan Tipe Udang terlebih dahulu!';
+
+                return response()->json(array(
+                    'status' => $status,
+                    'msg' => $msg,
+                ), 200);
+            }
+
             // Hitung banyaknya produksi dengan cara dibagi 4
             $banyak_produksi = $banyak_item / 4;
 
