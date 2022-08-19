@@ -10,6 +10,6 @@ class Level extends Model
     public function teams()
     {
         return $this->belongsToMany(Team::class, 'team_level', 'level_id', 'team_id')
-            ->withPivot(['syarat_1', 'syarat_2', 'syarat_3', 'syarat_4']);
+            ->withPivot(['syarat_1', 'syarat_2', 'syarat_3']);
     }
 }

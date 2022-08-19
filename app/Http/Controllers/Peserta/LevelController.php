@@ -58,7 +58,6 @@ class LevelController extends Controller
 
         $team_machine_effectivity = null;
         $team_machine_higenity = null;
-        $persentase_limbah = null;
 
         //Deklarasi teamnya
         $team = Auth::user()->team;
@@ -83,19 +82,6 @@ class LevelController extends Controller
         if ($team_machine_combination != null) {
             $team_machine_effectivity = $team_machine_combination->effectivity;
             $team_machine_higenity = $team_machine_combination->higenity;
-        }
-
-        //HITUNG PERSENTASE LIMBAH
-        //Ambil product team udang kaleng
-        $team_udang_kaleng = $team->products->where("id", 1)->first();
-
-        if ($team_udang_kaleng != null) {
-            // Ambil banyaknya udang kaleng yang sudah diproduksi oleh team
-            $total_udang_kaleng = $team_udang_kaleng->pivot->amount_have + $team_udang_kaleng->pivot->amount_sold;
-
-            // Ambil total waste
-            $total_limbah = $team->waste;
-            $persentase_limbah = $total_limbah / $total_udang_kaleng;
         }
 
         //Pengecekan
@@ -136,17 +122,6 @@ class LevelController extends Controller
             } else {
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 0]], false);
             }
-
-            // CHECK SYARAT 4 -> LIMBAH
-            if ($persentase_limbah != null) {
-                if ($persentase_limbah <= 0.20) {
-                    $team->levels()->sync([$team_level->id => ['syarat_4' => 1]], false);
-                } else {
-                    $team->levels()->sync([$team_level->id => ['syarat_4' => 0]], false);
-                }
-            } else {
-                $team->levels()->sync([$team_level->id => ['syarat_4' => 0]], false);
-            }
         }
 
         // Pengecekan Level 2
@@ -180,19 +155,6 @@ class LevelController extends Controller
             } else {
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 0]], false);
             }
-
-            // CHECK SYARAT 4 -> LIMBAH
-            if (
-                $persentase_limbah != null
-            ) {
-                if ($persentase_limbah <= 0.15) {
-                    $team->levels()->sync([$team_level->id => ['syarat_4' => 1]], false);
-                } else {
-                    $team->levels()->sync([$team_level->id => ['syarat_4' => 0]], false);
-                }
-            } else {
-                $team->levels()->sync([$team_level->id => ['syarat_4' => 0]], false);
-            }
         }
 
         //Pengecekan Level 3
@@ -225,19 +187,6 @@ class LevelController extends Controller
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 1]], false);
             } else {
                 $team->levels()->sync([$team_level->id => ['syarat_3' => 0]], false);
-            }
-
-            // CHECK SYARAT 4 -> LIMBAH
-            if (
-                $persentase_limbah != null
-            ) {
-                if ($persentase_limbah <= 0.10) {
-                    $team->levels()->sync([$team_level->id => ['syarat_4' => 1]], false);
-                } else {
-                    $team->levels()->sync([$team_level->id => ['syarat_4' => 0]], false);
-                }
-            } else {
-                $team->levels()->sync([$team_level->id => ['syarat_4' => 0]], false);
             }
         }
 
@@ -274,9 +223,9 @@ class LevelController extends Controller
             ), 200);
         }
 
-        $total_syarat_terpenuhi = $team_level->pivot->syarat_1 + $team_level->pivot->syarat_2 + $team_level->pivot->syarat_3  + $team_level->pivot->syarat_4;
+        $total_syarat_terpenuhi = $team_level->pivot->syarat_1 + $team_level->pivot->syarat_2 + $team_level->pivot->syarat_3;
 
-        if ($total_syarat_terpenuhi == 4) {
+        if ($total_syarat_terpenuhi == 3) {
             $team->level = $team->level + 1;
             $team->save();
 
@@ -284,7 +233,6 @@ class LevelController extends Controller
                 'syarat_1' => 0,
                 'syarat_2' => 0,
                 'syarat_3' => 0,
-                'syarat_4' => 0,
             ]);
 
             // Update Team Company di territory team

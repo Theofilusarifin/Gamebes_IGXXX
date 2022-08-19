@@ -85,7 +85,7 @@
     }
 
     .home {
-        background-color: rgba(75, 223, 70, 0.4);
+        background-color: rgba(44, 48, 44, 0.4);
         width: 30px;
     }
 

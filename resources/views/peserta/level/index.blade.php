@@ -27,18 +27,15 @@
                 <div class="row">
                     <div class="col-12 col-sm-12 col-xl-12 mt-1">
                         {{-- Logic BADGE --}}
-                        @php($nama_syarat = ['Tingkat Efektifitas', 'Tingkat Higenis', 'Saldo Akhir', 'Limbah'])
+                        @php($nama_syarat = ['Tingkat Efektifitas', 'Tingkat Higenis', 'Saldo Akhir'])
                         @php($success_count=0)
-                        @for ($i = 1; $i <= 4; $i++) @php($class_badge='danger' ) @if ($i==1 && $team_level->syarat_1)
+                        @for ($i = 1; $i <= 3; $i++) @php($class_badge='danger' ) @if ($i==1 && $team_level->syarat_1)
                             @php($class_badge = 'success')
                             @php($success_count+=1)
                             @elseif ($i == 2 && $team_level->syarat_2)
                             @php($class_badge = 'success')
                             @php($success_count+=1)
                             @elseif ($i == 3 && $team_level->syarat_3)
-                            @php($class_badge = 'success')
-                            @php($success_count+=1)
-                            @elseif ($i == 4 && $team_level->syarat_4)
                             @php($class_badge = 'success')
                             @php($success_count+=1)
                             @endif
@@ -60,7 +57,7 @@
                                 Max</button>
                             @endif
 
-                            @if (Auth::user()->team->level < 3) @if ($success_count==4) <button class="btn btn-success"
+                            @if (Auth::user()->team->level < 3) @if ($success_count==3) <button class="btn btn-success"
                                 id="upgrade_level" type="button" onclick="upgradeLevel()">Upgrade
                                 Level</button>
                                 @else
@@ -93,7 +90,7 @@
                 },
                 success: function (data) {
                     // UBAH GAMBAR
-                    var success_count = data.team_level.syarat_1*1 + data.team_level.syarat_2*1 + data.team_level.syarat_3*1 + data.team_level.syarat_4*1;
+                    var success_count = data.team_level.syarat_1*1 + data.team_level.syarat_2*1 + data.team_level.syarat_3*1;
                     // alert(success_count);
                     $('#gambar_level').attr("src",'https://penyisihan.igubaya.com/assets/img/level/'+ data.team.level +'/'+success_count+'.png');
                     
@@ -117,13 +114,6 @@
                         class_3 = 'success';   
                     }
                     $('#badge_syarat_3').attr("class", 'badge bg-'+class_3+' p-1');
-                    
-                    // UPDATE BADGE SYARAT 4
-                    var class_4 = 'danger';
-                    if (data.team_level.syarat_4*1){
-                        class_4 = 'success';
-                    }
-                    $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
 
                     //Tampilin Alert Message
                     if (data.status != ""){
@@ -146,7 +136,7 @@
 
                     $('#update_syarat').attr('disabled', false);
                     //Enable Upgrade Level
-                    if(data.team_level.syarat_1*1 && data.team_level.syarat_2*1 && data.team_level.syarat_3*1 && data.team_level.syarat_4*1)
+                    if(data.team_level.syarat_1*1 && data.team_level.syarat_2*1 && data.team_level.syarat_3*1)
                     {
                         $('#upgrade_level').attr('disabled', false);            
                     }
@@ -189,14 +179,6 @@
                     }
                     $('#badge_syarat_3').attr("class", 'badge bg-'+class_3+' p-1');
                     
-                    // UPDATE BADGE SYARAT 4
-                    var class_4 = 'danger';
-                    if (data.team_level.syarat_4*1){
-                        class_4 = 'success';
-                    }
-                    $('#badge_syarat_4').attr("class", 'badge bg-'+class_4+' p-1');
-
-
                     // Matikan button upgrade level
                     $('#upgrade_level').attr('disabled', true);   
                     

@@ -15,7 +15,7 @@ class LeaderboardController extends Controller
     {
         //Ambil semua team
         // $teams = Team::all();
-        $teams = DB::select(DB::raw("SELECT * FROM teams"));
+        $teams = DB::select(DB::raw("SELECT * FROM teams LIMIT 17"));
 
         $index = 0;
         foreach ($teams as $team) {
@@ -66,7 +66,7 @@ class LeaderboardController extends Controller
     {
         //Ambil semua team
         // $teams = Team::all();
-        $teams = DB::select(DB::raw("SELECT * FROM teams"));
+        $teams = DB::select(DB::raw("SELECT * FROM teams LIMIT 17"));
 
         // Ambil variabel waste dari db
         $leaderboard = Leaderboard::find(1);

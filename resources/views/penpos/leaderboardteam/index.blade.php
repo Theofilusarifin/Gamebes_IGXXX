@@ -55,33 +55,23 @@
                                 </div>
                             </div>
                         </div>
-                        <table class="table align-items-center table-flush">
+                        <table class="table align-items-center table-flush" id="leaderboard-table">
                             <thead class="thead-light">
                                 <tr>
                                     <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Rank
                                     </th>
                                     <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Nama Tim
                                     </th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat
-                                        Efetivitas</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat
-                                        Higenis</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Saldo
-                                        Akhir</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin
-                                        Level</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total
-                                        Produk</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total
-                                        Mesin</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Jenis
-                                        Transport</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin
-                                        Tambahan</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin
-                                        Limbah</th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total
-                                        Poin</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat Efetivitas</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat Higenis</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Saldo Akhir</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin Level</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total Produk</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total Mesin</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Jenis Transport</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin Tambahan</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin Limbah</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Total Poin</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -116,9 +106,21 @@
                             </tbody>
                         </table>
                     </div>
+
+                    <button class="btn btn-success mt-3" id="export_excel" type="button">Export to Excel</button>
                 </div>
             </div>
         </div>
     </div>
 </main>
+@endsection
+
+@section('script')
+<script src="{{ asset('assets/js/table2excel.js') }}"></script>
+<script>
+    document.getElementById('export_excel').addEventListener('click', function(){
+        var table2excel = new Table2Excel();
+        table2excel.export(document.querySelectorAll("#leaderboard-table"));
+    });
+</script>
 @endsection

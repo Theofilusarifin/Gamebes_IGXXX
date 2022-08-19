@@ -23,7 +23,6 @@ class CreateTeamLevelTable extends Migration
             $table->tinyInteger('syarat_1')->default(0);
             $table->tinyInteger('syarat_2')->default(0);
             $table->tinyInteger('syarat_3')->default(0);
-            $table->tinyInteger('syarat_4')->default(0);
         });
     }
 

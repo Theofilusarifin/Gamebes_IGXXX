@@ -12,7 +12,7 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        $path = "database/data/8-users batch 2.csv";
+        $path = "database/data/8-users batch 1.csv";
         $model = User::class;
         include("csv-reader.php");
     }
