@@ -229,16 +229,18 @@ class LevelController extends Controller
             $team->level = $team->level + 1;
             $team->save();
 
-            $team->levels()->attach($team->level + 1, [
-                'syarat_1' => 0,
-                'syarat_2' => 0,
-                'syarat_3' => 0,
-            ]);
-
-            // Update Team Company di territory team
-            $team_company = Territory::where('url_company', $team->id)->first();
-            $team_company->company_level = $team_company->company_level + 1;
-            $team_company->save();
+            if ($team->level < 3) {
+                $team->levels()->attach($team->level + 1, [
+                    'syarat_1' => 0,
+                    'syarat_2' => 0,
+                    'syarat_3' => 0,
+                ]);
+    
+                // Update Team Company di territory team
+                $team_company = Territory::where('url_company', $team->id)->first();
+                $team_company->company_level = $team_company->company_level + 1;
+                $team_company->save();
+            }
 
             $status = 'success';
             $msg = 'Selamat! Team anda telah berhasil mencapai level ' . $team->level . '!';
