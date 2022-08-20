@@ -62,7 +62,7 @@
                                     </th>
                                     <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Nama Tim
                                     </th>
-                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat Efetivitas</th>
+                                    <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat Efektivitas</th>
                                     <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Tingkat Higenis</th>
                                     <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Saldo Akhir</th>
                                     <th class="border-bottom" scope="col" style="width: 5%; text-align:center">Poin Level</th>
