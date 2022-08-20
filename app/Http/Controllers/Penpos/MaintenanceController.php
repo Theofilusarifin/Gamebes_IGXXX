@@ -45,7 +45,7 @@ class MaintenanceController extends Controller
         $status = '';
         
         //Cek Performa Mesin apakah masih bisa melakukan maintenance
-        if($team_machine->performance <= 25){
+        if($team_machine->performance < 25){
             $status = 'error';
             $msg = 'Performance mesin terlalu kecil untuk melakukan maintenance!';
 
