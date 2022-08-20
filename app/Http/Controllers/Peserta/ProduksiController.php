@@ -229,41 +229,41 @@ class ProduksiController extends Controller
                     ->where('is_used', 1)
                     ->first();
 
-                if ($timMesin == null) {
-                    $status = 'error';
-                    $msg = 'Terjadi Error hubungi panitia!';
-                    return response()->json(array(
-                        'status' => $status,
-                        'msg' => $msg,
-                    ), 200);
-                }
-                //Hitung kelipatan
-                $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
-                $totalPenurunanPerformance = $kelipatan * $kenaikan;
-                //Cek Performance utk setiap mesin
-                if ($timMesin->performance < $totalPenurunanPerformance) {
-                    $status = 'error';
-                    $msg = 'Performance mesin ' . $timMesin->name . ' tidak mampu untuk memproduksi banyak produk yang diinginkan!';
-                    return response()->json(array(
-                        'status' => $status,
-                        'msg' => $msg,
-                    ), 200);
-                }
-
-                // if ($timMesin != null) {
-                //     //Hitung kelipatan
-                //     $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
-                //     $totalPenurunanPerformance = $kelipatan * $kenaikan;
-                //     //Cek Performance utk setiap mesin
-                //     if ($timMesin->performance < $totalPenurunanPerformance) {
-                //         $status = 'error';
-                //         $msg = 'Performance mesin ' . $timMesin->name . ' tidak mampu untuk memproduksi banyak produk yang diinginkan!';
-                //         return response()->json(array(
-                //             'status' => $status,
-                //             'msg' => $msg,
-                //         ), 200);
-                //     }
+                // if ($timMesin == null) {
+                //     $status = 'error';
+                //     $msg = 'Terjadi Error hubungi panitia!';
+                //     return response()->json(array(
+                //         'status' => $status,
+                //         'msg' => $msg,
+                //     ), 200);
                 // }
+                // //Hitung kelipatan
+                // $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
+                // $totalPenurunanPerformance = $kelipatan * $kenaikan;
+                // //Cek Performance utk setiap mesin
+                // if ($timMesin->performance < $totalPenurunanPerformance) {
+                //     $status = 'error';
+                //     $msg = 'Performance mesin ' . $timMesin->name . ' tidak mampu untuk memproduksi banyak produk yang diinginkan!';
+                //     return response()->json(array(
+                //         'status' => $status,
+                //         'msg' => $msg,
+                //     ), 200);
+                // }
+
+                if ($timMesin != null) {
+                    //Hitung kelipatan
+                    $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
+                    $totalPenurunanPerformance = $kelipatan * $kenaikan;
+                    //Cek Performance utk setiap mesin
+                    if ($timMesin->performance < $totalPenurunanPerformance) {
+                        $status = 'error';
+                        $msg = 'Performance mesin ' . $timMesin->name . ' tidak mampu untuk memproduksi banyak produk yang diinginkan!';
+                        return response()->json(array(
+                            'status' => $status,
+                            'msg' => $msg,
+                        ), 200);
+                    }
+                }
             }
 
             // Kalkulasi banyak udang yang dibutuhkan
@@ -558,25 +558,25 @@ class ProduksiController extends Controller
                     ->where('is_used', 1)
                     ->first();
 
-                if ($timMesin == null) {
-                    $status = 'error';
-                    $msg = 'Terjadi Error hubungi panitia!';
-                    return response()->json(array(
-                        'status' => $status,
-                        'msg' => $msg,
-                    ), 200);
-                }
-                //Hitung defect timMesinnya
-                $defect = 100 - $timMesin->performance;
-                //Proses hitung total wastenya dan hasil produk akhir
-                $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
-                
-                // if ($timMesin != null) {            
-                    // //Hitung defect timMesinnya
-                    // $defect = 100 - $timMesin->performance;
-                    // //Proses hitung total wastenya dan hasil produk akhir
-                    // $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
+                // if ($timMesin == null) {
+                //     $status = 'error';
+                //     $msg = 'Terjadi Error hubungi panitia!';
+                //     return response()->json(array(
+                //         'status' => $status,
+                //         'msg' => $msg,
+                //     ), 200);
                 // }
+                // //Hitung defect timMesinnya
+                // $defect = 100 - $timMesin->performance;
+                // //Proses hitung total wastenya dan hasil produk akhir
+                // $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
+                
+                if ($timMesin != null) {            
+                    //Hitung defect timMesinnya
+                    $defect = 100 - $timMesin->performance;
+                    //Proses hitung total wastenya dan hasil produk akhir
+                    $hasil_setelah_defect = $hasil_setelah_defect - $hasil_setelah_defect * ($defect / 100);
+                }
             }
             //Total produk cacat yang nanti masuk waste (dibulatin keatas)
             $total_defect = ceil($banyak_item - $hasil_setelah_defect); //Ini nanti masuk waste
@@ -589,65 +589,65 @@ class ProduksiController extends Controller
                     ->where('is_used', 1)
                     ->first();
 
-                if ($timMesin == null) {
-                    $status = 'error';
-                    $msg = 'Terjadi Error hubungi panitia!';
-                    return response()->json(array(
-                        'status' => $status,
-                        'msg' => $msg,
-                    ), 200);
-                }
-                
-                //Hitung kelipatan untuk menghitung penurunan performance mesin
-                $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
-                //Hitung totalPenurunanPerformance
-                $totalPenurunanPerformance = $kelipatan * $kenaikan;
-                //Kurangkan performance tiap mesin
-                $timMesin->performance = $timMesin->performance - $totalPenurunanPerformance;
-                //Hitung sisa produksi yang nanti akan memperbaruhi productProduced tiap mesin
-                $sisaProduksi = ($banyak_item + $timMesin->product_produced) % 20;
-                //Update product produce
-                $timMesin->product_produced = $sisaProduksi;
-                //Lakukan save
-                $timMesin->save();
-
-                //CEK kalau performancenya 0 akan dihapus lgsg di databasenya
-                if ($timMesin->performance == 0) {
-                    $this->deleteMachine($timMesin->machine_id, $team->id);
-                    // Lepas Kombinasi
-                    DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
-                    // Lepas is_used
-                    DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id . " AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
-                    // Pesan Harap susun mesin ulang
-                    $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
-                }
-                
-                // if ($timMesin != null) {
-
-                //     //Hitung kelipatan untuk menghitung penurunan performance mesin
-                //     $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
-                //     //Hitung totalPenurunanPerformance
-                //     $totalPenurunanPerformance = $kelipatan * $kenaikan;
-                //     //Kurangkan performance tiap mesin
-                //     $timMesin->performance = $timMesin->performance - $totalPenurunanPerformance;
-                //     //Hitung sisa produksi yang nanti akan memperbaruhi productProduced tiap mesin
-                //     $sisaProduksi = ($banyak_item + $timMesin->product_produced) % 20;
-                //     //Update product produce
-                //     $timMesin->product_produced = $sisaProduksi;
-                //     //Lakukan save
-                //     $timMesin->save();
-    
-                //     //CEK kalau performancenya 0 akan dihapus lgsg di databasenya
-                //     if ($timMesin->performance == 0) {
-                //         $this->deleteMachine($timMesin->machine_id, $team->id);
-                //         // Lepas Kombinasi
-                //         DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
-                //         // Lepas is_used
-                //         DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id . " AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
-                //         // Pesan Harap susun mesin ulang
-                //         $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
-                //     }
+                // if ($timMesin == null) {
+                //     $status = 'error';
+                //     $msg = 'Terjadi Error hubungi panitia!';
+                //     return response()->json(array(
+                //         'status' => $status,
+                //         'msg' => $msg,
+                //     ), 200);
                 // }
+                
+                // //Hitung kelipatan untuk menghitung penurunan performance mesin
+                // $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
+                // //Hitung totalPenurunanPerformance
+                // $totalPenurunanPerformance = $kelipatan * $kenaikan;
+                // //Kurangkan performance tiap mesin
+                // $timMesin->performance = $timMesin->performance - $totalPenurunanPerformance;
+                // //Hitung sisa produksi yang nanti akan memperbaruhi productProduced tiap mesin
+                // $sisaProduksi = ($banyak_item + $timMesin->product_produced) % 20;
+                // //Update product produce
+                // $timMesin->product_produced = $sisaProduksi;
+                // //Lakukan save
+                // $timMesin->save();
+
+                // //CEK kalau performancenya 0 akan dihapus lgsg di databasenya
+                // if ($timMesin->performance == 0) {
+                //     $this->deleteMachine($timMesin->machine_id, $team->id);
+                //     // Lepas Kombinasi
+                //     DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
+                //     // Lepas is_used
+                //     DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id . " AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
+                //     // Pesan Harap susun mesin ulang
+                //     $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
+                // }
+                
+                if ($timMesin != null) {
+
+                    //Hitung kelipatan untuk menghitung penurunan performance mesin
+                    $kelipatan = floor(($banyak_item + $timMesin->product_produced) / 20);
+                    //Hitung totalPenurunanPerformance
+                    $totalPenurunanPerformance = $kelipatan * $kenaikan;
+                    //Kurangkan performance tiap mesin
+                    $timMesin->performance = $timMesin->performance - $totalPenurunanPerformance;
+                    //Hitung sisa produksi yang nanti akan memperbaruhi productProduced tiap mesin
+                    $sisaProduksi = ($banyak_item + $timMesin->product_produced) % 20;
+                    //Update product produce
+                    $timMesin->product_produced = $sisaProduksi;
+                    //Lakukan save
+                    $timMesin->save();
+    
+                    //CEK kalau performancenya 0 akan dihapus lgsg di databasenya
+                    if ($timMesin->performance == 0) {
+                        $this->deleteMachine($timMesin->machine_id, $team->id);
+                        // Lepas Kombinasi
+                        DB::statement("DELETE FROM `team_machine_combination` WHERE machine_combination_id <= 100 AND team_machine_id = " . $team->id);
+                        // Lepas is_used
+                        DB::statement("UPDATE `team_machines` SET is_used = 0 WHERE team_id = " . $team->id . " AND NOT (machine_id = 2 OR machine_id = 4 OR machine_id = 11 OR machine_id = 12 OR machine_id >= 15)");
+                        // Pesan Harap susun mesin ulang
+                        $trashMsg = 'Terdapat mesin yang performancenya 0 sehingga mesin akan langsung dibuang. Team diharapkan menyusun mesin kembali';
+                    }
+                }
             }
 
             // PRODUK DIBUAT DAN DISIMPAN KE DATABASE
@@ -1073,7 +1073,7 @@ class ProduksiController extends Controller
                         $team->id,
                         $team_shrimp_heads[$shrimp_head_index]->ingridient_id,
                         $team_shrimp_heads[$shrimp_head_index]->expired_time,
-                        $team_shrimp_heads[$shrimp_head_index]->amount_use + $team_shrimp_heads[$shrimp_head_index]->pivot->amount_have
+                        $team_shrimp_heads[$shrimp_head_index]->amount_use + $team_shrimp_heads[$shrimp_head_index]->amount_have
                     );
 
                     $shrimp_head_remains = false;
